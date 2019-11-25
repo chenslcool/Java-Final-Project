@@ -2,12 +2,14 @@ package formation;
 
 import battle.Config;
 import battle.Map;
+import bullet.Bullet;
 import creature.Creature;
-import creature.Evial;
+import creature.Evil;
 import creature.Scorpion;
 import creature.Snake;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 
 /**
  * @author csl
@@ -20,35 +22,38 @@ public class Formation implements Config {
     //TODO 添加所有static阵法方法
     //阵型变换只有在战斗还未开始的时候才能进行，因此理论在main线程上对map的访问是不会和其他线程竞争的
     //attention 默认是在葫芦娃恢复原始阵型后再进行妖怪的变换的，因此理论上不会位置冲突，单为了保险还是同步
-    public static void transformToHeyi(Map map, Scorpion scorpion, Snake snake, ArrayList<Evial> evials){
+    public static void transformToHeyi(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets){
 
         synchronized (map){
             //清除位置部分可以单独拿出来作为clear方法
             int rmX,rmY;//删除的位置
             //把蝎子精和蛇精从map移除
+            //如果是游戏刚开始的状态，蝎子精和蛇精的位置是无效的
             rmX = scorpion.getPosition().getX();
             rmY = scorpion.getPosition().getY();
             map.removeCreatureAt(rmX,rmY);
             rmX = snake.getPosition().getX();
             rmY = snake.getPosition().getY();
             map.removeCreatureAt(rmX,rmY);
-            for(Evial evial:evials){
+            for(Evil evil:evils){
                 //先把这些妖精从map上移除
-                rmX = evial.getPosition().getX();
-                rmY = evial.getPosition().getY();
+                rmX = evil.getPosition().getX();
+                rmY = evil.getPosition().getY();
                 map.removeCreatureAt(rmX,rmY);
             }
-            evials.clear();//删除所有妖怪
+            evils.clear();//删除所有妖怪
             //重置阵型,占据右半边
             int leaderX = 5;
             int leaderY = 10;
+            scorpion.moveTo(leaderX,leaderY);
+            snake.moveTo(5,14);
             for(int i = 1;i <= 2;++i){
-                Evial evial = new Evial(map);
-                evial.moveTo(leaderX-i,leaderY+i);//这里面也会对map上锁，不过都是在一个线程，问题不大
-                evials.add(evial);
-                evial = new Evial(map);
-                evial.moveTo(leaderX+i,leaderY+i);
-                evials.add(evial);
+                Evil evil = new Evil(map,bullets);
+                evil.moveTo(leaderX-i,leaderY+i);//这里面也会对map上锁，不过都是在一个线程，问题不大
+                evils.add(evil);
+                evil = new Evil(map,bullets);
+                evil.moveTo(leaderX+i,leaderY+i);
+                evils.add(evil);
             }
         }
     }

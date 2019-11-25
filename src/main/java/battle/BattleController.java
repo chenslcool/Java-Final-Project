@@ -1,7 +1,11 @@
 package battle;
 
-import creature.Evial;
+import bullet.Bullet;
+import creature.Evil;
 import creature.Huluwa;
+import creature.Scorpion;
+import creature.Snake;
+import formation.Formation;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -17,6 +21,7 @@ import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -28,8 +33,6 @@ import java.util.concurrent.Executors;
 public class BattleController implements Config {
     ExecutorService pool = Executors.newCachedThreadPool();//线程池
 
-    private ArrayList<Huluwa> huluwas = new ArrayList<Huluwa>();
-    private ArrayList<Evial> evials = new ArrayList<>();
     @FXML
     private BorderPane pane;//主面板
     @FXML
@@ -38,6 +41,12 @@ public class BattleController implements Config {
     Map map;//地图
     BattleState battleState;//战斗状态，由多个线程共享，指示子弹移动、ui刷新线程是否要退出
 
+    private ArrayList<Huluwa> huluwas = new ArrayList<Huluwa>();
+    private ArrayList<Evil> evils = new ArrayList<>();
+    private Scorpion scorpion;
+    private Snake snake;
+    private LinkedList<Bullet> bullets = new LinkedList<>();//由于bullets需要经常增删，用链表
+    private BulletManager bulletManager;
     public BattleController() {
     }
 
@@ -58,18 +67,14 @@ public class BattleController implements Config {
         canvas.setHeight(CANVAS_HEIGHT);
         gc = canvas.getGraphicsContext2D();
         battleState = new BattleState();
-        map = new Map(battleState, MAP_REFRESH_RATE, gc);
-
+        map = new Map(battleState, MAP_REFRESH_RATE, gc,bullets);
+        bulletManager = new BulletManager(map,bullets,battleState);
+        scorpion = new Scorpion(map,bullets);
+        snake = new Snake(map,bullets);
+        Formation.transformToHeyi(map,scorpion,snake,evils,bullets);
         initHuluwas();//创建葫芦娃
+        //TODO 初始化bulletmanager
         map.display();
-
-
-//        gc.setFill(Color.GREEN);
-//        gc.setStroke(Color.BLUE);
-//        gc.setLineWidth(5);
-//        gc.strokeLine(40, 10, 10, 40);
-        //试一下添加妖精，先写formation
-
     }
 
     private void initHuluwas() {
@@ -77,7 +82,7 @@ public class BattleController implements Config {
         for (int i = 1; i <= 7; ++i) {
             URL url = this.getClass().getClassLoader().getResource("pictures/" + i + ".jpg");
             Image image = new Image(url.toString());
-            huluwas.add(new Huluwa(map, image, "h"));
+            huluwas.add(new Huluwa(map, image, "h",bullets));
         }
         transFormChangShe();
     }
@@ -87,7 +92,7 @@ public class BattleController implements Config {
         //正常情况下，这是在游戏开始之前执行的，此时只有一个main线程，因此不存在对map的竞争访问
         //葫芦娃都先恢复正常状态:aive,Hp...
         for(Huluwa huluwa:huluwas){
-            huluwa.resetSatate();
+            huluwa.resetState();
         }
         //重新排列
         synchronized (map){//其实这个synchronized没必要
@@ -106,12 +111,27 @@ public class BattleController implements Config {
     }
 
     public void startGame(){
+        if(battleState.battleStarted == true || battleState.battlePaused == true)//战斗已经开始或者正在暂停
+            return;
         //按下空格,开始游戏
-        arrangeHuluwas();
+        battleState.battleStarted = true;//战斗开始
+        arrangeHuluwas();//重新安置葫芦娃
+        Formation.transformToHeyi(map,scorpion,snake,evils,bullets);//重新放置所有妖精：恢复状态与阵型
         //葫芦娃线程start
         for(Huluwa huluwa:huluwas){
             pool.execute(huluwa);
         }
+        for(Evil evil:evils){
+            pool.execute(evil);
+        }
+        pool.execute(scorpion);
+        pool.execute(snake);
         pool.execute(map);//战场刷新线程start
+        pool.execute(bulletManager);
+
     }
+
+//    public void pauseGame(){
+//        //按下
+//    }
 }

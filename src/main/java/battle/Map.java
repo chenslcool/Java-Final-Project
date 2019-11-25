@@ -1,9 +1,12 @@
 package battle;
 
+import bullet.Bullet;
 import creature.Creature;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -15,12 +18,14 @@ public class Map implements Runnable, Config {
     private int refreshRate;//刷新频率
     private GraphicsContext gc;//通过gc直接绘图
     private BattleState battleState;
+    private LinkedList<Bullet> bullets;//display的时候也要显示子弹
 
-    public Map(BattleState battleState, int refreshRate, GraphicsContext gc) {
+    public Map(BattleState battleState, int refreshRate, GraphicsContext gc,LinkedList<Bullet> bullets) {
         grounds = new Creature[NUM_ROWS][NUM_COLUMNS];//初始化为NULL
         this.battleState = battleState;
         this.refreshRate = refreshRate;
         this.gc = gc;
+        this.bullets = bullets;
     }
 
     public Creature getCreatureAt(int x, int y) {
@@ -34,7 +39,8 @@ public class Map implements Runnable, Config {
     }
 
     public void removeCreatureAt(int x,int y){
-        grounds[x][y] = null;
+        if(insideMap(x,y))//防止特殊情况
+            grounds[x][y] = null;
     }
 
     public boolean noCreatureAt(int x, int y) {
@@ -47,9 +53,9 @@ public class Map implements Runnable, Config {
         //先画12*16的网格
         drawBoardLines();
         //绘制所有Creature
-        for(int i = 0;i<NUM_ROWS;++i){
-            for(int j = 0;j<NUM_COLUMNS;++j){
-                synchronized (this){//锁住自己
+        synchronized (this){
+            for(int i = 0;i<NUM_ROWS;++i){
+                for(int j = 0;j<NUM_COLUMNS;++j){
                     Creature c = this.getCreatureAt(i,j);
                     if(c != null){
                         gc.drawImage(c.getImage(),j*UNIT_SIZE,i*UNIT_SIZE,UNIT_SIZE-1,UNIT_SIZE-1);
@@ -57,6 +63,15 @@ public class Map implements Runnable, Config {
                 }
             }
         }
+
+        //绘制所有的子弹
+        synchronized (bullets){//锁住
+            for(Bullet bullet:bullets){
+                gc.setFill(bullet.getColor());
+                gc.fillOval(bullet.getY()*UNIT_SIZE,bullet.getX()*UNIT_SIZE,BULLTE_RADIUS,BULLTE_RADIUS);
+            }
+        }
+        System.out.println("bullets.size() = "+bullets.size());
     }
 
     public void drawBoardLines() {
@@ -73,7 +88,7 @@ public class Map implements Runnable, Config {
 
     public void run() {
         //如果战斗结束或者暂停或结束就退出run(),结束线程
-        while (battleState.battleEnded == false && battleState.battlePaused == false) {
+        while (battleState.battleStarted == true&& battleState.battlePaused == false) {
             try {
                 TimeUnit.MILLISECONDS.sleep(1000/refreshRate);
                 display();
@@ -84,6 +99,13 @@ public class Map implements Runnable, Config {
     }
 
     public boolean insideMap(int x, int y) {//坐标是否在地图内
+        if (x < 0 || x >= NUM_ROWS || y < 0 || y >= NUM_COLUMNS)
+            return false;
+        else
+            return true;
+    }
+
+    public boolean insideMap(double x, double y) {//坐标是否在地图内
         if (x < 0 || x >= NUM_ROWS || y < 0 || y >= NUM_COLUMNS)
             return false;
         else

@@ -22,4 +22,10 @@ public interface Config {
     int DEFAULT_DEFENSE_VALUE = 40;
     int DEFAULT_MOVE_RATE = 2;//涉及刷新频率
 
+    //子弹
+    double STEP_DISTANCE = 1;//子弹每次移动的距离
+    int BULLTE_RADIUS = 20;//子弹半径
+//    int DEFAULT_BULLET_DAMAGE = 30;
+    int BULLET_REFRESH_RATE = 5;
+
 }

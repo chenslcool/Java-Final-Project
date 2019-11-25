@@ -2,8 +2,12 @@ package creature;
 
 import battle.Config;
 import battle.Map;
+import bullet.Bullet;
+import creature.enumeration.Camp;
 import javafx.scene.image.Image;
 
+import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.Random;
 
 /**
@@ -11,6 +15,7 @@ import java.util.Random;
  * @date 2019/11/24 20:49
  */
 public abstract class Creature implements Runnable, Config {
+    protected Camp camp;
     protected Random random;
     protected boolean alive;
     protected Position position;
@@ -22,8 +27,10 @@ public abstract class Creature implements Runnable, Config {
     protected int attackValue;//攻击力 > 50
     protected int defenseValue;//防御力 < 50
     protected int moveRate;//速度,sleepTime = 1000ms/moveRate;
+    protected LinkedList<Bullet> bullets;
     public Creature(){}
-    public Creature(Map map){
+    public Creature(Map map,LinkedList<Bullet> bullets){
+        camp = Camp.JUSTICE;
         random = new Random();
         alive = true;
         MAX_HP = DEFAULT_MAX_HP;
@@ -33,6 +40,7 @@ public abstract class Creature implements Runnable, Config {
         moveRate = DEFAULT_MOVE_RATE;//0.5 s
         this.map = map;
         position = new Position();
+        this.bullets = bullets;
     }
     public abstract void attack();//不同的生物有不同的攻击方式：近距离 or 子弹
     public void getHurt(int damage){//受到攻击
@@ -80,7 +88,7 @@ public abstract class Creature implements Runnable, Config {
         }
     }
 
-    public void resetSatate(){
+    public void resetState(){
         //恢复正常状态
         MAX_HP = DEFAULT_MAX_HP;
         currentHP = MAX_HP;
@@ -94,6 +102,23 @@ public abstract class Creature implements Runnable, Config {
         return image;
     }
 
+    ArrayList<Creature> searchLineEnemies(){
+        //寻找同一行的敌人
+        ArrayList<Creature> enemies = new ArrayList<>();
+        int x = position.getX();
+        int y = position.getY();
+        synchronized (map){
+            for(int i = 0;i<NUM_COLUMNS;++i){
+                //这个地方有地方生物
+                if((i != y) && (map.noCreatureAt(x,i) == false) && (map.getCreatureAt(x,i).getCamp() != this.camp))
+                    enemies.add(map.getCreatureAt(x,i));
+            }
+            return enemies;
+        }
+    }
+    public Camp getCamp(){
+        return camp;
+    }
     @Override
     public void run() {//生物的run方法都差不多
         while(alive){
