@@ -1,7 +1,24 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="e7605e7e-84e4-41ac-a511-e4703352d8e5" name="Default Changelist" comment="" />
+    <list default="true" id="e7605e7e-84e4-41ac-a511-e4703352d8e5" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/battle/BattleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/BattleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/battle/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/Config.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/battle/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/Map.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/creature/Creature.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Creature.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/battle.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/battle.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Main$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Main$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Main.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/battle.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleState.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleState.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/battle/Config.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/Config.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/battle/Map.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/Map.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/creature/Creature.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Creature.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/creature/Huluwa.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Huluwa.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/creature/Position.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Position.class" afterDir="false" />
+    </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,6 +34,9 @@
       </list>
     </option>
   </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
   <component name="MavenImportPreferences">
     <option name="importingSettings">
       <MavenImportingSettings>
@@ -25,14 +45,17 @@
     </option>
   </component>
   <component name="ProjectId" id="1U3HZBIwO4WYH27Xvxu4c1Km7ML" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="PropertiesComponent">
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
+    <property name="ignore_missing_gitignore" value="true" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="project.structure.last.edited" value="Modules" />
-    <property name="project.structure.proportion" value="0.0" />
-    <property name="project.structure.side.proportion" value="0.0" />
-    <property name="settings.editor.selected.configurable" value="MavenSettings" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
     <key name="MoveFile.RECENT_KEYS">
@@ -123,11 +146,25 @@
       <option name="presentableId" value="Default" />
       <updated>1574578411454</updated>
       <workItem from="1574578415199" duration="7256000" />
-      <workItem from="1574603920584" duration="3784000" />
+      <workItem from="1574603920584" duration="4025000" />
+      <workItem from="1574640869281" duration="11566000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State>
+              <option name="COLUMN_ORDER" />
+            </State>
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
