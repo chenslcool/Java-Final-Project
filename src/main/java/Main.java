@@ -15,7 +15,7 @@ public class Main extends Application {
 
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("battle.fxml"));
-        primaryStage.setTitle("葫芦娃vs妖精");
+        primaryStage.setTitle("Fighting");
         primaryStage.setScene(new Scene(root, 1200.0D, 800.0D)); //设置初始的窗口大小
         primaryStage.show();
 

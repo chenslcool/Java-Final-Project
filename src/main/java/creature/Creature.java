@@ -1,5 +1,6 @@
 package creature;
 
+import battle.Config;
 import battle.Map;
 import javafx.scene.image.Image;
 
@@ -9,7 +10,7 @@ import java.util.Random;
  * @author csl
  * @date 2019/11/24 20:49
  */
-public abstract class Creature implements Runnable{
+public abstract class Creature implements Runnable, Config {
     protected Random random;
     protected boolean alive;
     protected Position position;
@@ -21,14 +22,15 @@ public abstract class Creature implements Runnable{
     protected int attackValue;//攻击力 > 50
     protected int defenseValue;//防御力 < 50
     protected int moveRate;//速度,sleepTime = 1000ms/moveRate;
+    public Creature(){}
     public Creature(Map map){
         random = new Random();
         alive = true;
-        MAX_HP = 100;
-        currentHP = 100;
-        attackValue = 60;
-        defenseValue = 40;
-        moveRate = 2;//0.5 s
+        MAX_HP = DEFAULT_MAX_HP;
+        currentHP = MAX_HP;
+        attackValue = DEFAULT_ATTACK_VALUE;
+        defenseValue = DEFAULT_DEFENSE_VALUE;
+        moveRate = DEFAULT_MOVE_RATE;//0.5 s
         this.map = map;
         position = new Position();
     }
@@ -64,6 +66,10 @@ public abstract class Creature implements Runnable{
         //如果不符合条件，就不移动
     }
 
+    public Position getPosition(){
+        return position;
+    }
+    //移动生物并且设置map，确保无位置冲突
     public void moveTo(int newX,int newY){
         //移动到(x,y)处，需要synchronized map
         synchronized (map){//对map上锁
@@ -74,8 +80,32 @@ public abstract class Creature implements Runnable{
         }
     }
 
+    public void resetSatate(){
+        //恢复正常状态
+        MAX_HP = DEFAULT_MAX_HP;
+        currentHP = MAX_HP;
+        attackValue = DEFAULT_ATTACK_VALUE;
+        defenseValue = DEFAULT_DEFENSE_VALUE;
+        moveRate = DEFAULT_MOVE_RATE;//0.5 s
+        alive = true;
+    }
+
     public Image getImage(){
         return image;
+    }
+
+    @Override
+    public void run() {//生物的run方法都差不多
+        while(alive){
+            //如果暂停的话，BattleField只要把所以生物的alive置为false,就能结束所有生物线程并且生物状态不变了
+            try {
+                Thread.sleep(1000/moveRate);
+                attack();
+                move();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
 }

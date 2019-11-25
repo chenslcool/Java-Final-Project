@@ -16,5 +16,10 @@ public interface Config {
     int UNIT_SIZE = CANVAS_HEIGHT/NUM_ROWS;
     int BORDER_LINE_WIDTH = 1;
 
+    //生物的一些默认属性
+    int DEFAULT_MAX_HP = 100;
+    int DEFAULT_ATTACK_VALUE = 60;
+    int DEFAULT_DEFENSE_VALUE = 40;
+    int DEFAULT_MOVE_RATE = 2;//涉及刷新频率
 
 }

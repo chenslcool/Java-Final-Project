@@ -2,22 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e7605e7e-84e4-41ac-a511-e4703352d8e5" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/main/java/creature/Evial.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/creature/Scorpion.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/creature/Snake.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/formation/Formation.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/battle/BattleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/BattleController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/battle/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/Config.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/battle/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/Map.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/creature/Creature.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Creature.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/resources/battle.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/battle.fxml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Main$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Main$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/creature/Huluwa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Huluwa.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/Main.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/battle.fxml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle.fxml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleController$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleState.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleState.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/battle/Config.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/Config.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/battle/Map.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/Map.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/creature/Creature.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Creature.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/creature/Huluwa.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Huluwa.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/creature/Position.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Position.class" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -147,7 +147,7 @@
       <updated>1574578411454</updated>
       <workItem from="1574578415199" duration="7256000" />
       <workItem from="1574603920584" duration="4025000" />
-      <workItem from="1574640869281" duration="11566000" />
+      <workItem from="1574640869281" duration="15888000" />
     </task>
     <servers />
   </component>
