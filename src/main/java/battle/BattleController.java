@@ -22,16 +22,14 @@ import javafx.scene.paint.Color;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
-import java.util.concurrent.Executor;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.concurrent.*;
 
 /**
  * @author csl
  * @date 2019/11/24 21:47
  */
 public class BattleController implements Config {
-    ExecutorService pool = Executors.newCachedThreadPool();//线程池
+    ExecutorService pool;//线程池
 
     @FXML
     private BorderPane pane;//主面板
@@ -115,22 +113,76 @@ public class BattleController implements Config {
             return;
         //按下空格,开始游戏
         battleState.battleStarted = true;//战斗开始
-        arrangeHuluwas();//重新安置葫芦娃
-        Formation.transformToHeyi(map,scorpion,snake,evils,bullets);//重新放置所有妖精：恢复状态与阵型
+//        arrangeHuluwas();//重新安置葫芦娃
+//        Formation.transformToHeyi(map,scorpion,snake,evils,bullets);//重新放置所有妖精：恢复状态与阵型
         //葫芦娃线程start
-        for(Huluwa huluwa:huluwas){
-            pool.execute(huluwa);
-        }
+        //由于之前是用shutDownNow退出的，如果还是用之前的线程池再execute会出错
+        pool = Executors.newCachedThreadPool();
         for(Evil evil:evils){
             pool.execute(evil);
+        }
+        for(Huluwa huluwa:huluwas){
+            pool.execute(huluwa);
         }
         pool.execute(scorpion);
         pool.execute(snake);
         pool.execute(map);//战场刷新线程start
         pool.execute(bulletManager);//子弹移动、出界、伤害
-
+//        int threadCount = ((ThreadPoolExecutor)pool).getActiveCount();
+//        System.out.println("初始化有"+threadCount+"个活跃线程");
+        //用一个线程侦听战斗是否结束，while(notEnded) wait(); map的display()检测双方人数，若一方=0，则notifyAll()结束map线程,
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                synchronized (battleState){
+                    while (battleState.battleStarted == true){//等待战斗结束
+                        try {
+                            battleState.wait();//等待battleState的锁，而不是忙等待监听
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                }
+                //stated = false，即游戏结束
+//                System.out.println("game over, in Listener thread");
+                //失败一方的所有生物线段都因为alive = false 导致线程退出
+                //胜利一方的所有生物线程、map刷新线程、bulletManager线程都可能还在运行
+                //因此需要shutDownNow向所有线程发送interrupt()让他们退出
+                gameOver();
+            }
+        }).start();//这个侦听线程不经过pool控制
     }
 
+    public void gameOver(){
+        //这个函数在侦听线程中被调用
+        //pool.shutDownNow -> 重排阵型
+//        pool.shutdownNow();
+        //重排阵型
+        System.out.println("game over");
+//        try {
+//            TimeUnit.SECONDS.sleep(2);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        int threadCount = ((ThreadPoolExecutor)pool).getActiveCount();
+//        System.out.println("还剩"+threadCount+"个活跃线程");
+        pool.shutdownNow();
+        //现在只剩一个主线程了
+        synchronized (map){
+            map.clearMap();
+        }
+        arrangeHuluwas();
+        transFormChangShe();
+        bulletManager.clearBullets();
+
+        scorpion.resetState();
+        snake.resetState();
+        for(Evil evil:evils){
+            evil.resetState();
+        }
+        Formation.transformToHeyi(map,scorpion,snake,evils,bullets);
+        map.display();
+    }
 //    public void pauseGame(){
 //        //按下
 //    }

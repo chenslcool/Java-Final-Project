@@ -2,6 +2,7 @@ package battle;
 
 import bullet.Bullet;
 import creature.Creature;
+import creature.enumeration.Camp;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -52,6 +53,9 @@ public class Map implements Runnable, Config {
     }
 
     public void display() {
+        //双方剩余人数
+        int numJusticeLeft = 0;
+        int numEvilLeft = 0;
         //先清空画布
         gc.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
         //先画12*16的网格
@@ -65,6 +69,11 @@ public class Map implements Runnable, Config {
                         synchronized (c){//画生物的时候它不能被攻击、移动
                             if(c.isAlive())
                             {
+                                if(c.getCamp()== Camp.JUSTICE){
+                                    numJusticeLeft ++;
+                                }
+                                else
+                                    numEvilLeft ++;
                                 gc.drawImage(c.getImage(),j*UNIT_SIZE,i*UNIT_SIZE,UNIT_SIZE-1,UNIT_SIZE-1);
                                 //画血量
                                 int currentHp = c.getCurrentHP();
@@ -88,7 +97,12 @@ public class Map implements Runnable, Config {
                 }
             }
         }
-
+        if(numEvilLeft ==0 || numJusticeLeft == 0){
+            battleState.battleStarted = false;
+            synchronized (battleState){
+                battleState.notifyAll();//唤醒侦听线程
+            }
+        }
         //绘制所有的子弹
         synchronized (bullets){//锁住
             for(Bullet bullet:bullets){
@@ -118,9 +132,10 @@ public class Map implements Runnable, Config {
                 TimeUnit.MILLISECONDS.sleep(1000/refreshRate);
                 display();
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                break;
             }
         }
+        System.out.println("map.run() exit");
     }
 
     public boolean insideMap(int x, int y) {//坐标是否在地图内
@@ -135,5 +150,14 @@ public class Map implements Runnable, Config {
             return false;
         else
             return true;
+    }
+
+    public void clearMap(){
+        //清空map
+        for(int i = 0;i < NUM_ROWS;++i){
+            for(int j =0;j < NUM_COLUMNS;++j){
+                grounds[i][j] = null;
+            }
+        }
     }
 }

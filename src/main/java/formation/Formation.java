@@ -57,4 +57,38 @@ public class Formation implements Config {
             }
         }
     }
+    public static void transFormToYanxing(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets){
+        synchronized (map){
+            //清除位置部分可以单独拿出来作为clear方法
+            int rmX,rmY;//删除的位置
+            //把蝎子精和蛇精从map移除
+            //如果是游戏刚开始的状态，蝎子精和蛇精的位置是无效的
+            rmX = scorpion.getPosition().getX();
+            rmY = scorpion.getPosition().getY();
+            map.removeCreatureAt(rmX,rmY);
+            rmX = snake.getPosition().getX();
+            rmY = snake.getPosition().getY();
+            map.removeCreatureAt(rmX,rmY);
+            for(Evil evil:evils){
+                //先把这些妖精从map上移除
+                rmX = evil.getPosition().getX();
+                rmY = evil.getPosition().getY();
+                map.removeCreatureAt(rmX,rmY);
+            }
+            evils.clear();//删除所有妖怪
+            //重置阵型,占据右半边
+            int leaderX = 5;
+            int leaderY = 12;
+            scorpion.moveTo(leaderX,leaderY);
+            snake.moveTo(5,14);
+            for(int i = 1;i <= 2;++i){
+                Evil evil = new Evil(map,bullets);
+                evil.moveTo(leaderX-i,leaderY+i);//这里面也会对map上锁，不过都是在一个线程，问题不大
+                evils.add(evil);
+                evil = new Evil(map,bullets);
+                evil.moveTo(leaderX+i,leaderY-i);
+                evils.add(evil);
+            }
+        }
+    }
 }

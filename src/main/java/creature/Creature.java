@@ -48,9 +48,10 @@ public abstract class Creature implements Runnable, Config {
             currentHP = 0;
             alive = false;
             //TODO map要设置怎么画死亡的生物
-            System.out.println("dead");
+//            System.out.println("dead");
         }
         else{
+//            System.out.println("hurt");
             currentHP -= damage;
         }
     }
@@ -85,10 +86,12 @@ public abstract class Creature implements Runnable, Config {
     public void moveTo(int newX,int newY){
         //移动到(x,y)处，需要synchronized map
         synchronized (map){//对map上锁
-            if(map.insideMap(newX,newY) && map.noCreatureAt(newX,newY)){
-                map.setCreatureAt(newX,newY,this);
+            synchronized (this){
+                if(map.insideMap(newX,newY) && map.noCreatureAt(newX,newY)){
+                    map.setCreatureAt(newX,newY,this);
+                    setPosition(newX,newY);
+                }
             }
-            setPosition(newX,newY);
         }
     }
 
@@ -125,16 +128,18 @@ public abstract class Creature implements Runnable, Config {
     }
     @Override
     public void run() {//生物的run方法都差不多
-        while(alive){
+        while(alive && Thread.interrupted() == false){//死亡或者pool调用了shutDownNow则本线程退出
             //如果暂停的话，BattleField只要把所以生物的alive置为false,就能结束所有生物线程并且生物状态不变了
             try {
                 Thread.sleep(1000/moveRate);
                 attack();
                 move();//move方法内部已经对map和this上锁了
             } catch (InterruptedException e) {
-                e.printStackTrace();
+                break;//在sleep的时候shutDownNow结束线程
             }
         }
+        System.out.println("Creature.run() exit");
+
     }
 
     public boolean isAlive(){
