@@ -53,6 +53,7 @@ public class Map implements Runnable, Config {
     }
 
     public void display() {
+        //为什么刷新的时候极少数情况会卡死?
         //双方剩余人数
         int numJusticeLeft = 0;
         int numEvilLeft = 0;
@@ -61,7 +62,7 @@ public class Map implements Runnable, Config {
         //先画12*16的网格
         drawBoardLines();
         //绘制所有Creature
-        synchronized (this){
+        synchronized (this){//锁住地图
             for(int i = 0;i<NUM_ROWS;++i){
                 for(int j = 0;j<NUM_COLUMNS;++j){
                     Creature c = this.getCreatureAt(i,j);

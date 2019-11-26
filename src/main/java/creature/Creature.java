@@ -3,8 +3,10 @@ package creature;
 import battle.Config;
 import battle.Map;
 import bullet.Bullet;
+import bullet.HorizontalBullet;
 import creature.enumeration.Camp;
 import javafx.scene.image.Image;
+import javafx.scene.paint.Color;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -42,7 +44,37 @@ public abstract class Creature implements Runnable, Config {
         position = new Position();
         this.bullets = bullets;
     }
-    public abstract void attack();//不同的生物有不同的攻击方式：近距离 or 子弹
+    public void attack()//不同的生物有不同的攻击方式：近距离 or 子弹
+    {
+        //TODO search the map and found Enimies and send bullets
+        //首先寻找九宫格之内的敌人
+        //算了，先发射水平子弹吧
+        //寻找水平方向的敌人
+        synchronized (map){
+            //只要看水平方向有没有敌人就行了，一边最多一个
+            ArrayList<Creature> enemies = searchLineEnemies();
+            for(Creature enemy : enemies){
+                if(enemy.isAlive() == false)//如果对方没死亡
+                    continue;
+                boolean toRight = enemy.position.getY() > this.position.getY();
+                int x = position.getX();
+                int y = position.getY();
+                double bulletX = x*UNIT_SIZE + (UNIT_SIZE - BULLTE_RADIUS)/2;
+                double bulletY = y*UNIT_SIZE + (UNIT_SIZE - BULLTE_RADIUS)/2;
+                Bullet bullet = new HorizontalBullet(map,this,this.attackValue,toRight,bulletX,bulletY);
+                if(camp == Camp.JUSTICE){
+                    bullet.setColor(Color.LIGHTGREEN);
+                }
+                else
+                    bullet.setColor(Color.DEEPPINK);
+                synchronized (bullets){//添加子弹
+                    bullets.add(bullet);
+                }
+                break;//发射一个就行了
+//                System.out.println("add bullet:"+bullet);
+            }
+        }
+    }
     public void getHurt(int damage){//受到攻击
         if(damage > currentHP){
             currentHP = 0;
@@ -68,7 +100,7 @@ public abstract class Creature implements Runnable, Config {
         int newX = oldX + xStep;
         int newY = oldY + yStep;
         synchronized (map){//对map上锁
-            synchronized (this){//给自己上锁，不能被攻击
+            {
                 if(map.insideMap(newX,newY) && map.noCreatureAt(newX,newY)){
                     map.removeCreatureAt(oldX,oldY);
                     map.setCreatureAt(newX,newY,this);//放置自己
@@ -128,17 +160,23 @@ public abstract class Creature implements Runnable, Config {
     }
     @Override
     public void run() {//生物的run方法都差不多
+        //进入循环后，黑莓移动，被杀死，ui显示一次，移动后，再显示一次，体现为墓碑移动
+        //因此在移动时要上锁(攻击无所谓，发出子弹就一瞬间的事)
         while(alive && Thread.interrupted() == false){//死亡或者pool调用了shutDownNow则本线程退出
             //如果暂停的话，BattleField只要把所以生物的alive置为false,就能结束所有生物线程并且生物状态不变了
             try {
                 Thread.sleep(1000/moveRate);
-                attack();
-                move();//move方法内部已经对map和this上锁了
+                if(alive == false)
+                    break;//sleep后发现自己死了
+                synchronized (map){
+                    attack();//attack()对map、bullet上锁
+                    move();//move方法内部已经对map上锁了
+                }
             } catch (InterruptedException e) {
                 break;//在sleep的时候shutDownNow结束线程
             }
         }
-        System.out.println("Creature.run() exit");
+//        System.out.println("Creature.run() exit");
 
     }
 

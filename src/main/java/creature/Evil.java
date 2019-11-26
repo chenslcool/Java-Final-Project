@@ -22,10 +22,11 @@ public class Evil extends Creature{//妖精是在BattleControler中创建的
         //构造器就直接用
         this.camp = Camp.EVIL;
     }
-    @Override
-    public void attack() {
-        //TODO 添加攻击行为
-    }
+//    @Override
+//    public void attack() {
+//        //TODO 添加攻击行为
+//
+//    }
 
 
 }

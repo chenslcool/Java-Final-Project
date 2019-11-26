@@ -57,6 +57,9 @@ public class BattleController implements Config {
                 if(event.getCode() == KeyCode.SPACE){
                     startGame();
                 }
+                else if(event.getCode() == KeyCode.E){//强制结束
+                    gameOver();
+                }
             }
         });
         Platform.runLater(() -> pane.requestFocus());//否则键盘无效
@@ -158,6 +161,9 @@ public class BattleController implements Config {
         //pool.shutDownNow -> 重排阵型
 //        pool.shutdownNow();
         //重排阵型
+        synchronized (battleState){
+            battleState.battleStarted = false;
+        }
         System.out.println("game over");
 //        try {
 //            TimeUnit.SECONDS.sleep(2);
@@ -180,7 +186,7 @@ public class BattleController implements Config {
         for(Evil evil:evils){
             evil.resetState();
         }
-        Formation.transformToHeyi(map,scorpion,snake,evils,bullets);
+        Formation.transFormToYanxing(map,scorpion,snake,evils,bullets);
         map.display();
     }
 //    public void pauseGame(){

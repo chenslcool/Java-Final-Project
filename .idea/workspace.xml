@@ -6,14 +6,19 @@
       <change beforePath="$PROJECT_DIR$/src/main/java/battle/BattleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/BattleController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/battle/BulletManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/BulletManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/battle/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/Map.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/bullet/Bullet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bullet/Bullet.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/creature/Creature.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Creature.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/formation/Formation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/formation/Formation.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/creature/Evil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Evil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/creature/Huluwa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Huluwa.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleController$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/battle/BulletManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BulletManager.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/battle/Map.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/Map.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/bullet/Bullet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/bullet/Bullet.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/creature/Creature.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Creature.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/formation/Formation.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/formation/Formation.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/creature/Evil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Evil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/creature/Huluwa.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Huluwa.class" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -150,7 +155,8 @@
       <workItem from="1574640869281" duration="24380000" />
       <workItem from="1574694954832" duration="1864000" />
       <workItem from="1574732597205" duration="5310000" />
-      <workItem from="1574763310920" duration="7076000" />
+      <workItem from="1574763310920" duration="7941000" />
+      <workItem from="1574778660626" duration="2937000" />
     </task>
     <servers />
   </component>
