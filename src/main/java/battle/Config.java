@@ -28,4 +28,6 @@ public interface Config {
 //    int DEFAULT_BULLET_DAMAGE = 30;
     int BULLET_REFRESH_RATE = 5;
 
+    //血条
+    int BLOOD_LINE_WIDTH = 4;
 }

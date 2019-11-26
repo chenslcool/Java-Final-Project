@@ -43,17 +43,22 @@ public class BulletManager implements Config,Runnable{
                             &&(centerX + BULLTE_RADIUS/2 < (squareX+1)*UNIT_SIZE)
                             &&(centerY - BULLTE_RADIUS/2 > squareY*UNIT_SIZE)
                             &&(centerY + BULLTE_RADIUS/2 < (squareY+1)*UNIT_SIZE);
-                    if(entireBulletInside){//完整在放个内
+                    if(entireBulletInside){//子弹完整地在一个方格内
                         synchronized (map){
                             Creature c = map.getCreatureAt(squareX,squareY);
-                            //如果这个地方有生物并且是敌人
-////                            synchronized (c){//锁住生物，这时候只有这个自当能攻击它
-////
-//                            }
                             //仅有本线程(Manager)掌控子弹的移动和攻击，所以不会出现一个生物被多个同时击中、杀死
-                            if(c != null && c.getCamp() != bullet.getSender().getCamp() && c.isAlive()){
-                                c.getHurt(bullet.getDamage());//受到伤害
-                                it.remove();//删除子弹
+                            //但是由于生物线程也在进行，可能本线程认为打中了，而在极短时间内目标移动了，却还是受伤 or 死亡了，
+                            //视觉效果可能是：墓碑移动(打死 -> 生物线程已经进入 while(alive)循环,move() -> ui刷新显示墓碑 -> 移动后再次刷新)
+                            //解决方式: 给生物加锁？move和gethurt不能同时进行? 会不会死锁
+                            //如果申请锁的顺序一致 map -> creature应该不会死锁
+                            if(c!=null)
+                            {
+                                synchronized (c){//不能移动
+                                    if(c.getCamp() != bullet.getSender().getCamp() && c.isAlive()){
+                                        c.getHurt(bullet.getDamage());//受到伤害
+                                        it.remove();//删除子弹
+                                    }
+                                }
                             }
                         }
                     }

@@ -67,10 +67,12 @@ public abstract class Creature implements Runnable, Config {
         int newX = oldX + xStep;
         int newY = oldY + yStep;
         synchronized (map){//对map上锁
-            if(map.insideMap(newX,newY) && map.noCreatureAt(newX,newY)){
-                map.removeCreatureAt(oldX,oldY);
-                map.setCreatureAt(newX,newY,this);//放置自己
-                setPosition(newX,newY);
+            synchronized (this){//给自己上锁，不能被攻击
+                if(map.insideMap(newX,newY) && map.noCreatureAt(newX,newY)){
+                    map.removeCreatureAt(oldX,oldY);
+                    map.setCreatureAt(newX,newY,this);//放置自己
+                    setPosition(newX,newY);
+                }
             }
         }
         //如果不符合条件，就不移动
@@ -128,7 +130,7 @@ public abstract class Creature implements Runnable, Config {
             try {
                 Thread.sleep(1000/moveRate);
                 attack();
-                move();
+                move();//move方法内部已经对map和this上锁了
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
@@ -137,6 +139,14 @@ public abstract class Creature implements Runnable, Config {
 
     public boolean isAlive(){
         return alive;
+    }
+
+    public int getCurrentHP(){
+        return currentHP;
+    }
+
+    public int getMAX_HP(){
+        return MAX_HP;
     }
 
 }

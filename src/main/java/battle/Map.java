@@ -62,10 +62,27 @@ public class Map implements Runnable, Config {
                 for(int j = 0;j<NUM_COLUMNS;++j){
                     Creature c = this.getCreatureAt(i,j);
                     if(c != null){
-                        if(c.isAlive())
-                            gc.drawImage(c.getImage(),j*UNIT_SIZE,i*UNIT_SIZE,UNIT_SIZE-1,UNIT_SIZE-1);
-                        else{
-                            gc.drawImage(deadImage,j*UNIT_SIZE,i*UNIT_SIZE,UNIT_SIZE-1,UNIT_SIZE-1);
+                        synchronized (c){//画生物的时候它不能被攻击、移动
+                            if(c.isAlive())
+                            {
+                                gc.drawImage(c.getImage(),j*UNIT_SIZE,i*UNIT_SIZE,UNIT_SIZE-1,UNIT_SIZE-1);
+                                //画血量
+                                int currentHp = c.getCurrentHP();
+                                int maxHp = c.getMAX_HP();
+                                int greenLen = UNIT_SIZE*currentHp/maxHp;
+//                                double redLen = UNIT_SIZE - greenLen;
+                                gc.setLineWidth(BLOOD_LINE_WIDTH);
+                                gc.setStroke(Color.LIGHTGREEN);
+                                gc.strokeLine(j*UNIT_SIZE,i*UNIT_SIZE,j*UNIT_SIZE + greenLen,i*UNIT_SIZE);
+                                if(currentHp != maxHp)
+                                {
+                                    gc.setStroke(Color.RED);
+                                    gc.strokeLine(j*UNIT_SIZE + greenLen,i*UNIT_SIZE,(j+1)*UNIT_SIZE,i*UNIT_SIZE);
+                                }
+                            }
+                            else{
+                                gc.drawImage(deadImage,j*UNIT_SIZE,i*UNIT_SIZE,UNIT_SIZE-1,UNIT_SIZE-1);
+                            }
                         }
                     }
                 }
