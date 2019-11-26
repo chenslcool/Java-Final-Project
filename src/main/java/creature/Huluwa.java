@@ -26,13 +26,21 @@ public class Huluwa extends Creature {
         //算了，先发射水平子弹吧
         //寻找水平方向的敌人
         synchronized (map){
+            //只要看水平方向有没有敌人就行了，一边最多一个
             ArrayList<Creature> enemies = searchLineEnemies();
             for(Creature enemy : enemies){
+                if(enemy.isAlive() == false)//如果对方没死亡
+                    continue;
                 boolean toRight = enemy.position.getY() > this.position.getY();
-                Bullet bullet = new HorizontalBullet(map,this,this.attackValue,toRight,position.getX(),position.getY());
+                int x = position.getX();
+                int y = position.getY();
+                double bulletX = x*UNIT_SIZE + (UNIT_SIZE - BULLTE_RADIUS)/2;
+                double bulletY = y*UNIT_SIZE + (UNIT_SIZE - BULLTE_RADIUS)/2;
+                Bullet bullet = new HorizontalBullet(map,this,this.attackValue,toRight,bulletX,bulletY);
                 synchronized (bullets){//添加子弹
                     bullets.add(bullet);
                 }
+                break;//发射一个就行了
 //                System.out.println("add bullet:"+bullet);
             }
         }

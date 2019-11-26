@@ -3,8 +3,10 @@ package battle;
 import bullet.Bullet;
 import creature.Creature;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
@@ -19,13 +21,15 @@ public class Map implements Runnable, Config {
     private GraphicsContext gc;//通过gc直接绘图
     private BattleState battleState;
     private LinkedList<Bullet> bullets;//display的时候也要显示子弹
-
+    private Image deadImage;
     public Map(BattleState battleState, int refreshRate, GraphicsContext gc,LinkedList<Bullet> bullets) {
         grounds = new Creature[NUM_ROWS][NUM_COLUMNS];//初始化为NULL
         this.battleState = battleState;
         this.refreshRate = refreshRate;
         this.gc = gc;
         this.bullets = bullets;
+        URL url = this.getClass().getClassLoader().getResource("pictures/" + "death.jpg");
+        deadImage = new javafx.scene.image.Image(url.toString());
     }
 
     public Creature getCreatureAt(int x, int y) {
@@ -58,7 +62,11 @@ public class Map implements Runnable, Config {
                 for(int j = 0;j<NUM_COLUMNS;++j){
                     Creature c = this.getCreatureAt(i,j);
                     if(c != null){
-                        gc.drawImage(c.getImage(),j*UNIT_SIZE,i*UNIT_SIZE,UNIT_SIZE-1,UNIT_SIZE-1);
+                        if(c.isAlive())
+                            gc.drawImage(c.getImage(),j*UNIT_SIZE,i*UNIT_SIZE,UNIT_SIZE-1,UNIT_SIZE-1);
+                        else{
+                            gc.drawImage(deadImage,j*UNIT_SIZE,i*UNIT_SIZE,UNIT_SIZE-1,UNIT_SIZE-1);
+                        }
                     }
                 }
             }
@@ -68,10 +76,10 @@ public class Map implements Runnable, Config {
         synchronized (bullets){//锁住
             for(Bullet bullet:bullets){
                 gc.setFill(bullet.getColor());
-                gc.fillOval(bullet.getY()*UNIT_SIZE,bullet.getX()*UNIT_SIZE,BULLTE_RADIUS,BULLTE_RADIUS);
+                gc.fillOval(bullet.getY(),bullet.getX(),BULLTE_RADIUS,BULLTE_RADIUS);
             }
         }
-        System.out.println("bullets.size() = "+bullets.size());
+//        System.out.println("bullets.size() = "+bullets.size());
     }
 
     public void drawBoardLines() {

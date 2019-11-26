@@ -12,7 +12,7 @@ import javafx.scene.paint.Color;
  * @date 2019/11/25 18:56
  */
 public abstract class Bullet implements Config {
-    double x;//左上角
+    double x;//左上角的坐标,是以像素为单位
     double y;
     protected Map map;//也要知道自己的位置
     protected int damage;//伤害
@@ -49,6 +49,6 @@ public abstract class Bullet implements Config {
     public abstract void move();
 
     public boolean outOfMap(){
-        return (this.x < 0 || this.y < 0 || this.x  >= NUM_ROWS|| this.y >= NUM_COLUMNS);
+        return (this.x < 0.1 || this.y < 0.1 || this.x  >= CANVAS_HEIGHT - 0.1|| this.y >= CANVAS_WIDTH - 0.1);
     }
 }

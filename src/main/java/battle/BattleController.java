@@ -127,7 +127,7 @@ public class BattleController implements Config {
         pool.execute(scorpion);
         pool.execute(snake);
         pool.execute(map);//战场刷新线程start
-        pool.execute(bulletManager);
+        pool.execute(bulletManager);//子弹移动、出界、伤害
 
     }
 

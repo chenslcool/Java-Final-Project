@@ -47,6 +47,8 @@ public abstract class Creature implements Runnable, Config {
         if(damage > currentHP){
             currentHP = 0;
             alive = false;
+            //TODO map要设置怎么画死亡的生物
+            System.out.println("dead");
         }
         else{
             currentHP -= damage;
@@ -131,6 +133,10 @@ public abstract class Creature implements Runnable, Config {
                 e.printStackTrace();
             }
         }
+    }
+
+    public boolean isAlive(){
+        return alive;
     }
 
 }
