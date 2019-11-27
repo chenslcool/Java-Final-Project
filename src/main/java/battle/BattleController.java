@@ -52,23 +52,24 @@ public class BattleController implements Config {
         pane.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                System.out.println(event.getCode());
+//                System.out.println(event.getCode());
                 if(event.getCode() == KeyCode.SPACE){
                     startGame();
                 }
                 else if(event.getCode() == KeyCode.E){//强制结束
-                    gameOver();
+                    if(battleState.battleStarted == true)//如果战斗正在进行，可以结束，如果已经结束，就不要再结束
+                        gameOver();
                 }
-                else if(event.getCode() == KeyCode.UP){
+                else if(event.getCode() == KeyCode.UP && battleState.battleStarted == true){
                     grandPa.addDirection(Direction.UP);
                 }
-                else if(event.getCode() == KeyCode.DOWN){
+                else if(event.getCode() == KeyCode.DOWN && battleState.battleStarted == true){
                     grandPa.addDirection(Direction.DOWN);
                 }
-                else if(event.getCode() == KeyCode.RIGHT){
+                else if(event.getCode() == KeyCode.RIGHT && battleState.battleStarted == true){
                     grandPa.addDirection(Direction.RIGHT);
                 }
-                else if(event.getCode() == KeyCode.LEFT){
+                else if(event.getCode() == KeyCode.LEFT && battleState.battleStarted == true){
                     grandPa.addDirection(Direction.LEFT);
                 }
             }
@@ -141,7 +142,7 @@ public class BattleController implements Config {
         //葫芦娃线程start
         //由于之前是用shutDownNow退出的，如果还是用之前的线程池再execute会出错
         pool = Executors.newCachedThreadPool();
-        for(Evil evil:evils){
+        for(Evil evil:evils){//为什么这里出错?
             pool.execute(evil);
         }
         for(Huluwa huluwa:huluwas){
@@ -185,7 +186,7 @@ public class BattleController implements Config {
         synchronized (battleState){
             battleState.battleStarted = false;
         }
-        System.out.println("game over");
+        System.out.println(n+"th game over");
 //        try {
 //            TimeUnit.SECONDS.sleep(2);
 //        } catch (InterruptedException e) {
@@ -204,16 +205,18 @@ public class BattleController implements Config {
 
         scorpion.resetState();
         snake.resetState();
-        grandPa.clearDirection();
-        for(Evil evil:evils){
-            evil.resetState();
-        }
+        grandPa.resetState();
+        grandPa.clearDirection();//可能错误的原因是：比赛结束，clearDirections的时候，按下了方向键，这样就同时修改directions
+//        for(Evil evil:evils){
+//            evil.resetState();
+//        }
         Formation.transFormToYanxing(map,scorpion,snake,evils,bullets);
         map.display();
 
         //test
         ++n;
-        System.out.println("game "+n);
+        int threadCount = ((ThreadPoolExecutor)pool).getActiveCount();
+        System.out.println("game "+n+",线程池中还有"+threadCount+"个活跃线程");
         startGame();
     }
 //    public void pauseGame(){

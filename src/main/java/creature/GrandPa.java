@@ -61,7 +61,7 @@ public class GrandPa extends Creature implements Curable {
                     synchronized (this){//锁住自己
                         setPosition(newX,newY);
                     }
-                    System.out.println("move");
+//                    System.out.println("move");
 //                    return;//按键方向成功
                 }
             }

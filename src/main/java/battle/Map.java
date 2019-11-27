@@ -137,7 +137,7 @@ public class Map implements Runnable, Config {
 
     public void run() {
         //如果战斗结束或者暂停或结束就退出run(),结束线程
-        while (battleState.battleStarted == true&& battleState.battlePaused == false) {
+        while (battleState.battleStarted == true&& battleState.battlePaused == false && Thread.interrupted() == false) {
             try {
                 TimeUnit.MILLISECONDS.sleep(1000/refreshRate);
                 display();

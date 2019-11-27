@@ -2,22 +2,17 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e7605e7e-84e4-41ac-a511-e4703352d8e5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/creature/enumeration/Direction.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/battle/BattleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/BattleController.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/battle/BulletManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/BulletManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/creature/Creature.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Creature.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/creature/Evil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Evil.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/battle/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/Map.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/creature/GrandPa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/GrandPa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/creature/Snake.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Snake.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleController$1.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleController$2.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleController.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/battle/BulletManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BulletManager.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/creature/Creature.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Creature.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/creature/Evil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Evil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/battle/Map.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/Map.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/creature/GrandPa.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/GrandPa.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/creature/Snake.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Snake.class" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -159,7 +154,9 @@
       <workItem from="1574778660626" duration="5263000" />
       <workItem from="1574812163550" duration="2313000" />
       <workItem from="1574828615420" duration="12000000" />
-      <workItem from="1574858282059" duration="2892000" />
+      <workItem from="1574858282059" duration="2990000" />
+      <workItem from="1574862469425" duration="29000" />
+      <workItem from="1574865361232" duration="3948000" />
     </task>
     <servers />
   </component>
