@@ -100,7 +100,7 @@ public abstract class Creature implements Runnable, Config {
         this.position.setX(x);
         this.position.setY(y);
     }
-    public void move(){//移动,只在生物的run线程中调用
+    public void move(){//移动,只在生物的run线程中调用,已经取得了map的锁
         //随机生成两个x y 方向的0 1 -1 值
         int xStep = random.nextInt(3) -1;//-1 0 1
         int yStep = random.nextInt(3) -1;
@@ -108,13 +108,11 @@ public abstract class Creature implements Runnable, Config {
         int oldY = position.getY();
         int newX = oldX + xStep;
         int newY = oldY + yStep;
-        synchronized (map){//对map上锁,其实在move外部
-            {
-                if(map.insideMap(newX,newY) && map.noCreatureAt(newX,newY)){
-                    map.removeCreatureAt(oldX,oldY);
-                    map.setCreatureAt(newX,newY,this);//放置自己
-                    setPosition(newX,newY);
-                }
+        if(map.insideMap(newX,newY) && map.noCreatureAt(newX,newY)){
+            map.removeCreatureAt(oldX,oldY);
+            map.setCreatureAt(newX,newY,this);//放置自己
+            synchronized (this){//锁住自己
+                setPosition(newX,newY);
             }
         }
         //如果不符合条件，就不移动

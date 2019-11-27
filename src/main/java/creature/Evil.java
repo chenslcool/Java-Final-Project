@@ -2,6 +2,7 @@ package creature;
 
 import battle.Map;
 import bullet.Bullet;
+import bullet.HorizontalBulletFactory;
 import bullet.TrackBulletFactory;
 import creature.enumeration.Camp;
 import javafx.scene.image.Image;
@@ -22,7 +23,7 @@ public class Evil extends Creature{//妖精是在BattleControler中创建的
         this.image = new Image(url.toString());//这样很麻烦，最好能抽象出一个Image类，保存所有图片，以后的
         //构造器就直接用
         this.camp = Camp.EVIL;
-        bulletBulletFactory = new TrackBulletFactory();
+        bulletBulletFactory = new HorizontalBulletFactory();
     }
 //    @Override
 //    public void attack() {

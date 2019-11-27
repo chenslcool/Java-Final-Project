@@ -2,6 +2,7 @@ package battle;
 
 import bullet.Bullet;
 import creature.*;
+import creature.enumeration.Direction;
 import formation.Formation;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -57,6 +58,18 @@ public class BattleController implements Config {
                 }
                 else if(event.getCode() == KeyCode.E){//强制结束
                     gameOver();
+                }
+                else if(event.getCode() == KeyCode.UP){
+                    grandPa.addDirection(Direction.UP);
+                }
+                else if(event.getCode() == KeyCode.DOWN){
+                    grandPa.addDirection(Direction.DOWN);
+                }
+                else if(event.getCode() == KeyCode.RIGHT){
+                    grandPa.addDirection(Direction.RIGHT);
+                }
+                else if(event.getCode() == KeyCode.LEFT){
+                    grandPa.addDirection(Direction.LEFT);
                 }
             }
         });
@@ -191,6 +204,7 @@ public class BattleController implements Config {
 
         scorpion.resetState();
         snake.resetState();
+        grandPa.clearDirection();
         for(Evil evil:evils){
             evil.resetState();
         }
