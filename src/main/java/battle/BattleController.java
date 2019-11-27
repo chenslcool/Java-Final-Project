@@ -56,20 +56,20 @@ public class BattleController implements Config {
                 if(event.getCode() == KeyCode.SPACE){
                     startGame();
                 }
-                else if(event.getCode() == KeyCode.E){//强制结束
-                    if(battleState.battleStarted == true)//如果战斗正在进行，可以结束，如果已经结束，就不要再结束
-                        gameOver();
-                }
-                else if(event.getCode() == KeyCode.UP && battleState.battleStarted == true){
+//                else if(event.getCode() == KeyCode.E){//强制结束
+//                    if(battleState.isBattleStarted())//如果战斗正在进行，可以结束，如果已经结束，就不要再结束
+//                        gameOver();
+//                }
+                else if(event.getCode() == KeyCode.UP && battleState.isBattleStarted()){
                     grandPa.addDirection(Direction.UP);
                 }
-                else if(event.getCode() == KeyCode.DOWN && battleState.battleStarted == true){
+                else if(event.getCode() == KeyCode.DOWN && battleState.isBattleStarted()){
                     grandPa.addDirection(Direction.DOWN);
                 }
-                else if(event.getCode() == KeyCode.RIGHT && battleState.battleStarted == true){
+                else if(event.getCode() == KeyCode.RIGHT && battleState.isBattleStarted()){
                     grandPa.addDirection(Direction.RIGHT);
                 }
-                else if(event.getCode() == KeyCode.LEFT && battleState.battleStarted == true){
+                else if(event.getCode() == KeyCode.LEFT && battleState.isBattleStarted()){
                     grandPa.addDirection(Direction.LEFT);
                 }
             }
@@ -133,10 +133,11 @@ public class BattleController implements Config {
     }
 
     public void startGame(){
-        if(battleState.battleStarted == true || battleState.battlePaused == true)//战斗已经开始或者正在暂停
+        if(battleState.isBattleStarted())//战斗已经开始或者正在暂停
             return;
         //按下空格,开始游戏
-        battleState.battleStarted = true;//战斗开始
+//        battleState.battleStarted = true;//战斗开始
+        battleState.setStarted(true);
 //        arrangeHuluwas();//重新安置葫芦娃
 //        Formation.transformToHeyi(map,scorpion,snake,evils,bullets);//重新放置所有妖精：恢复状态与阵型
         //葫芦娃线程start
@@ -160,7 +161,7 @@ public class BattleController implements Config {
             @Override
             public void run() {
                 synchronized (battleState){
-                    while (battleState.battleStarted == true){//等待战斗结束
+                    while (battleState.isBattleStarted()){//等待战斗结束
                         try {
                             battleState.wait();//等待battleState的锁，而不是忙等待监听
                         } catch (InterruptedException e) {
@@ -183,9 +184,8 @@ public class BattleController implements Config {
         //pool.shutDownNow -> 重排阵型
 //        pool.shutdownNow();
         //重排阵型
-        synchronized (battleState){
-            battleState.battleStarted = false;
-        }
+//            battleState.battleStarted = false;
+        battleState.setStarted(false);
         System.out.println(n+"th game over");
 //        try {
 //            TimeUnit.SECONDS.sleep(2);

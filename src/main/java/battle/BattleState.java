@@ -7,6 +7,12 @@ package battle;
  */
 
 public class BattleState {
-    public boolean battlePaused = false;//初始情况：战场没有暂停也没有开始
-    public boolean battleStarted = false;
+//    private boolean battlePaused = false;//初始情况：战场没有暂停也没有开始
+    private boolean battleStarted = false;
+    synchronized public void setStarted(boolean started){
+        battleStarted = started;
+    }
+    synchronized public boolean isBattleStarted(){
+        return battleStarted;
+    }
 }

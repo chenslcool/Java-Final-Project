@@ -108,7 +108,7 @@ public class Map implements Runnable, Config {
             }
         }
         if(numEvilLeft ==0 || numJusticeLeft == 0){
-            battleState.battleStarted = false;
+            battleState.setStarted(false);
             synchronized (battleState){
                 battleState.notifyAll();//唤醒侦听线程
             }
@@ -137,7 +137,7 @@ public class Map implements Runnable, Config {
 
     public void run() {
         //如果战斗结束或者暂停或结束就退出run(),结束线程
-        while (battleState.battleStarted == true&& battleState.battlePaused == false && Thread.interrupted() == false) {
+        while (battleState.isBattleStarted() && Thread.interrupted() == false) {
             try {
                 TimeUnit.MILLISECONDS.sleep(1000/refreshRate);
                 display();

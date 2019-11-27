@@ -72,7 +72,7 @@ public class BulletManager implements Config,Runnable{
 
     @Override
     public void run() {
-        while(battleState.battleStarted == true && battleState.battlePaused == false && Thread.interrupted() == false){
+        while(battleState.isBattleStarted() && Thread.interrupted() == false){
             try {
                 TimeUnit.MILLISECONDS.sleep(1000/BULLET_REFRESH_RATE);
                 synchronized (map){//对map上锁
