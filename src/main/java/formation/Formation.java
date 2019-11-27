@@ -81,7 +81,7 @@ public class Formation implements Config {
             int leaderY = 12;
             scorpion.moveTo(leaderX,leaderY);
             snake.moveTo(5,14);
-            for(int i = 1;i <= 2;++i){
+            for(int i = 1;i <= 3;++i){
                 Evil evil = new Evil(map,bullets);
                 evil.moveTo(leaderX-i,leaderY+i);//这里面也会对map上锁，不过都是在一个线程，问题不大
                 evils.add(evil);

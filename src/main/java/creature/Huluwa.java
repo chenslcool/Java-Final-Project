@@ -3,6 +3,7 @@ package creature;
 import battle.Map;
 import bullet.Bullet;
 import bullet.HorizontalBullet;
+import bullet.HorizontalBulletFactory;
 import creature.enumeration.Camp;
 import javafx.scene.image.Image;
 
@@ -19,6 +20,7 @@ public class Huluwa extends Creature {
         this.image = image;
         this.name = name;
         this.camp = Camp.JUSTICE;
+        bulletBulletFactory = new HorizontalBulletFactory();
     }
 //    public void attack() {
 //

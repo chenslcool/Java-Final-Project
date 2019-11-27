@@ -2,8 +2,7 @@ package creature;
 
 import battle.Config;
 import battle.Map;
-import bullet.Bullet;
-import bullet.HorizontalBullet;
+import bullet.*;
 import creature.enumeration.Camp;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -30,6 +29,7 @@ public abstract class Creature implements Runnable, Config {
     protected int defenseValue;//防御力 < 50
     protected int moveRate;//速度,sleepTime = 1000ms/moveRate;
     protected LinkedList<Bullet> bullets;
+    protected BulletFactory<Bullet> bulletBulletFactory;
     public Creature(){}
     public Creature(Map map,LinkedList<Bullet> bullets){
         camp = Camp.JUSTICE;
@@ -52,16 +52,24 @@ public abstract class Creature implements Runnable, Config {
         //寻找水平方向的敌人
         synchronized (map){
             //只要看水平方向有没有敌人就行了，一边最多一个
-            ArrayList<Creature> enemies = searchLineEnemies();
+            ArrayList<Creature> enemies;
+            if(bulletBulletFactory instanceof HorizontalBulletFactory)
+                enemies = searchLineEnemies();
+            else if (bulletBulletFactory instanceof VerticalBulletFactory){
+                enemies = searchColumnEnemies();
+            }
+            else{
+                //追踪弹
+                enemies = new ArrayList<>();
+            }
             for(Creature enemy : enemies){
                 if(enemy.isAlive() == false)//如果对方没死亡
                     continue;
-                boolean toRight = enemy.position.getY() > this.position.getY();
                 int x = position.getX();
                 int y = position.getY();
                 double bulletX = x*UNIT_SIZE + (UNIT_SIZE - BULLTE_RADIUS)/2;
                 double bulletY = y*UNIT_SIZE + (UNIT_SIZE - BULLTE_RADIUS)/2;
-                Bullet bullet = new HorizontalBullet(map,this,this.attackValue,toRight,bulletX,bulletY);
+                Bullet bullet = bulletBulletFactory.getBullet(map,this,enemy,this.attackValue,bulletX,bulletY);
                 if(camp == Camp.JUSTICE){
                     bullet.setColor(Color.LIGHTGREEN);
                 }
@@ -151,6 +159,21 @@ public abstract class Creature implements Runnable, Config {
                 //这个地方有地方生物
                 if((i != y) && (map.noCreatureAt(x,i) == false) && (map.getCreatureAt(x,i).getCamp() != this.camp))
                     enemies.add(map.getCreatureAt(x,i));
+            }
+            return enemies;
+        }
+    }
+
+    ArrayList<Creature> searchColumnEnemies(){
+        //寻找同一行的敌人
+        ArrayList<Creature> enemies = new ArrayList<>();
+        int x = position.getX();
+        int y = position.getY();
+        synchronized (map){
+            for(int i = 0;i<NUM_ROWS;++i){
+                //这个地方有地方生物
+                if((i != x) && (map.noCreatureAt(i,y) == false) && (map.getCreatureAt(i,y).getCamp() != this.camp))
+                    enemies.add(map.getCreatureAt(i,y));
             }
             return enemies;
         }

@@ -2,6 +2,8 @@ package creature;
 
 import battle.Map;
 import bullet.Bullet;
+import bullet.HorizontalBulletFactory;
+import bullet.VerticalBulletFactory;
 import creature.enumeration.Camp;
 import javafx.scene.image.Image;
 
@@ -18,10 +20,11 @@ public class Scorpion extends Creature {
         URL url = this.getClass().getClassLoader().getResource("pictures/" + "scorpion.jpg");
         this.image = new Image(url.toString());
         this.camp = Camp.EVIL;
+        bulletBulletFactory = new HorizontalBulletFactory();
     }
-    @Override
-    public void attack() {
-
-    }
+//    @Override
+//    public void attack() {
+//
+//    }
     //TODO 给蝎子精添加特殊技能
 }

@@ -30,7 +30,7 @@ import java.util.concurrent.*;
  */
 public class BattleController implements Config {
     ExecutorService pool;//线程池
-
+    int n = 0;
     @FXML
     private BorderPane pane;//主面板
     @FXML
@@ -188,6 +188,11 @@ public class BattleController implements Config {
         }
         Formation.transFormToYanxing(map,scorpion,snake,evils,bullets);
         map.display();
+
+        //test
+        ++n;
+        System.out.println("game "+n);
+        startGame();
     }
 //    public void pauseGame(){
 //        //按下

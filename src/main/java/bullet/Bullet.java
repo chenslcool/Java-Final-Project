@@ -18,13 +18,15 @@ public abstract class Bullet implements Config {
     protected int damage;//伤害
     protected Color color;//子弹的颜色
     protected Creature sender;//发射者，记录的一个原因是不能攻击自己
+    protected Creature target;
     //至于目标是谁，在基类Bullet里面并不重要，因为不同的子弹的移动方式也是不一样的(直线、追踪)
-    public Bullet (Map map,Creature sender,int damage,double x,double y){
+    public Bullet (Map map,Creature sender,Creature target,int damage,double x,double y){
         this.map = map;
         this.sender = sender;
         this.damage = damage;
         this.x = x;
         this.y = y;
+        this.target = target;
     }
     public double getX(){
         return x;
