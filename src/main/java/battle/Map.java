@@ -2,6 +2,7 @@ package battle;
 
 import bullet.Bullet;
 import creature.Creature;
+import creature.Curable;
 import creature.enumeration.Camp;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
@@ -88,6 +89,14 @@ public class Map implements Runnable, Config {
                                 {
                                     gc.setStroke(Color.RED);
                                     gc.strokeLine(j*UNIT_SIZE + greenLen,i*UNIT_SIZE,(j+1)*UNIT_SIZE,i*UNIT_SIZE);
+                                }
+                                if(c instanceof Curable){
+                                    //画治愈绿色,会不会挡住其他生物，其实这样的画法不太行，在边缘的时候不对
+                                    //设置透明度
+                                    gc.setFill(Color.rgb(0,255,0,0.1));
+                                    double x1=((j-1)>0?j-1:0)*UNIT_SIZE;
+                                    double y1=((i-1)>0?i-1:0)*UNIT_SIZE;
+                                    gc.fillRect(x1,y1,3*UNIT_SIZE,3*UNIT_SIZE);
                                 }
                             }
                             else{

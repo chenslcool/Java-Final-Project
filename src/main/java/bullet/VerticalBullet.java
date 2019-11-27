@@ -25,7 +25,7 @@ public class VerticalBullet extends Bullet{
             this.x -=  STEP_DISTANCE;
         }
         else{
-            this.y +=  STEP_DISTANCE;
+            this.x +=  STEP_DISTANCE;
         }
     }
     @Override

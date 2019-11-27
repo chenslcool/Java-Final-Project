@@ -1,6 +1,7 @@
 package battle;
 
 import bullet.Bullet;
+import bullet.TrackBullet;
 import creature.Creature;
 
 import java.util.LinkedList;
@@ -62,8 +63,8 @@ public class BulletManager implements Config,Runnable{
                         }
                     }
                     //如果子弹没有爆炸
-                    bullet.move();//子弹移动
-                    if(bullet.outOfMap()){//如果这次移动导致出界
+                    bullet.move();//子弹移动,为什么trackBullet敌人死后会出界而不被回收呢?导致rte:越界
+                    if(bullet.outOfMap()||(bullet instanceof TrackBullet && bullet.getTarget().isAlive() ==false)){//如果这次移动导致出界
                         it.remove();//删除
                     }
                 }

@@ -30,4 +30,7 @@ public interface Config {
 
     //血条
     int BLOOD_LINE_WIDTH = 4;
+
+    //回血
+    int HEAL_BLOOD = 30;
 }

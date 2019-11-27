@@ -57,4 +57,7 @@ public abstract class Bullet implements Config {
     public void setColor(Color color){
         this.color = color;
     }
+    public Creature getTarget(){
+        return target;
+    }
 }

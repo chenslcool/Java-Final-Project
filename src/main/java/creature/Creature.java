@@ -59,8 +59,9 @@ public abstract class Creature implements Runnable, Config {
                 enemies = searchColumnEnemies();
             }
             else{
-                //追踪弹
-                enemies = new ArrayList<>();
+                //追踪弹,攻击协45度方向
+                enemies = searchCorssEnemies();
+//                enemies = new ArrayList<>();
             }
             for(Creature enemy : enemies){
                 if(enemy.isAlive() == false)//如果对方没死亡
@@ -99,7 +100,7 @@ public abstract class Creature implements Runnable, Config {
         this.position.setX(x);
         this.position.setY(y);
     }
-    public void move(){//移动
+    public void move(){//移动,只在生物的run线程中调用
         //随机生成两个x y 方向的0 1 -1 值
         int xStep = random.nextInt(3) -1;//-1 0 1
         int yStep = random.nextInt(3) -1;
@@ -107,7 +108,7 @@ public abstract class Creature implements Runnable, Config {
         int oldY = position.getY();
         int newX = oldX + xStep;
         int newY = oldY + yStep;
-        synchronized (map){//对map上锁
+        synchronized (map){//对map上锁,其实在move外部
             {
                 if(map.insideMap(newX,newY) && map.noCreatureAt(newX,newY)){
                     map.removeCreatureAt(oldX,oldY);
@@ -178,6 +179,87 @@ public abstract class Creature implements Runnable, Config {
             return enemies;
         }
     }
+
+    ArrayList<Creature> searchCorssEnemies(){
+        //寻找同一行的敌人
+        ArrayList<Creature> enemies = new ArrayList<>();
+        int x = position.getX();
+        int y = position.getY();
+        //依次向四个方向寻找
+        synchronized (map){
+            //左上
+            int nextX = x - 1;
+            int nextY = y - 1;
+            while(map.insideMap(nextX,nextY)){
+                if((map.noCreatureAt(nextX,nextY) == false) && (map.getCreatureAt(nextX,nextY).getCamp() != this.camp))
+                {
+                    enemies.add(map.getCreatureAt(nextX,nextY));
+                }
+                --nextX;
+                --nextY;
+            }
+            //右上
+            nextX = x - 1;
+            nextY = y + 1;
+            while(map.insideMap(nextX,nextY)){
+                if((map.noCreatureAt(nextX,nextY) == false) && (map.getCreatureAt(nextX,nextY).getCamp() != this.camp))
+                {
+                    enemies.add(map.getCreatureAt(nextX,nextY));
+                }
+                --nextX;
+                ++nextY;
+            }
+
+            //左下
+            nextX = x + 1;
+            nextY = y - 1;
+            while(map.insideMap(nextX,nextY)){
+                if((map.noCreatureAt(nextX,nextY) == false) && (map.getCreatureAt(nextX,nextY).getCamp() != this.camp))
+                {
+                    enemies.add(map.getCreatureAt(nextX,nextY));
+                }
+                ++nextX;
+                --nextY;
+            }
+
+            //右下
+            nextX = x + 1;
+            nextY = y + 1;
+            while(map.insideMap(nextX,nextY)){
+                if((map.noCreatureAt(nextX,nextY) == false) && (map.getCreatureAt(nextX,nextY).getCamp() != this.camp))
+                {
+                    enemies.add(map.getCreatureAt(nextX,nextY));
+                }
+                ++nextX;
+                ++nextY;
+            }
+
+            return enemies;
+        }
+    }
+
+    ArrayList<Creature> searchSudokuFriends(){
+        ArrayList<Creature> friends = new ArrayList<>();
+        //寻找九宫格内的队友
+        synchronized (map){
+            int x = position.getX() - 1;
+            int y = position.getY() - 1;
+            for(int i = 0 ;i < 3;++i){
+                for(int j = 0;j<3;++j){
+                    int newX = x+i;
+                    int newY = y+j;
+                    if(map.insideMap(newX,newY)){
+                        //还是没有同步
+                        Creature c = map.getCreatureAt(newX,newY);
+                        if(c != null && c.camp == this.camp && c.alive && (i!=1 && j!=1)){//不能治愈自己
+                            friends.add(c);
+                        }
+                    }
+                }
+            }
+        }
+        return friends;
+    }
     public Camp getCamp(){
         return camp;
     }
@@ -213,6 +295,16 @@ public abstract class Creature implements Runnable, Config {
 
     public int getMAX_HP(){
         return MAX_HP;
+    }
+
+    public void heal(int blood){
+        //回血
+        if(alive){
+            currentHP += blood;
+            if(currentHP > MAX_HP){
+                currentHP = MAX_HP;
+            }
+        }
     }
 
 }

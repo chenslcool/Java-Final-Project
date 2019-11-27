@@ -1,10 +1,7 @@
 package battle;
 
 import bullet.Bullet;
-import creature.Evil;
-import creature.Huluwa;
-import creature.Scorpion;
-import creature.Snake;
+import creature.*;
 import formation.Formation;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -40,6 +37,7 @@ public class BattleController implements Config {
     BattleState battleState;//战斗状态，由多个线程共享，指示子弹移动、ui刷新线程是否要退出
 
     private ArrayList<Huluwa> huluwas = new ArrayList<Huluwa>();
+    private GrandPa grandPa;
     private ArrayList<Evil> evils = new ArrayList<>();
     private Scorpion scorpion;
     private Snake snake;
@@ -73,9 +71,16 @@ public class BattleController implements Config {
         scorpion = new Scorpion(map,bullets);
         snake = new Snake(map,bullets);
         Formation.transformToHeyi(map,scorpion,snake,evils,bullets);
+        initGrandPa();
         initHuluwas();//创建葫芦娃
         //TODO 初始化bulletmanager
         map.display();
+    }
+
+    private void initGrandPa(){
+        URL url = this.getClass().getClassLoader().getResource("pictures/grandPa.jpg");
+        Image image = new Image(url.toString());
+        grandPa = new GrandPa(map,image,"GrandPa",bullets);
     }
 
     private void initHuluwas() {
@@ -95,6 +100,7 @@ public class BattleController implements Config {
         for(Huluwa huluwa:huluwas){
             huluwa.resetState();
         }
+        grandPa.resetState();
         //重新排列
         synchronized (map){//其实这个synchronized没必要
             transFormChangShe();
@@ -105,6 +111,7 @@ public class BattleController implements Config {
         //将葫芦娃重置为长蛇阵型，需要修改map和huluwa数组,调用Creature的moveTo方法
         int y = NUM_COLUMNS/4;
         int x = NUM_ROWS/2 - 3;
+        grandPa.moveTo(6,2);
         for (Huluwa huluwa : huluwas) {
             huluwa.moveTo(x, y);
             ++x;
@@ -127,6 +134,7 @@ public class BattleController implements Config {
         for(Huluwa huluwa:huluwas){
             pool.execute(huluwa);
         }
+        pool.execute(grandPa);
         pool.execute(scorpion);
         pool.execute(snake);
         pool.execute(map);//战场刷新线程start
