@@ -140,7 +140,7 @@ public class Map implements Runnable, Config {
         while (battleState.isBattleStarted() && Thread.interrupted() == false) {
             try {
                 TimeUnit.MILLISECONDS.sleep(1000/refreshRate);
-                display();
+                display();//display内部上锁顺序: map -> creature
             } catch (InterruptedException e) {
                 break;
             }

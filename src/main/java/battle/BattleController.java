@@ -4,6 +4,7 @@ import bullet.Bullet;
 import creature.*;
 import creature.enumeration.Direction;
 import formation.Formation;
+import formation.FormationKind;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
@@ -56,10 +57,11 @@ public class BattleController implements Config {
                 if(event.getCode() == KeyCode.SPACE){
                     startGame();
                 }
-//                else if(event.getCode() == KeyCode.E){//强制结束
-//                    if(battleState.isBattleStarted())//如果战斗正在进行，可以结束，如果已经结束，就不要再结束
-//                        gameOver();
-//                }
+                else if(event.getCode() == KeyCode.F && battleState.isBattleStarted() == false){
+                    //在战斗还没开始可以变换阵型
+                    Formation.transFormToNextFormation(map,scorpion,snake,evils,bullets);
+                    map.display();
+                }
                 else if(event.getCode() == KeyCode.UP && battleState.isBattleStarted()){
                     grandPa.addDirection(Direction.UP);
                 }
@@ -84,7 +86,7 @@ public class BattleController implements Config {
         bulletManager = new BulletManager(map,bullets,battleState);
         scorpion = new Scorpion(map,bullets);
         snake = new Snake(map,bullets);
-        Formation.transformToHeyi(map,scorpion,snake,evils,bullets);
+        Formation.transFormToNextFormation(map,scorpion,snake,evils,bullets);
         initGrandPa();
         initHuluwas();//创建葫芦娃
         //TODO 初始化bulletmanager
@@ -157,25 +159,22 @@ public class BattleController implements Config {
 //        int threadCount = ((ThreadPoolExecutor)pool).getActiveCount();
 //        System.out.println("初始化有"+threadCount+"个活跃线程");
         //用一个线程侦听战斗是否结束，while(notEnded) wait(); map的display()检测双方人数，若一方=0，则notifyAll()结束map线程,
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                synchronized (battleState){
-                    while (battleState.isBattleStarted()){//等待战斗结束
-                        try {
-                            battleState.wait();//等待battleState的锁，而不是忙等待监听
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
-                        }
+        new Thread(() -> {//用lambda表达式代替匿名内部类
+            synchronized (battleState){
+                while (battleState.isBattleStarted()){//等待战斗结束
+                    try {
+                        battleState.wait();//等待battleState的锁，而不是忙等待监听
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
-                //stated = false，即游戏结束
-//                System.out.println("game over, in Listener thread");
-                //失败一方的所有生物线段都因为alive = false 导致线程退出
-                //胜利一方的所有生物线程、map刷新线程、bulletManager线程都可能还在运行
-                //因此需要shutDownNow向所有线程发送interrupt()让他们退出
-                gameOver();
             }
+            //stated = false，即游戏结束
+//                System.out.println("game over, in Listener thread");
+            //失败一方的所有生物线段都因为alive = false 导致线程退出
+            //胜利一方的所有生物线程、map刷新线程、bulletManager线程都可能还在运行
+            //因此需要shutDownNow向所有线程发送interrupt()让他们退出
+            gameOver();
         }).start();//这个侦听线程不经过pool控制
     }
 
@@ -210,14 +209,14 @@ public class BattleController implements Config {
 //        for(Evil evil:evils){
 //            evil.resetState();
 //        }
-        Formation.transFormToYanxing(map,scorpion,snake,evils,bullets);
+        Formation.transFormToNextFormation(map,scorpion,snake,evils,bullets);
         map.display();
 
         //test
         ++n;
         int threadCount = ((ThreadPoolExecutor)pool).getActiveCount();
         System.out.println("game "+n+",线程池中还有"+threadCount+"个活跃线程");
-        startGame();
+//        startGame();
     }
 //    public void pauseGame(){
 //        //按下

@@ -111,7 +111,7 @@ public abstract class Creature implements Runnable, Config {
         if(map.insideMap(newX,newY) && map.noCreatureAt(newX,newY)){
             map.removeCreatureAt(oldX,oldY);
             map.setCreatureAt(newX,newY,this);//放置自己
-            synchronized (this){//锁住自己
+            synchronized (this){//锁住自己，这时候不能被攻击
                 setPosition(newX,newY);
             }
         }
@@ -271,7 +271,7 @@ public abstract class Creature implements Runnable, Config {
                 Thread.sleep(1000/moveRate);
                 if(alive == false)
                     break;//sleep后发现自己死了
-                synchronized (map){
+                synchronized (map){//上锁顺序 map -> creature(this)
                     attack();//attack()对map、bullet上锁
                     move();//move方法内部已经对map上锁了
                 }

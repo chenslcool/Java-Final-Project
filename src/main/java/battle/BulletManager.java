@@ -63,7 +63,7 @@ public class BulletManager implements Config,Runnable{
                 }
                 //如果子弹没有爆炸
                 bullet.move();//子弹移动,为什么trackBullet敌人死后会出界而不被回收呢?导致rte:越界
-                if(bullet.outOfMap()||(bullet instanceof TrackBullet && bullet.getTarget().isAlive() ==false)){//如果这次移动导致出界
+                if(bullet.outOfMap()||(bullet instanceof TrackBullet && bullet.getTarget().isAlive() == false)){//如果这次移动导致出界
                     it.remove();//删除
                 }
             }
@@ -75,7 +75,7 @@ public class BulletManager implements Config,Runnable{
         while(battleState.isBattleStarted() && Thread.interrupted() == false){
             try {
                 TimeUnit.MILLISECONDS.sleep(1000/BULLET_REFRESH_RATE);
-                synchronized (map){//对map上锁
+                synchronized (map){//上锁顺序 map -> creature
                     moveAll();//移动所有子弹
                 }
             } catch (InterruptedException e) {

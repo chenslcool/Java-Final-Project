@@ -11,6 +11,8 @@ import creature.Snake;
 import java.util.ArrayList;
 import java.util.LinkedList;
 
+import static formation.FormationKind.*;
+
 /**
  * @author csl
  * @date 2019/11/25 12:48
@@ -22,26 +24,49 @@ public class Formation implements Config {
     //TODO 添加所有static阵法方法
     //阵型变换只有在战斗还未开始的时候才能进行，因此理论在main线程上对map的访问是不会和其他线程竞争的
     //attention 默认是在葫芦娃恢复原始阵型后再进行妖怪的变换的，因此理论上不会位置冲突，单为了保险还是同步
-    public static void transformToHeyi(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets){
 
-        synchronized (map){
+    private static FormationKind nextFormation = HEYI;//初始化为鹤翼
+
+    public static void transFormToNextFormation(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets){
+        //变换成下一个阵型
+        switch (nextFormation){
+            case HEYI:{
+                transformToHeyi(map,scorpion,snake,evils,bullets);
+                nextFormation = YANXING;
+            }break;
+            case YANXING:{
+                transFormToYanxing(map,scorpion,snake,evils,bullets);
+                nextFormation = HEYI;
+            }break;
+        };
+    }
+
+    public static void clearPreFormation(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets){
+        synchronized (map) {
             //清除位置部分可以单独拿出来作为clear方法
-            int rmX,rmY;//删除的位置
+            int rmX, rmY;//删除的位置
             //把蝎子精和蛇精从map移除
             //如果是游戏刚开始的状态，蝎子精和蛇精的位置是无效的
             rmX = scorpion.getPosition().getX();
             rmY = scorpion.getPosition().getY();
-            map.removeCreatureAt(rmX,rmY);
+            map.removeCreatureAt(rmX, rmY);
             rmX = snake.getPosition().getX();
             rmY = snake.getPosition().getY();
-            map.removeCreatureAt(rmX,rmY);
-            for(Evil evil:evils){
+            map.removeCreatureAt(rmX, rmY);
+            for (Evil evil : evils) {
                 //先把这些妖精从map上移除
                 rmX = evil.getPosition().getX();
                 rmY = evil.getPosition().getY();
-                map.removeCreatureAt(rmX,rmY);
+                map.removeCreatureAt(rmX, rmY);
             }
             evils.clear();//删除所有妖怪
+        }
+    }
+
+    public static void transformToHeyi(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets){
+
+        synchronized (map){
+            clearPreFormation(map,scorpion,snake,evils,bullets);
             //重置阵型,占据右半边
             int leaderX = 5;
             int leaderY = 10;
@@ -59,23 +84,7 @@ public class Formation implements Config {
     }
     public static void transFormToYanxing(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets){
         synchronized (map){
-            //清除位置部分可以单独拿出来作为clear方法
-            int rmX,rmY;//删除的位置
-            //把蝎子精和蛇精从map移除
-            //如果是游戏刚开始的状态，蝎子精和蛇精的位置是无效的
-            rmX = scorpion.getPosition().getX();
-            rmY = scorpion.getPosition().getY();
-            map.removeCreatureAt(rmX,rmY);
-            rmX = snake.getPosition().getX();
-            rmY = snake.getPosition().getY();
-            map.removeCreatureAt(rmX,rmY);
-            for(Evil evil:evils){
-                //先把这些妖精从map上移除
-                rmX = evil.getPosition().getX();
-                rmY = evil.getPosition().getY();
-                map.removeCreatureAt(rmX,rmY);
-            }
-            evils.clear();//删除所有妖怪
+            clearPreFormation(map,scorpion,snake,evils,bullets);
             //重置阵型,占据右半边
             int leaderX = 5;
             int leaderY = 12;
