@@ -215,7 +215,7 @@ public class BattleController implements Config {
         //test
         ++n;
         int threadCount = ((ThreadPoolExecutor)pool).getActiveCount();
-        System.out.println("game "+n+",线程池中还有"+threadCount+"个活跃线程");
+        System.out.println("game "+n+                                                                                   ",线程池中还有"+threadCount+"个活跃线程");
 //        startGame();
     }
 //    public void pauseGame(){

@@ -2,17 +2,13 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e7605e7e-84e4-41ac-a511-e4703352d8e5" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/formation/FormationKind.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/battle/BattleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/BattleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/battle/BulletManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/BulletManager.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/battle/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/Map.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/creature/Creature.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Creature.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/formation/Formation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/formation/Formation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleController$1.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController$2.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/formation/Formation.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/formation/Formation.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/creature/GrandPa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/GrandPa.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/creature/Scorpion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Scorpion.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/creature/GrandPa$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/GrandPa$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/creature/GrandPa.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/GrandPa.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/creature/Scorpion.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Scorpion.class" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -158,7 +154,9 @@
       <workItem from="1574862469425" duration="29000" />
       <workItem from="1574865361232" duration="5384000" />
       <workItem from="1574918683235" duration="2437000" />
-      <workItem from="1574921691261" duration="2657000" />
+      <workItem from="1574921691261" duration="2785000" />
+      <workItem from="1575019290285" duration="434000" />
+      <workItem from="1575089307165" duration="622000" />
     </task>
     <servers />
   </component>

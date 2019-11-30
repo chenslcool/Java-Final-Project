@@ -3,6 +3,7 @@ package creature;
 import battle.Map;
 import bullet.Bullet;
 import bullet.HorizontalBulletFactory;
+import bullet.TrackBulletFactory;
 import bullet.VerticalBulletFactory;
 import creature.enumeration.Camp;
 import javafx.scene.image.Image;
@@ -20,7 +21,8 @@ public class Scorpion extends Creature {
         URL url = this.getClass().getClassLoader().getResource("pictures/" + "scorpion.jpg");
         this.image = new Image(url.toString());
         this.camp = Camp.EVIL;
-        bulletBulletFactory = new HorizontalBulletFactory();
+//        bulletBulletFactory = new HorizontalBulletFactory();
+        bulletBulletFactory = new TrackBulletFactory();
     }
 //    @Override
 //    public void attack() {

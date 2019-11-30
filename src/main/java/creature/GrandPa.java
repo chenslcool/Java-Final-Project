@@ -3,6 +3,7 @@ package creature;
 import battle.Map;
 import bullet.Bullet;
 import bullet.HorizontalBulletFactory;
+import bullet.TrackBulletFactory;
 import creature.enumeration.Camp;
 import creature.enumeration.Direction;
 import javafx.scene.image.Image;
@@ -21,7 +22,8 @@ public class GrandPa extends Creature implements Curable {
         this.image = image;
         this.name = name;
         this.camp = Camp.JUSTICE;
-        bulletBulletFactory = new HorizontalBulletFactory();
+//        bulletBulletFactory = new HorizontalBulletFactory();
+        bulletBulletFactory = new TrackBulletFactory();
     }
     @Override
     public void attack(){
