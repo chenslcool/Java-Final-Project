@@ -20,13 +20,14 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
+import java.util.concurrent.Callable;
 import java.util.concurrent.TimeUnit;
 
 /**
  * @author csl
  * @date 2019/11/24 20:56
  */
-public class Map implements Runnable, Config {
+public class Map implements Runnable, Config, Callable<String> {
     private Creature[][] grounds;//这个的序列化
     private int refreshRate;//刷新频率
     private GraphicsContext gc;//通过gc直接绘图
@@ -35,6 +36,7 @@ public class Map implements Runnable, Config {
     private Image deadImage;
     private Image backGroundImage;
     private ObjectOutputStream writer;
+    private ObjectInputStream reader;
     private HashMap<String, Image> typeImageMap;//类型名称->image的字典
     public Map(BattleState battleState, int refreshRate, GraphicsContext gc, LinkedList<Bullet> bullets) {
         grounds = new Creature[NUM_ROWS][NUM_COLUMNS];//初始化为NULL
@@ -49,6 +51,7 @@ public class Map implements Runnable, Config {
         this.writer = writer;
         initDictionary();
     }
+
     private void initDictionary(){
         typeImageMap = new HashMap<>();
         URL url = this.getClass().getClassLoader().getResource("pictures/" + "ghost.png");
@@ -65,6 +68,8 @@ public class Map implements Runnable, Config {
         typeImageMap.put("Scorpion",new Image(url.toString()));
         url = this.getClass().getClassLoader().getResource("pictures/" + "snake.png");
         typeImageMap.put("Snake",new Image(url.toString()));
+        url = this.getClass().getClassLoader().getResource("pictures/" + "lolo.png");
+        typeImageMap.put("Evil",new Image(url.toString()));
     }
 
     public Creature getCreatureAt(int x, int y) {
@@ -240,14 +245,30 @@ public class Map implements Runnable, Config {
         this.writer = writer;
     }
 
+    @Override
+    public String call(){
+        review(reader);
+        return "review";
+    }
+
+    public void setReader(ObjectInputStream reader){
+        this.reader = reader;
+    }
+
     public void review(ObjectInputStream reader){
         //review一定只有单线程
+        //为什么作为callable，放到call中调用review就可以啊!!!
         while (true){
             try {
                Record record = (Record)reader.readObject();
                drawRecord(record);
                TimeUnit.MILLISECONDS.sleep(1000/refreshRate);
             } catch (EOFException e) {//正常结束
+                try {
+                    reader.close();
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                }
                 break;
             } catch (ClassNotFoundException | IOException e) {
                 e.printStackTrace();
@@ -274,6 +295,7 @@ public class Map implements Runnable, Config {
             Image image = typeImageMap.get(r.type);
             if(r.alive)
             {
+//                System.out.println("inside");
                 gc.drawImage(image,r.y*UNIT_SIZE,r.x*UNIT_SIZE,UNIT_SIZE-1,UNIT_SIZE-1);
                 //画血量
                 int greenLen = UNIT_SIZE*r.currentHP/DEFAULT_MAX_HP;
@@ -283,6 +305,7 @@ public class Map implements Runnable, Config {
                 gc.strokeLine(r.y*UNIT_SIZE,r.x*UNIT_SIZE,r.y*UNIT_SIZE + greenLen,r.x*UNIT_SIZE);
                 if(r.currentHP != DEFAULT_MAX_HP)
                 {
+//                    System.out.println("not full");
                     gc.setStroke(Color.RED);
                     gc.strokeLine(r.y*UNIT_SIZE + greenLen,r.x*UNIT_SIZE,(r.y+1)*UNIT_SIZE,r.x*UNIT_SIZE);
                 }
@@ -294,7 +317,7 @@ public class Map implements Runnable, Config {
         }
 
         for(BulletRecord r:bulletRecords){
-            Color color = r.isRed? Color.RED:Color.GREEN;
+            Color color = r.isRed? Color.DEEPPINK:Color.LIGHTGREEN;
             gc.setFill(color);
             gc.fillOval(r.y,r.x,BULLTE_RADIUS,BULLTE_RADIUS);
         }

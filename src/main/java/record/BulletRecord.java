@@ -15,6 +15,6 @@ public class BulletRecord implements Serializable {
     public BulletRecord(double x,double y ,Color color){
         this.x = x;
         this.y = y;
-        this.isRed = (color == Color.RED);//这样可以吗,应该可以，内部对象
+        this.isRed = (color.equals(Color.DEEPPINK));//用等号和equals都行，等号是比较是否同一个引用，重载了equals比较rgb
     }
 }

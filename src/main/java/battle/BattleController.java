@@ -59,6 +59,9 @@ public class BattleController implements Config {
                 if(event.getCode() == KeyCode.SPACE){
                     startGame();
                 }
+                else if(event.getCode() == KeyCode.L){
+                    review();
+                }
                 else if(event.getCode() == KeyCode.F && battleState.isBattleStarted() == false){
                     //在战斗还没开始可以变换阵型
                     Formation.transFormToNextFormation(map,scorpion,snake,evils,bullets);
@@ -151,7 +154,7 @@ public class BattleController implements Config {
             e.printStackTrace();
         }
         map.setWriter(writer);
-        System.out.println("after set:"+writer);
+//        System.out.println("after set:"+writer);
         //按下空格,开始游戏
         battleState.setStarted(true);
         //葫芦娃线程start
@@ -224,6 +227,21 @@ public class BattleController implements Config {
         int threadCount = ((ThreadPoolExecutor)pool).getActiveCount();
         System.out.println("game "+n+",线程池中还有"+threadCount+"个活跃线程");
 //        startGame();
+    }
+
+    public void review(){
+        //都是在主线程进行的
+        //按下L回放
+        System.out.println("start review");
+        try {
+            reader = new ObjectInputStream(new BufferedInputStream(new FileInputStream("log")));
+            map.setReader(reader);
+            pool = Executors.newCachedThreadPool();
+            pool.submit((Callable<String>) map);
+            //在review线程内关闭reader
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 //    public void pauseGame(){
 //        //按下
