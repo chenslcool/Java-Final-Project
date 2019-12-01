@@ -15,6 +15,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 
+import java.io.*;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -43,6 +44,9 @@ public class BattleController implements Config {
     private Snake snake;
     private LinkedList<Bullet> bullets = new LinkedList<>();//由于bullets需要经常增删，用链表
     private BulletManager bulletManager;
+    private ObjectOutputStream writer;//每次刷新就向文件写
+    private ObjectInputStream reader;
+
     public BattleController() {
     }
 
@@ -58,7 +62,7 @@ public class BattleController implements Config {
                 else if(event.getCode() == KeyCode.F && battleState.isBattleStarted() == false){
                     //在战斗还没开始可以变换阵型
                     Formation.transFormToNextFormation(map,scorpion,snake,evils,bullets);
-                    map.display();
+                    map.display(false);//writer已经关闭
                 }
                 else if(event.getCode() == KeyCode.UP && battleState.isBattleStarted()){
                     grandPa.addDirection(Direction.UP);
@@ -92,7 +96,7 @@ public class BattleController implements Config {
         Formation.transFormToNextFormation(map,scorpion,snake,evils,bullets);
         initGrandPa();
         initHuluwas();//创建葫芦娃
-        map.display();
+        map.display(false);
     }
 
     private void initGrandPa(){
@@ -139,6 +143,15 @@ public class BattleController implements Config {
     public void startGame(){
         if(battleState.isBattleStarted())//战斗已经开始
             return;
+        //序列化输出文件
+        try {
+            //缓冲一下，加快速度
+            writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("log")));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        map.setWriter(writer);
+        System.out.println("after set:"+writer);
         //按下空格,开始游戏
         battleState.setStarted(true);
         //葫芦娃线程start
@@ -204,8 +217,7 @@ public class BattleController implements Config {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        map.display();
-
+        map.display(false);//这时候已经writer已经关闭
         //test
         //如果在侦听线程sleep(2)的时候案例空格键，那么主线程就会调用strtGame()，就会显示活跃线程数不为0，但是问题不大
         ++n;

@@ -7,9 +7,15 @@ import creature.enumeration.Camp;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import record.BulletRecord;
+import record.CreatureRecord;
+import record.Record;
 
+import java.io.EOFException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
@@ -18,14 +24,15 @@ import java.util.concurrent.TimeUnit;
  * @date 2019/11/24 20:56
  */
 public class Map implements Runnable, Config {
-    private Creature[][] grounds;
+    private Creature[][] grounds;//这个的序列化
     private int refreshRate;//刷新频率
     private GraphicsContext gc;//通过gc直接绘图
     private BattleState battleState;
-    private LinkedList<Bullet> bullets;//display的时候也要显示子弹
+    private LinkedList<Bullet> bullets;//display的时候也要显示子弹，这个的序列化很容易
     private Image deadImage;
     private Image backGroundImage;
-    public Map(BattleState battleState, int refreshRate, GraphicsContext gc,LinkedList<Bullet> bullets) {
+    private ObjectOutputStream writer;
+    public Map(BattleState battleState, int refreshRate, GraphicsContext gc, LinkedList<Bullet> bullets) {
         grounds = new Creature[NUM_ROWS][NUM_COLUMNS];//初始化为NULL
         this.battleState = battleState;
         this.refreshRate = refreshRate;
@@ -35,6 +42,7 @@ public class Map implements Runnable, Config {
         deadImage = new Image(url.toString());
         url = this.getClass().getClassLoader().getResource("pictures/" + "background.jpg");
         backGroundImage = new Image(url.toString());
+        this.writer = writer;
     }
 
     public Creature getCreatureAt(int x, int y) {
@@ -60,7 +68,8 @@ public class Map implements Runnable, Config {
         return grounds[x][y] == null;
     }
 
-    public void display() {
+    public void display(boolean needRecord) {//是否需要记录
+        Record record = new Record();
         //双方剩余人数
         int numJusticeLeft = 0;
         int numEvilLeft = 0;
@@ -77,6 +86,7 @@ public class Map implements Runnable, Config {
                     Creature c = this.getCreatureAt(i,j);
                     if(c != null){
                         synchronized (c){//画生物的时候它不能被攻击、移动
+                            record.creatureRecords.add(new CreatureRecord(c.getCamp(),c.getCurrentHP(),c.isAlive(),c.getSimpleName()));
                             if(c.isAlive())
                             {
                                 if(c.getCamp()== Camp.JUSTICE){
@@ -115,6 +125,24 @@ public class Map implements Runnable, Config {
                 }
             }
         }
+        //绘制所有的子弹
+        synchronized (bullets){//锁住
+            for(Bullet bullet:bullets){
+                record.bulletRecords.add(new BulletRecord(bullet.getX(),bullet.getY(),bullet.getColor()));
+                gc.setFill(bullet.getColor());
+                gc.fillOval(bullet.getY(),bullet.getX(),BULLTE_RADIUS,BULLTE_RADIUS);
+            }
+        }
+
+        //将这一帧写入文件
+        if(needRecord) {
+            try {
+                writer.writeObject(record);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+
         if(numEvilLeft ==0 || numJusticeLeft == 0){
             battleState.setStarted(false);
             if(numEvilLeft == 0){//设置战斗胜利者
@@ -125,13 +153,6 @@ public class Map implements Runnable, Config {
             }
             synchronized (battleState){
                 battleState.notifyAll();//唤醒侦听线程
-            }
-        }
-        //绘制所有的子弹
-        synchronized (bullets){//锁住
-            for(Bullet bullet:bullets){
-                gc.setFill(bullet.getColor());
-                gc.fillOval(bullet.getY(),bullet.getX(),BULLTE_RADIUS,BULLTE_RADIUS);
             }
         }
 //        System.out.println("bullets.size() = "+bullets.size());
@@ -150,16 +171,23 @@ public class Map implements Runnable, Config {
     }
 
     public void run() {
+        //序列化输出writer的文件打开操作是在主线程执行的
         //如果战斗结束或者暂停或结束就退出run(),结束线程
         while (battleState.isBattleStarted() && Thread.interrupted() == false) {
             try {
                 TimeUnit.MILLISECONDS.sleep(1000/refreshRate);
-                display();//display内部上锁顺序: map -> creature
+                display(true);//display内部上锁顺序: map -> creature
+//                record();//记录一帧
             } catch (InterruptedException e) {
                 break;
             }
         }
-        //after each display,reacord current map into file
+        //关闭序列化输出在本线程执行，如果在主线程关闭的画，本线程还未结束，可能继续用已经closed的writer
+        try {
+            writer.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         System.out.println("map.run() exit");
     }
 
@@ -182,6 +210,25 @@ public class Map implements Runnable, Config {
         for(int i = 0;i < NUM_ROWS;++i){
             for(int j =0;j < NUM_COLUMNS;++j){
                 grounds[i][j] = null;
+            }
+        }
+    }
+
+    public void setWriter(ObjectOutputStream writer){
+        this.writer = writer;
+    }
+
+    public void review(ObjectInputStream reader){
+        //review一定只有单线程
+        while (true){
+            try {
+                Creature[][] creatures = (Creature[][]) reader.readObject();
+                LinkedList<Bullet>bullets = (LinkedList<Bullet>) reader.readObject();
+                //画
+            } catch (EOFException e) {//正常结束
+                break;
+            } catch (ClassNotFoundException | IOException e) {
+                e.printStackTrace();
             }
         }
     }

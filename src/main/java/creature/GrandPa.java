@@ -15,7 +15,8 @@ import java.util.LinkedList;
  * @date 2019/11/27 19:16
  */
 public class GrandPa extends Creature implements Curable {
-    private LinkedList<Direction> directions = new LinkedList<Direction>();
+    private static String simpleName = "GrandPa";
+    private transient LinkedList<Direction> directions = new LinkedList<Direction>();
     public GrandPa(Map map, Image image, String name, LinkedList<Bullet> bullets){
         super(map,bullets);
         this.image = image;
@@ -90,5 +91,9 @@ public class GrandPa extends Creature implements Curable {
         synchronized (directions){
             directions.clear();
         }
+    }
+    @Override
+    public String getSimpleName(){
+        return "GrandPa";
     }
 }

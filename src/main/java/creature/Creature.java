@@ -7,6 +7,7 @@ import creature.enumeration.Camp;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
@@ -15,21 +16,23 @@ import java.util.Random;
  * @author csl
  * @date 2019/11/24 20:49
  */
-public abstract class Creature implements Runnable, Config {
-    protected Camp camp;
-    protected Random random;
-    protected boolean alive;
-    protected Position position;
-    protected Map map;
-    protected Image image;
-    protected String name;
+public abstract class Creature implements Runnable, Config, Serializable {
+    //只有阵营、存活状态、图像(也许可以用map统一保存，但是先存吧)、hp需要保存
     protected int MAX_HP;
     protected int currentHP;
-    protected int attackValue;//攻击力 > 50
-    protected int defenseValue;//防御力 < 50
-    protected int moveRate;//速度,sleepTime = 1000ms/moveRate;
-    protected LinkedList<Bullet> bullets;
-    protected BulletGenerator<Bullet> bulletBulletGenerator;
+    protected Camp camp;
+    protected boolean alive;
+
+    protected transient Image image;
+    protected transient Random random;
+    protected transient Position position;
+    protected transient Map map;
+    protected transient String name;
+    protected transient int attackValue;//攻击力 > 50
+    protected transient int defenseValue;//防御力 < 50
+    protected transient int moveRate;//速度,sleepTime = 1000ms/moveRate;
+    protected transient LinkedList<Bullet> bullets;
+    protected transient BulletGenerator<Bullet> bulletBulletGenerator;
     public Creature(){}
     public Creature(Map map,LinkedList<Bullet> bullets){
         camp = Camp.JUSTICE;
@@ -309,4 +312,7 @@ public abstract class Creature implements Runnable, Config {
         }
     }
 
+    public String getSimpleName(){
+        return "Creature";
+    }
 }

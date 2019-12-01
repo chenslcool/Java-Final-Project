@@ -15,6 +15,7 @@ import java.util.LinkedList;
  * @date 2019/11/25 16:50
  */
 public class Snake extends Creature implements Curable{
+    private static String simpleName = "Snake";
     public Snake(Map map, LinkedList<Bullet> bullets){
         super(map,bullets);
         URL url = this.getClass().getClassLoader().getResource("pictures/" + "snake.png");
@@ -34,10 +35,8 @@ public class Snake extends Creature implements Curable{
             }
         }
     }
-//    @Override
-//    public void attack() {
-//
-//    }
-
-    //TODO 蛇精可以有CheerUp方法，添加友方攻击力
+    @Override
+    public String getSimpleName(){
+        return "Snake";
+    }
 }

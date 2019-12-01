@@ -26,11 +26,11 @@ public class Evil extends Creature{//妖精是在BattleControler中创建的
         this.defenseValue = EVIL_DEF;
         bulletBulletGenerator = new HorizontalBulletGenerator();
     }
-//    @Override
-//    public void attack() {
-//        //TODO 添加攻击行为
-//
-//    }
+
+    @Override
+    public String getSimpleName(){
+        return "Evil";
+    }
 
 
 }
