@@ -7,6 +7,7 @@ import creature.enumeration.Camp;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
+import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
@@ -37,7 +38,7 @@ public abstract class Creature implements Runnable, Config {
         alive = true;
         MAX_HP = DEFAULT_MAX_HP;
         currentHP = MAX_HP;
-        attackValue = DEFAULT_ATTACK_VALUE;
+        attackValue = DEFAULT_ATTACK_VALUE;//实际上不同的人物要有不同的武力值，可以在Config中设置不同的武力值
         defenseValue = DEFAULT_DEFENSE_VALUE;
         moveRate = DEFAULT_MOVE_RATE;//0.5 s
         this.map = map;
@@ -70,7 +71,11 @@ public abstract class Creature implements Runnable, Config {
                 int y = position.getY();
                 double bulletX = x*UNIT_SIZE + (UNIT_SIZE - BULLTE_RADIUS)/2;
                 double bulletY = y*UNIT_SIZE + (UNIT_SIZE - BULLTE_RADIUS)/2;
-                Bullet bullet = bulletBulletFactory.getBullet(map,this,enemy,this.attackValue,bulletX,bulletY);
+                int damage = this.attackValue - enemy.defenseValue;
+                if(damage <= 0){
+                    damage = 10;
+                }
+                Bullet bullet = bulletBulletFactory.getBullet(map,this,enemy,damage,bulletX,bulletY);
                 if(camp == Camp.JUSTICE){
                     bullet.setColor(Color.LIGHTGREEN);
                 }

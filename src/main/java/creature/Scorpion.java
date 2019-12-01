@@ -18,10 +18,11 @@ import java.util.LinkedList;
 public class Scorpion extends Creature {
     public Scorpion(Map map, LinkedList<Bullet> bullets){
         super(map,bullets);
-        URL url = this.getClass().getClassLoader().getResource("pictures/" + "scorpion.jpg");
+        URL url = this.getClass().getClassLoader().getResource("pictures/" + "scorpion.png");
         this.image = new Image(url.toString());
         this.camp = Camp.EVIL;
-//        bulletBulletFactory = new HorizontalBulletFactory();
+        this.attackValue = EVIL_LEADER_ATK;
+        this.defenseValue = EVIL_LEADER_DEF;
         bulletBulletFactory = new TrackBulletFactory();
     }
 //    @Override

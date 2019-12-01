@@ -2,12 +2,10 @@ package battle;
 
 import bullet.Bullet;
 import creature.*;
+import creature.enumeration.Camp;
 import creature.enumeration.Direction;
 import formation.Formation;
-import formation.FormationKind;
 import javafx.application.Platform;
-import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -16,7 +14,6 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.paint.Color;
 
 import java.net.URL;
 import java.util.ArrayList;
@@ -37,7 +34,8 @@ public class BattleController implements Config {
     private GraphicsContext gc;//用于在canvas上直接绘图
     Map map;//地图
     BattleState battleState;//战斗状态，由多个线程共享，指示子弹移动、ui刷新线程是否要退出
-
+    private Image evilWinImage;
+    private Image justiceWinImage;
     private ArrayList<Huluwa> huluwas = new ArrayList<Huluwa>();
     private GrandPa grandPa;
     private ArrayList<Evil> evils = new ArrayList<>();
@@ -77,6 +75,11 @@ public class BattleController implements Config {
             }
         });
         Platform.runLater(() -> pane.requestFocus());//否则键盘无效
+        //战斗结果图像初始化
+        URL url = this.getClass().getClassLoader().getResource("pictures/" + "EvilWinner.png");
+        evilWinImage = new Image(url.toString());
+        url = this.getClass().getClassLoader().getResource("pictures/" + "JusticeWinner.png");
+        justiceWinImage = new Image(url.toString());
         //完成画布、地图和葫芦娃等的初始化
         canvas.setWidth(CANVAS_WIDTH);//960
         canvas.setHeight(CANVAS_HEIGHT);
@@ -89,12 +92,11 @@ public class BattleController implements Config {
         Formation.transFormToNextFormation(map,scorpion,snake,evils,bullets);
         initGrandPa();
         initHuluwas();//创建葫芦娃
-        //TODO 初始化bulletmanager
         map.display();
     }
 
     private void initGrandPa(){
-        URL url = this.getClass().getClassLoader().getResource("pictures/grandPa.jpg");
+        URL url = this.getClass().getClassLoader().getResource("pictures/grandPa.png");
         Image image = new Image(url.toString());
         grandPa = new GrandPa(map,image,"GrandPa",bullets);
     }
@@ -102,7 +104,7 @@ public class BattleController implements Config {
     private void initHuluwas() {
         //葫芦娃的初始化，创建了七个葫芦娃，并且排阵
         for (int i = 1; i <= 7; ++i) {
-            URL url = this.getClass().getClassLoader().getResource("pictures/" + i + ".jpg");
+            URL url = this.getClass().getClassLoader().getResource("pictures/" + i + ".png");
             Image image = new Image(url.toString());
             huluwas.add(new Huluwa(map, image, "h",bullets));
         }
@@ -135,17 +137,14 @@ public class BattleController implements Config {
     }
 
     public void startGame(){
-        if(battleState.isBattleStarted())//战斗已经开始或者正在暂停
+        if(battleState.isBattleStarted())//战斗已经开始
             return;
         //按下空格,开始游戏
-//        battleState.battleStarted = true;//战斗开始
         battleState.setStarted(true);
-//        arrangeHuluwas();//重新安置葫芦娃
-//        Formation.transformToHeyi(map,scorpion,snake,evils,bullets);//重新放置所有妖精：恢复状态与阵型
         //葫芦娃线程start
-        //由于之前是用shutDownNow退出的，如果还是用之前的线程池再execute会出错
+        //由于之前是用shutDownNow退出的，如果还是用之前的线程池再execute会出错，因此重新申请一个线程池
         pool = Executors.newCachedThreadPool();
-        for(Evil evil:evils){//为什么这里出错?
+        for(Evil evil:evils){
             pool.execute(evil);
         }
         for(Huluwa huluwa:huluwas){
@@ -154,10 +153,8 @@ public class BattleController implements Config {
         pool.execute(grandPa);
         pool.execute(scorpion);
         pool.execute(snake);
-        pool.execute(map);//战场刷新线程start
-        pool.execute(bulletManager);//子弹移动、出界、伤害
-//        int threadCount = ((ThreadPoolExecutor)pool).getActiveCount();
-//        System.out.println("初始化有"+threadCount+"个活跃线程");
+        pool.execute(map);//战场、子弹刷新线程start
+        pool.execute(bulletManager);//负责子弹移动、出界、伤害
         //用一个线程侦听战斗是否结束，while(notEnded) wait(); map的display()检测双方人数，若一方=0，则notifyAll()结束map线程,
         new Thread(() -> {//用lambda表达式代替匿名内部类
             synchronized (battleState){
@@ -169,30 +166,17 @@ public class BattleController implements Config {
                     }
                 }
             }
-            //stated = false，即游戏结束
-//                System.out.println("game over, in Listener thread");
-            //失败一方的所有生物线段都因为alive = false 导致线程退出
-            //胜利一方的所有生物线程、map刷新线程、bulletManager线程都可能还在运行
-            //因此需要shutDownNow向所有线程发送interrupt()让他们退出
-            gameOver();
+            gameOver();//现在这个侦听线程也要结束了
         }).start();//这个侦听线程不经过pool控制
     }
 
     public void gameOver(){
         //这个函数在侦听线程中被调用
-        //pool.shutDownNow -> 重排阵型
-//        pool.shutdownNow();
-        //重排阵型
-//            battleState.battleStarted = false;
+        //失败一方的所有生物线段都因为alive = false 导致线程退出
+        //胜利一方的所有生物线程、map刷新线程、bulletManager线程都可能还在运行
+        //因此需要shutDownNow向所有线程发送interrupt()让他们退出
         battleState.setStarted(false);
         System.out.println(n+"th game over");
-//        try {
-//            TimeUnit.SECONDS.sleep(2);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        int threadCount = ((ThreadPoolExecutor)pool).getActiveCount();
-//        System.out.println("还剩"+threadCount+"个活跃线程");
         pool.shutdownNow();
         //现在只剩一个主线程了
         synchronized (map){
@@ -206,16 +190,27 @@ public class BattleController implements Config {
         snake.resetState();
         grandPa.resetState();
         grandPa.clearDirection();//可能错误的原因是：比赛结束，clearDirections的时候，按下了方向键，这样就同时修改directions
-//        for(Evil evil:evils){
-//            evil.resetState();
-//        }
         Formation.transFormToNextFormation(map,scorpion,snake,evils,bullets);
+        //一场战斗结束，应该显示游戏结果，三秒后再显示战斗初始界面
+        //先显示战斗结果图片
+        if(battleState.getWinner() == Camp.JUSTICE){
+            gc.drawImage(justiceWinImage,0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+        }
+        else{
+            gc.drawImage(evilWinImage,0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+        }
+        try {
+            TimeUnit.SECONDS.sleep(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         map.display();
 
         //test
+        //如果在侦听线程sleep(2)的时候案例空格键，那么主线程就会调用strtGame()，就会显示活跃线程数不为0，但是问题不大
         ++n;
         int threadCount = ((ThreadPoolExecutor)pool).getActiveCount();
-        System.out.println("game "+n+                                                                                   ",线程池中还有"+threadCount+"个活跃线程");
+        System.out.println("game "+n+",线程池中还有"+threadCount+"个活跃线程");
 //        startGame();
     }
 //    public void pauseGame(){

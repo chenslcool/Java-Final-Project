@@ -24,14 +24,17 @@ public class Map implements Runnable, Config {
     private BattleState battleState;
     private LinkedList<Bullet> bullets;//display的时候也要显示子弹
     private Image deadImage;
+    private Image backGroundImage;
     public Map(BattleState battleState, int refreshRate, GraphicsContext gc,LinkedList<Bullet> bullets) {
         grounds = new Creature[NUM_ROWS][NUM_COLUMNS];//初始化为NULL
         this.battleState = battleState;
         this.refreshRate = refreshRate;
         this.gc = gc;
         this.bullets = bullets;
-        URL url = this.getClass().getClassLoader().getResource("pictures/" + "death.jpg");
-        deadImage = new javafx.scene.image.Image(url.toString());
+        URL url = this.getClass().getClassLoader().getResource("pictures/" + "ghost.png");
+        deadImage = new Image(url.toString());
+        url = this.getClass().getClassLoader().getResource("pictures/" + "background.jpg");
+        backGroundImage = new Image(url.toString());
     }
 
     public Creature getCreatureAt(int x, int y) {
@@ -54,12 +57,13 @@ public class Map implements Runnable, Config {
     }
 
     public void display() {
-        //为什么刷新的时候极少数情况会卡死?
         //双方剩余人数
         int numJusticeLeft = 0;
         int numEvilLeft = 0;
         //先清空画布
         gc.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+        //画背景
+        gc.drawImage(backGroundImage,0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
         //先画12*16的网格
         drawBoardLines();
         //绘制所有Creature
@@ -109,6 +113,12 @@ public class Map implements Runnable, Config {
         }
         if(numEvilLeft ==0 || numJusticeLeft == 0){
             battleState.setStarted(false);
+            if(numEvilLeft == 0){//设置战斗胜利者
+                battleState.setWinner(Camp.JUSTICE);
+            }
+            else{
+                battleState.setWinner(Camp.EVIL);
+            }
             synchronized (battleState){
                 battleState.notifyAll();//唤醒侦听线程
             }

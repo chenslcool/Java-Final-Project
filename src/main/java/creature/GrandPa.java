@@ -22,7 +22,8 @@ public class GrandPa extends Creature implements Curable {
         this.image = image;
         this.name = name;
         this.camp = Camp.JUSTICE;
-//        bulletBulletFactory = new HorizontalBulletFactory();
+        this.attackValue = GRANDPA_ATK;
+        this.defenseValue = GRANDPA_DEF;
         bulletBulletFactory = new TrackBulletFactory();
     }
     @Override

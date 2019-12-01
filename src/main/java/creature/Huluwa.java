@@ -20,6 +20,8 @@ public class Huluwa extends Creature {
         this.image = image;
         this.name = name;
         this.camp = Camp.JUSTICE;
+        this.attackValue = HULUWA_ATK;
+        this.defenseValue = HULUWA_DEF;
         bulletBulletFactory = new HorizontalBulletFactory();
     }
 //    public void attack() {

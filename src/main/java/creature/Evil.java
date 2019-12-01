@@ -19,10 +19,12 @@ public class Evil extends Creature{//妖精是在BattleControler中创建的
     public Evil(Map map, LinkedList<Bullet> bullets){
         super(map,bullets);
         //设置image
-        URL url = this.getClass().getClassLoader().getResource("pictures/" + "lolo.jpg");
+        URL url = this.getClass().getClassLoader().getResource("pictures/" + "lolo.png");
         this.image = new Image(url.toString());//这样很麻烦，最好能抽象出一个Image类，保存所有图片，以后的
         //构造器就直接用
         this.camp = Camp.EVIL;
+        this.attackValue = EVIL_ATK;
+        this.defenseValue = EVIL_DEF;
         bulletBulletFactory = new HorizontalBulletFactory();
     }
 //    @Override
