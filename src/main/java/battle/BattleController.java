@@ -110,7 +110,7 @@ public class BattleController implements Config {
         for (int i = 1; i <= 7; ++i) {
             URL url = this.getClass().getClassLoader().getResource("pictures/" + i + ".png");
             Image image = new Image(url.toString());
-            huluwas.add(new Huluwa(map, image, "h",bullets));
+            huluwas.add(new Huluwa(map, image, "h",i,bullets));
         }
         transFormChangShe();
     }

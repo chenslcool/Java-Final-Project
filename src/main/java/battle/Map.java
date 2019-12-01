@@ -4,6 +4,7 @@ import bullet.Bullet;
 import creature.Creature;
 import creature.Curable;
 import creature.enumeration.Camp;
+import javafx.scene.ImageCursor;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
@@ -16,6 +17,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.concurrent.TimeUnit;
 
@@ -32,6 +35,7 @@ public class Map implements Runnable, Config {
     private Image deadImage;
     private Image backGroundImage;
     private ObjectOutputStream writer;
+    private HashMap<String, Image> typeImageMap;//类型名称->image的字典
     public Map(BattleState battleState, int refreshRate, GraphicsContext gc, LinkedList<Bullet> bullets) {
         grounds = new Creature[NUM_ROWS][NUM_COLUMNS];//初始化为NULL
         this.battleState = battleState;
@@ -43,6 +47,24 @@ public class Map implements Runnable, Config {
         url = this.getClass().getClassLoader().getResource("pictures/" + "background.jpg");
         backGroundImage = new Image(url.toString());
         this.writer = writer;
+        initDictionary();
+    }
+    private void initDictionary(){
+        typeImageMap = new HashMap<>();
+        URL url = this.getClass().getClassLoader().getResource("pictures/" + "ghost.png");
+        typeImageMap.put("Dead",new Image(url.toString()));
+        //葫芦娃
+        for(int i = 1;i <= 7;++i){
+            url = this.getClass().getClassLoader().getResource("pictures/" + i + ".png");
+            typeImageMap.put("Huluwa"+i,new Image(url.toString()));
+        }
+        //老爷爷
+        url = this.getClass().getClassLoader().getResource("pictures/" + "grandpa.png");
+        typeImageMap.put("GrandPa",new Image(url.toString()));
+        url = this.getClass().getClassLoader().getResource("pictures/" + "scorpion.png");
+        typeImageMap.put("Scorpion",new Image(url.toString()));
+        url = this.getClass().getClassLoader().getResource("pictures/" + "snake.png");
+        typeImageMap.put("Snake",new Image(url.toString()));
     }
 
     public Creature getCreatureAt(int x, int y) {
@@ -86,7 +108,7 @@ public class Map implements Runnable, Config {
                     Creature c = this.getCreatureAt(i,j);
                     if(c != null){
                         synchronized (c){//画生物的时候它不能被攻击、移动
-                            record.creatureRecords.add(new CreatureRecord(c.getCamp(),c.getCurrentHP(),c.isAlive(),c.getSimpleName()));
+                            record.creatureRecords.add(new CreatureRecord(i,j,c.getCamp(),c.getCurrentHP(),c.isAlive(),c.getSimpleName()));
                             if(c.isAlive())
                             {
                                 if(c.getCamp()== Camp.JUSTICE){
@@ -222,14 +244,59 @@ public class Map implements Runnable, Config {
         //review一定只有单线程
         while (true){
             try {
-                Creature[][] creatures = (Creature[][]) reader.readObject();
-                LinkedList<Bullet>bullets = (LinkedList<Bullet>) reader.readObject();
-                //画
+               Record record = (Record)reader.readObject();
+               drawRecord(record);
+               TimeUnit.MILLISECONDS.sleep(1000/refreshRate);
             } catch (EOFException e) {//正常结束
                 break;
             } catch (ClassNotFoundException | IOException e) {
                 e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
+        }
+    }
+
+    //画一帧记录
+    public void drawRecord(Record record){
+        //先清空画布
+        gc.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+        //画背景
+        gc.drawImage(backGroundImage,0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+        //先画12*16的网格
+        drawBoardLines();
+
+        ArrayList<CreatureRecord> creatureRecords = record.creatureRecords;
+        ArrayList<BulletRecord> bulletRecords = record.bulletRecords;
+        //先画生物
+        for(CreatureRecord r:creatureRecords){
+            //TODO 根据type从type-image map中选出图片
+            Image image = typeImageMap.get(r.type);
+            if(r.alive)
+            {
+                gc.drawImage(image,r.y*UNIT_SIZE,r.x*UNIT_SIZE,UNIT_SIZE-1,UNIT_SIZE-1);
+                //画血量
+                int greenLen = UNIT_SIZE*r.currentHP/DEFAULT_MAX_HP;
+//                                double redLen = UNIT_SIZE - greenLen;
+                gc.setLineWidth(BLOOD_LINE_WIDTH);
+                gc.setStroke(Color.LIGHTGREEN);
+                gc.strokeLine(r.y*UNIT_SIZE,r.x*UNIT_SIZE,r.y*UNIT_SIZE + greenLen,r.x*UNIT_SIZE);
+                if(r.currentHP != DEFAULT_MAX_HP)
+                {
+                    gc.setStroke(Color.RED);
+                    gc.strokeLine(r.y*UNIT_SIZE + greenLen,r.x*UNIT_SIZE,(r.y+1)*UNIT_SIZE,r.x*UNIT_SIZE);
+                }
+                //TODO 处理curable的情况???
+            }
+            else{
+                gc.drawImage(deadImage,r.y*UNIT_SIZE,r.x*UNIT_SIZE,UNIT_SIZE-1,UNIT_SIZE-1);
+            }
+        }
+
+        for(BulletRecord r:bulletRecords){
+            Color color = r.isRed? Color.RED:Color.GREEN;
+            gc.setFill(color);
+            gc.fillOval(r.y,r.x,BULLTE_RADIUS,BULLTE_RADIUS);
         }
     }
 }

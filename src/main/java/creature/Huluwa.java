@@ -14,18 +14,20 @@ import java.util.LinkedList;
  */
 public class Huluwa extends Creature {
     private static String simpleName = "Huluwa";
-    public Huluwa(Map map, Image image, String name, LinkedList<Bullet> bullets){
+    private int rank;
+    public Huluwa(Map map, Image image, String name,int rank, LinkedList<Bullet> bullets){
         super(map,bullets);
         this.image = image;
         this.name = name;
         this.camp = Camp.JUSTICE;
         this.attackValue = HULUWA_ATK;
         this.defenseValue = HULUWA_DEF;
+        this.rank = rank;
         bulletBulletGenerator = new HorizontalBulletGenerator();
     }
 
     @Override
     public String getSimpleName(){
-        return "Huluwa";
-    }
+        return "Huluwa"+ rank;
+    }//用于回放
 }
