@@ -8,6 +8,6 @@ import creature.Creature;
  * @date 2019/11/27 7:54
  */
 //子弹工厂
-public abstract class BulletFactory<T> {
+public abstract class BulletGenerator<T> {
     public abstract T getBullet(Map map, Creature sender,Creature target, int damage, double x, double y);
 }

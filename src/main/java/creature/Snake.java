@@ -2,8 +2,7 @@ package creature;
 
 import battle.Map;
 import bullet.Bullet;
-import bullet.HorizontalBulletFactory;
-import bullet.TrackBulletFactory;
+import bullet.TrackBulletGenerator;
 import creature.enumeration.Camp;
 import javafx.scene.image.Image;
 
@@ -23,7 +22,7 @@ public class Snake extends Creature implements Curable{
         this.camp = Camp.EVIL;
         this.attackValue = EVIL_LEADER_ATK;
         this.defenseValue = EVIL_LEADER_DEF;
-        bulletBulletFactory = new TrackBulletFactory();
+        bulletBulletGenerator = new TrackBulletGenerator();
     }
 
     @Override

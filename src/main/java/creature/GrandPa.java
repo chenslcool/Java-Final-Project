@@ -2,8 +2,7 @@ package creature;
 
 import battle.Map;
 import bullet.Bullet;
-import bullet.HorizontalBulletFactory;
-import bullet.TrackBulletFactory;
+import bullet.TrackBulletGenerator;
 import creature.enumeration.Camp;
 import creature.enumeration.Direction;
 import javafx.scene.image.Image;
@@ -24,7 +23,7 @@ public class GrandPa extends Creature implements Curable {
         this.camp = Camp.JUSTICE;
         this.attackValue = GRANDPA_ATK;
         this.defenseValue = GRANDPA_DEF;
-        bulletBulletFactory = new TrackBulletFactory();
+        bulletBulletGenerator = new TrackBulletGenerator();
     }
     @Override
     public void attack(){

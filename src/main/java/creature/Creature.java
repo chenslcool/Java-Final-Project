@@ -7,7 +7,6 @@ import creature.enumeration.Camp;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
-import java.lang.annotation.Target;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.Random;
@@ -30,7 +29,7 @@ public abstract class Creature implements Runnable, Config {
     protected int defenseValue;//防御力 < 50
     protected int moveRate;//速度,sleepTime = 1000ms/moveRate;
     protected LinkedList<Bullet> bullets;
-    protected BulletFactory<Bullet> bulletBulletFactory;
+    protected BulletGenerator<Bullet> bulletBulletGenerator;
     public Creature(){}
     public Creature(Map map,LinkedList<Bullet> bullets){
         camp = Camp.JUSTICE;
@@ -54,9 +53,9 @@ public abstract class Creature implements Runnable, Config {
         synchronized (map){
             //只要看水平方向有没有敌人就行了，一边最多一个
             ArrayList<Creature> enemies;
-            if(bulletBulletFactory instanceof HorizontalBulletFactory)
+            if(bulletBulletGenerator instanceof HorizontalBulletGenerator)
                 enemies = searchLineEnemies();
-            else if (bulletBulletFactory instanceof VerticalBulletFactory){
+            else if (bulletBulletGenerator instanceof VerticalBulletGenerator){
                 enemies = searchColumnEnemies();
             }
             else{
@@ -65,7 +64,7 @@ public abstract class Creature implements Runnable, Config {
 //                enemies = new ArrayList<>();
             }
             for(Creature enemy : enemies){
-                if(enemy.isAlive() == false)//如果对方没死亡
+                if(enemy.isAlive() == false)//如果对方死亡
                     continue;
                 int x = position.getX();
                 int y = position.getY();
@@ -75,7 +74,7 @@ public abstract class Creature implements Runnable, Config {
                 if(damage <= 0){
                     damage = 10;
                 }
-                Bullet bullet = bulletBulletFactory.getBullet(map,this,enemy,damage,bulletX,bulletY);
+                Bullet bullet = bulletBulletGenerator.getBullet(map,this,enemy,damage,bulletX,bulletY);
                 if(camp == Camp.JUSTICE){
                     bullet.setColor(Color.LIGHTGREEN);
                 }

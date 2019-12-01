@@ -2,12 +2,10 @@ package creature;
 
 import battle.Map;
 import bullet.Bullet;
-import bullet.HorizontalBullet;
-import bullet.HorizontalBulletFactory;
+import bullet.HorizontalBulletGenerator;
 import creature.enumeration.Camp;
 import javafx.scene.image.Image;
 
-import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
@@ -22,7 +20,7 @@ public class Huluwa extends Creature {
         this.camp = Camp.JUSTICE;
         this.attackValue = HULUWA_ATK;
         this.defenseValue = HULUWA_DEF;
-        bulletBulletFactory = new HorizontalBulletFactory();
+        bulletBulletGenerator = new HorizontalBulletGenerator();
     }
 //    public void attack() {
 //

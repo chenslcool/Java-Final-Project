@@ -32,7 +32,7 @@ public interface Config {
     int EVIL_LEADER_ATK = 60;
     int EVIL_LEADER_DEF = 40;
     //子弹
-    double STEP_DISTANCE = 40;//子弹每次移动的距离：像素
+    double STEP_DISTANCE = 30;//子弹每次移动的距离：像素
     int BULLTE_RADIUS = 20;//子弹半径
 //    int DEFAULT_BULLET_DAMAGE = 30;
     int BULLET_REFRESH_RATE = 5;

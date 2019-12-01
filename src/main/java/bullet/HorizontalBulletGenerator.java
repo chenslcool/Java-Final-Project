@@ -7,7 +7,7 @@ import creature.Creature;
  * @author csl
  * @date 2019/11/27 7:56
  */
-public class HorizontalBulletFactory extends BulletFactory<Bullet> {
+public class HorizontalBulletGenerator extends BulletGenerator<Bullet> {
 
     @Override
     public HorizontalBullet getBullet(Map map, Creature sender,Creature target, int damage, double x, double y) {

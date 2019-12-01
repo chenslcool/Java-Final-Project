@@ -38,7 +38,11 @@ public class Map implements Runnable, Config {
     }
 
     public Creature getCreatureAt(int x, int y) {
-        return grounds[x][y];
+        if(insideMap(x,y) == false){
+            return null;
+        }
+        else
+            return grounds[x][y];
     }
 
     public void setCreatureAt(int x, int y, Creature creature) {
@@ -97,7 +101,7 @@ public class Map implements Runnable, Config {
                                 if(c instanceof Curable){
                                     //画治愈绿色,会不会挡住其他生物，其实这样的画法不太行，在边缘的时候不对
                                     //设置透明度
-                                    gc.setFill(Color.rgb(0,255,0,0.1));
+                                    gc.setFill(Color.rgb(0,255,0,0.3));
                                     double x1=((j-1)>0?j-1:0)*UNIT_SIZE;
                                     double y1=((i-1)>0?i-1:0)*UNIT_SIZE;
                                     gc.fillRect(x1,y1,3*UNIT_SIZE,3*UNIT_SIZE);
