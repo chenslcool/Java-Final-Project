@@ -27,9 +27,9 @@ public interface Config {
     int GRANDPA_DEF = 30;//防御力也很弱
     int HULUWA_ATK = 50;
     int HULUWA_DEF = 35;
-    int EVIL_ATK = 55;
+    int EVIL_ATK = 60;
     int EVIL_DEF = 40  ;
-    int EVIL_LEADER_ATK = 60;
+    int EVIL_LEADER_ATK = 70;
     int EVIL_LEADER_DEF = 40;
     //子弹
     double STEP_DISTANCE = 30;//子弹每次移动的距离：像素

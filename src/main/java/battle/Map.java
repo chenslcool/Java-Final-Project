@@ -159,6 +159,7 @@ public class Map implements Runnable, Config {
                 break;
             }
         }
+        //after each display,reacord current map into file
         System.out.println("map.run() exit");
     }
 
