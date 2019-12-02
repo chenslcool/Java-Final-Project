@@ -59,29 +59,37 @@ public class BattleController implements Config {
         pane.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
+                //战场正在回放或者战斗，按键无效
+//                if(battleState.isInFreeState() == false){
+//                    System.out.println("battle is busy now");
+//                    return;
+//                }
 //                System.out.println(event.getCode());
-                if(event.getCode() == KeyCode.SPACE){
-                    startGame();
+                if(event.getCode() == KeyCode.SPACE && battleState.isInFreeState()){
+                    startGame();//里面已经对战斗状态进行了判断
                 }
-                else if(event.getCode() == KeyCode.L){
-                    review();
+                else if(event.getCode() == KeyCode.L && battleState.isInFreeState() ){
+                    review();//里面已经对战斗状态进行了判断
                 }
-                else if(event.getCode() == KeyCode.F && battleState.isBattleStarted() == false){
+                else if(event.getCode() == KeyCode.F && battleState.isBattleStarted()){
                     //在战斗还没开始可以变换阵型
                     Formation.transFormToNextFormation(map,scorpion,snake,evils,bullets);
                     map.display(false);//writer已经关闭
                 }
-                else if(event.getCode() == KeyCode.UP && battleState.isBattleStarted()){
+                else if(event.getCode() == KeyCode.UP&& battleState.isBattleStarted()){
                     grandPa.addDirection(Direction.UP);
                 }
-                else if(event.getCode() == KeyCode.DOWN && battleState.isBattleStarted()){
+                else if(event.getCode() == KeyCode.DOWN&& battleState.isBattleStarted()){
                     grandPa.addDirection(Direction.DOWN);
                 }
-                else if(event.getCode() == KeyCode.RIGHT && battleState.isBattleStarted()){
+                else if(event.getCode() == KeyCode.RIGHT&& battleState.isBattleStarted()){
                     grandPa.addDirection(Direction.RIGHT);
                 }
-                else if(event.getCode() == KeyCode.LEFT && battleState.isBattleStarted()){
+                else if(event.getCode() == KeyCode.LEFT&& battleState.isBattleStarted()){
                     grandPa.addDirection(Direction.LEFT);
+                }
+                else{
+                    System.out.println("unused key or battle is busy");
                 }
             }
         });
@@ -148,8 +156,8 @@ public class BattleController implements Config {
     }
 
     public void startGame(){
-        if(battleState.isBattleStarted())//战斗已经开始
-            return;
+//        if(battleState.isBattleStarted() || battleState.isReviewing())//战斗或者回放已经开始
+//            return;
         //序列化输出文件
         try {
             //缓冲一下，加快速度
@@ -172,7 +180,7 @@ public class BattleController implements Config {
         map.setWriter(writer);
 //        System.out.println("after set:"+writer);
         //按下空格,开始游戏
-        battleState.setStarted(true);
+        battleState.setStarted(true);//状态的结束在map的run线程中设置
         //葫芦娃线程start
         //由于之前是用shutDownNow退出的，如果还是用之前的线程池再execute会出错，因此重新申请一个线程池
         pool = Executors.newCachedThreadPool();
@@ -246,6 +254,8 @@ public class BattleController implements Config {
     }
 
     public void review(){
+//        if(battleState.isBattleStarted() || battleState.isReviewing())//战斗或者回放已经开始
+//            return;
         //都是在主线程进行的
         //按下L回放
         System.out.println("start review");
@@ -266,6 +276,7 @@ public class BattleController implements Config {
             reader = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
             map.setReader(reader);
             pool = Executors.newCachedThreadPool();
+            battleState.setReviewing(true);//回放状态的关闭在submit的call线程中
             pool.submit((Callable<String>) map);
             //在review线程内关闭reader
         } catch (IOException e) {

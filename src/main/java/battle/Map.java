@@ -248,6 +248,7 @@ public class Map implements Runnable, Config, Callable<String> {
     @Override
     public String call(){
         review(reader);
+        battleState.setReviewing(false);//回放结束
         return "review";
     }
 

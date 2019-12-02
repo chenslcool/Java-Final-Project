@@ -11,6 +11,7 @@ import creature.enumeration.Camp;
 public class BattleState {
 //    private boolean battlePaused = false;//初始情况：战场没有暂停也没有开始
     private boolean battleStarted = false;
+    private boolean reviewing = false;
     private Camp winner = null;//胜利的一方，在游戏结束时由 map设置
     synchronized public void setStarted(boolean started){
         battleStarted = started;
@@ -24,6 +25,16 @@ public class BattleState {
     synchronized public Camp getWinner(){//侦听线程接受到map线程的notifyAll,侦听到战斗结束，侦听线程调用gameOver,调用此方法
         //获得战斗结果信息
         return winner;
+    }
+    synchronized public void setReviewing(boolean isReviewing){
+        this.reviewing = isReviewing;
+    }
+    synchronized public boolean isReviewing(){
+        return reviewing;
+    }
+    synchronized public boolean isInFreeState(){
+        //判断战场仙子啊是不是处于空闲状态
+        return (reviewing == false)&&(battleStarted == false);
     }
 
 }
