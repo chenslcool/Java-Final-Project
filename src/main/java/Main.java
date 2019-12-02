@@ -3,6 +3,7 @@
  * @date 2019/11/24 14:53
  */
 
+import battle.BattleController;
 import battle.Config;
 import creature.enumeration.Camp;
 import javafx.application.Application;
@@ -21,7 +22,7 @@ public class Main extends Application implements Config {
         primaryStage.setScene(new Scene(root, CANVAS_WIDTH, CANVAS_HEIGHT)); //设置初始的窗口大小
         primaryStage.show();
         primaryStage.setResizable(false);//不可变更窗口大小
-
+        BattleController.stage = primaryStage;
         //监听窗口关闭事件，回收线程
         primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
             @Override

@@ -32,7 +32,7 @@ public abstract class Creature implements Runnable, Config, Serializable {
     protected transient int defenseValue;//防御力 < 50
     protected transient int moveRate;//速度,sleepTime = 1000ms/moveRate;
     protected transient LinkedList<Bullet> bullets;
-    protected transient BulletGenerator<Bullet> bulletBulletGenerator;
+    protected transient BulletGenerator<Bullet> bulletBulletGenerator;//工厂模式
     public Creature(){}
     public Creature(Map map,LinkedList<Bullet> bullets){
         camp = Camp.JUSTICE;

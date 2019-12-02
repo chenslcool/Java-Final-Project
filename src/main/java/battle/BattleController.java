@@ -14,6 +14,9 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import javafx.stage.Window;
 
 import java.io.*;
 import java.net.URL;
@@ -26,6 +29,7 @@ import java.util.concurrent.*;
  * @date 2019/11/24 21:47
  */
 public class BattleController implements Config {
+    public static Stage stage = null;
     ExecutorService pool;//线程池
     int n = 0;
     @FXML
@@ -149,7 +153,19 @@ public class BattleController implements Config {
         //序列化输出文件
         try {
             //缓冲一下，加快速度
-            writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream("log")));
+            //考虑跳出对话框让玩家选择记录文件的保存位置
+            FileChooser chooser = new FileChooser();
+            chooser.setInitialDirectory(new File("."));;
+            chooser.setTitle("保存战斗记录文件");
+            //设置选择文件类型
+            chooser.getExtensionFilters().add(
+                    new FileChooser.ExtensionFilter("游戏记录文件", "*.gamelog*"));
+            File file = chooser.showSaveDialog(stage);
+            if (file == null){//如果没有选择，就不能开始游戏
+                System.out.println("没有选择保存文件，游戏不能进行");
+                return;
+            }
+            writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file.getPath()+".gamelog")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -173,7 +189,7 @@ public class BattleController implements Config {
         pool.execute(bulletManager);//负责子弹移动、出界、伤害
         //用一个线程侦听战斗是否结束，while(notEnded) wait(); map的display()检测双方人数，若一方=0，则notifyAll()结束map线程,
         new Thread(() -> {//用lambda表达式代替匿名内部类
-            synchronized (battleState){
+            synchronized (battleState){//观察者模式
                 while (battleState.isBattleStarted()){//等待战斗结束
                     try {
                         battleState.wait();//等待battleState的锁，而不是忙等待监听
@@ -233,8 +249,21 @@ public class BattleController implements Config {
         //都是在主线程进行的
         //按下L回放
         System.out.println("start review");
+        //应该跳出选择框，选择路径
+        FileChooser chooser = new FileChooser();
+        chooser.setInitialDirectory(new File("."));;
+        chooser.setTitle("打开回放记录文件");
+        chooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("游戏记录文件", "*.gamelog*"));
+        File file = chooser.showOpenDialog(stage);
+        if (file == null){//如果没有选择，就不能回放
+            System.out.println("没有选择记录文件，回放不能进行");
+            return;
+        }
+
         try {
-            reader = new ObjectInputStream(new BufferedInputStream(new FileInputStream("log")));
+            //装饰器模式
+            reader = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
             map.setReader(reader);
             pool = Executors.newCachedThreadPool();
             pool.submit((Callable<String>) map);
