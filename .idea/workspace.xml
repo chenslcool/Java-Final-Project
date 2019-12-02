@@ -3,13 +3,14 @@
   <component name="ChangeListManager">
     <list default="true" id="e7605e7e-84e4-41ac-a511-e4703352d8e5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/battle/BattleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/BattleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/battle/BattleState.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/BattleState.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/battle/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/Map.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/battle/Config.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/Config.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleController.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleState.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleState.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/battle/Map.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/Map.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/battle/BulletManager.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BulletManager.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/battle/Config.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/Config.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/bullet/HorizontalBullet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/bullet/HorizontalBullet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/bullet/TrackBullet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/bullet/TrackBullet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/bullet/VerticalBullet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/bullet/VerticalBullet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/creature/Creature.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Creature.class" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -167,7 +168,9 @@
       <workItem from="1575215079349" duration="269000" />
       <workItem from="1575245019971" duration="1748000" />
       <workItem from="1575250961251" duration="954000" />
-      <workItem from="1575259868854" duration="3032000" />
+      <workItem from="1575259868854" duration="3308000" />
+      <workItem from="1575266364204" duration="121000" />
+      <workItem from="1575282324167" duration="263000" />
     </task>
     <servers />
   </component>

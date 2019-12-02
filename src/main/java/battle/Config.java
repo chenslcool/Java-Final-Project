@@ -11,7 +11,7 @@ public interface Config {
 
     int NUM_ROWS = 12;//对应x
     int NUM_COLUMNS = 16;//对应y
-    int MAP_REFRESH_RATE = 10;
+    int MAP_REFRESH_RATE = 20;
 
     int UNIT_SIZE = CANVAS_HEIGHT/NUM_ROWS;
     int BORDER_LINE_WIDTH = 1;
@@ -20,7 +20,7 @@ public interface Config {
     int DEFAULT_MAX_HP = 100;
     int DEFAULT_ATTACK_VALUE = 60;
     int DEFAULT_DEFENSE_VALUE = 40;
-    int DEFAULT_MOVE_RATE = 2;//涉及刷新频率
+    int DEFAULT_MOVE_RATE = 4;//涉及刷新频率
 
     //不同生物的定制属性
     int GRANDPA_ATK = 40;//老爷爷的攻击力比较弱，主要任务是回血
@@ -32,10 +32,10 @@ public interface Config {
     int EVIL_LEADER_ATK = 70;
     int EVIL_LEADER_DEF = 40;
     //子弹
-    double STEP_DISTANCE = 30;//子弹每次移动的距离：像素
+    double STEP_DISTANCE = 15;//子弹每次移动的距离：像素
     int BULLTE_RADIUS = 20;//子弹半径
 //    int DEFAULT_BULLET_DAMAGE = 30;
-    int BULLET_REFRESH_RATE = 5;
+    int BULLET_REFRESH_RATE = 10;
 
     //血条
     int BLOOD_LINE_WIDTH = 4;
