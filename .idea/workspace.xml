@@ -3,8 +3,12 @@
   <component name="ChangeListManager">
     <list default="true" id="e7605e7e-84e4-41ac-a511-e4703352d8e5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/battle/Map.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/Map.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/battle/Map.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/Map.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/1.gamelog" beforeDir="false" afterPath="$PROJECT_DIR$/1.gamelog" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/battle/BattleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/BattleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/creature/Snake.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Snake.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/creature/Snake.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Snake.class" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -167,7 +171,7 @@
       <workItem from="1575282324167" duration="3060000" />
       <workItem from="1575285481808" duration="588000" />
       <workItem from="1575286395816" duration="299000" />
-      <workItem from="1575294618933" duration="1623000" />
+      <workItem from="1575294618933" duration="2494000" />
     </task>
     <servers />
   </component>

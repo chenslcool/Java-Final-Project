@@ -88,6 +88,18 @@ public class BattleController implements Config {
                 else if(event.getCode() == KeyCode.LEFT&& battleState.isBattleStarted()){
                     grandPa.addDirection(Direction.LEFT);
                 }
+                else if(event.getCode() == KeyCode.W&& battleState.isBattleStarted()){
+                    snake.addDirection(Direction.UP);
+                }
+                else if(event.getCode() == KeyCode.S&& battleState.isBattleStarted()){
+                    snake.addDirection(Direction.DOWN);
+                }
+                else if(event.getCode() == KeyCode.D&& battleState.isBattleStarted()){
+                    snake.addDirection(Direction.RIGHT);
+                }
+                else if(event.getCode() == KeyCode.A&& battleState.isBattleStarted()){
+                    snake.addDirection(Direction.LEFT);
+                }
                 else{
                     System.out.println("unused key or battle is busy");
                 }
@@ -230,6 +242,7 @@ public class BattleController implements Config {
         snake.resetState();
         grandPa.resetState();
         grandPa.clearDirection();//可能错误的原因是：比赛结束，clearDirections的时候，按下了方向键，这样就同时修改directions
+        snake.clearDirection();
         Formation.transFormToNextFormation(map,scorpion,snake,evils,bullets);
         //一场战斗结束，应该显示游戏结果，三秒后再显示战斗初始界面
         //先显示战斗结果图片
