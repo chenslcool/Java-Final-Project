@@ -101,7 +101,7 @@ public class Map implements Runnable, Config, Callable<String> {
         int numJusticeLeft = 0;
         int numEvilLeft = 0;
         //先清空画布
-        gc.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+//        gc.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT); //好像清空画布是没必要的，整个覆盖了
         //画背景
         gc.drawImage(backGroundImage,0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
         //先画12*16的网格
