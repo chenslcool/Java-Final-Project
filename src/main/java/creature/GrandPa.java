@@ -24,6 +24,10 @@ public class GrandPa extends Creature implements Curable {
         this.camp = Camp.JUSTICE;
         this.attackValue = GRANDPA_ATK;
         this.defenseValue = GRANDPA_DEF;
+
+        //diff
+        this.moveRate = DEFAULT_MOVE_RATE*2;//为了快速相应方向键
+
         bulletBulletGenerator = new TrackBulletGenerator();
     }
     @Override
@@ -95,5 +99,14 @@ public class GrandPa extends Creature implements Curable {
     @Override
     public String getSimpleName(){
         return "GrandPa";
+    }
+    @Override
+    public void resetState(){
+        this.MAX_HP = DEFAULT_MAX_HP;
+        this.currentHP = this.MAX_HP;
+        this.attackValue = GRANDPA_ATK;
+        this.defenseValue = GRANDPA_DEF;
+        this.alive = true;
+        this.moveRate = GRANDPA_MOVE_RATE;
     }
 }

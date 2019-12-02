@@ -22,7 +22,7 @@ public abstract class Creature implements Runnable, Config, Serializable {
     protected int currentHP;
     protected Camp camp;
     protected boolean alive;
-
+    protected boolean lastTimeSent;//上一次是否发射了子弹
     protected transient Image image;
     protected transient Random random;
     protected transient Position position;
@@ -46,6 +46,7 @@ public abstract class Creature implements Runnable, Config, Serializable {
         this.map = map;
         position = new Position();
         this.bullets = bullets;
+        lastTimeSent = false;
     }
     public void attack()//不同的生物有不同的攻击方式：近距离 or 子弹
     {
@@ -54,6 +55,7 @@ public abstract class Creature implements Runnable, Config, Serializable {
         //算了，先发射水平子弹吧
         //寻找水平方向的敌人
         synchronized (map){
+            //即使一次只发射一次，会不会也太频繁了？？再慢一点？
             //只要看水平方向有没有敌人就行了，一边最多一个
             ArrayList<Creature> enemies;
             if(bulletBulletGenerator instanceof HorizontalBulletGenerator)
@@ -66,9 +68,17 @@ public abstract class Creature implements Runnable, Config, Serializable {
                 enemies = searchCorssEnemies();
 //                enemies = new ArrayList<>();
             }
+            if(enemies.isEmpty()){
+                lastTimeSent = false;//记录：上一次没有发射
+            }
             for(Creature enemy : enemies){
                 if(enemy.isAlive() == false)//如果对方死亡
                     continue;
+                //避免连续发射，如果上一次发射了，这次就只有 0.5 的概率发射
+                if(lastTimeSent && (!random.nextBoolean())){
+                    lastTimeSent = false;//本次就不发射了
+                    break;
+                }
                 int x = position.getX();
                 int y = position.getY();
                 double bulletX = x*UNIT_SIZE + (UNIT_SIZE - BULLTE_RADIUS)/2;
@@ -141,15 +151,7 @@ public abstract class Creature implements Runnable, Config, Serializable {
         }
     }
 
-    public void resetState(){
-        //恢复正常状态
-        MAX_HP = DEFAULT_MAX_HP;
-        currentHP = MAX_HP;
-        attackValue = DEFAULT_ATTACK_VALUE;
-        defenseValue = DEFAULT_DEFENSE_VALUE;
-        moveRate = DEFAULT_MOVE_RATE;//0.5 s
-        alive = true;
-    }
+    public abstract void resetState();//和构造函数对应
 
     public Image getImage(){
         return image;

@@ -30,4 +30,14 @@ public class Huluwa extends Creature {
     public String getSimpleName(){
         return "Huluwa"+ rank;
     }//用于回放
+
+    @Override
+    public void resetState(){
+        this.MAX_HP = DEFAULT_MAX_HP;
+        this.currentHP = this.MAX_HP;
+        this.attackValue = HULUWA_ATK;
+        this.defenseValue = HULUWA_DEF;
+        this.alive = true;
+        this.moveRate = DEFAULT_MOVE_RATE;
+    }
 }

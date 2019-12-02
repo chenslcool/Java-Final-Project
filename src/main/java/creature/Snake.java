@@ -39,4 +39,14 @@ public class Snake extends Creature implements Curable{
     public String getSimpleName(){
         return "Snake";
     }
+
+    @Override
+    public void resetState(){
+        this.MAX_HP = DEFAULT_MAX_HP;
+        this.currentHP = this.MAX_HP;
+        this.attackValue = EVIL_LEADER_ATK;
+        this.defenseValue = EVIL_LEADER_DEF;
+        this.alive = true;
+        this.moveRate = DEFAULT_MOVE_RATE;
+    }
 }

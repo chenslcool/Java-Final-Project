@@ -32,5 +32,14 @@ public class Evil extends Creature{//妖精是在BattleControler中创建的
         return "Evil";
     }
 
+    @Override
+    public void resetState(){
+        this.MAX_HP = DEFAULT_MAX_HP;
+        this.currentHP = this.MAX_HP;
+        this.attackValue = EVIL_ATK;
+        this.defenseValue = EVIL_DEF;
+        this.alive = true;
+        this.moveRate = DEFAULT_MOVE_RATE;
+    }
 
 }
