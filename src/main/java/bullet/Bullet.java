@@ -61,4 +61,8 @@ public abstract class Bullet implements Config {
     public Creature getTarget(){
         return target;
     }
+
+    public int getCountDown(){
+        return TRACK_COUNT_DOWN;
+    }
 }

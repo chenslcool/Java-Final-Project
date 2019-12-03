@@ -5,5 +5,5 @@ package formation;
  * @date 2019/11/28 14:34
  */
 public enum FormationKind {
-    HEYI,YANXING
+    HEYI,YANXING,CHANGSHE
 }

@@ -9,13 +9,14 @@ import creature.Creature;
  */
 //追踪子弹
 public class TrackBullet extends Bullet{
-
+    int countDown = TRACK_COUNT_DOWN;
     public TrackBullet(Map map, Creature sender, Creature target, int damage, double x, double y) {
         super(map, sender, target, damage, x, y);
     }
 
     @Override
     public void move() {
+        countDown --;
         //追踪敌人，不管他是不是已经dead了
         //每步的总长度就是STEP_DISTANCE
         //根据敌人的位置设置角度，计算三角函数
@@ -43,5 +44,10 @@ public class TrackBullet extends Bullet{
         }
         x = newX;
         y = newY;
+    }
+
+    @Override
+    public int getCountDown(){
+        return countDown;
     }
 }

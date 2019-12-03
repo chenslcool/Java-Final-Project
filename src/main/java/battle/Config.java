@@ -36,6 +36,7 @@ public interface Config {
     int BULLTE_RADIUS = 20;//子弹半径
 //    int DEFAULT_BULLET_DAMAGE = 30;
     int BULLET_REFRESH_RATE = 10;
+    int TRACK_COUNT_DOWN = 70;//子弹最多追踪的步数
 
     //血条
     int BLOOD_LINE_WIDTH = 4;

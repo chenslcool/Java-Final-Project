@@ -36,6 +36,10 @@ public class Formation implements Config {
             }break;
             case YANXING:{
                 transFormToYanxing(map,scorpion,snake,evils,bullets);
+                nextFormation = CHANGSHE;
+            }break;
+            case CHANGSHE:{
+                transFormToChangShe(map,scorpion,snake,evils,bullets);
                 nextFormation = HEYI;
             }break;
         };
@@ -96,6 +100,21 @@ public class Formation implements Config {
                 evils.add(evil);
                 evil = new Evil(map,bullets);
                 evil.moveTo(leaderX+i,leaderY-i);
+                evils.add(evil);
+            }
+        }
+    }
+    public static void transFormToChangShe(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets){
+        synchronized (map){
+            clearPreFormation(map,scorpion,snake,evils,bullets);
+            //重置阵型,占据右半边
+            int leaderX = 5;
+            int leaderY = 10;
+            scorpion.moveTo(leaderX,leaderY);
+            snake.moveTo(5,14);
+            for(int i = 1;i <= 7;++i){
+                Evil evil = new Evil(map,bullets);
+                evil.moveTo(1 + i,12);//这里面也会对map上锁，不过都是在一个线程，问题不大
                 evils.add(evil);
             }
         }

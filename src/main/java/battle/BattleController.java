@@ -238,13 +238,13 @@ public class BattleController implements Config {
         snake.clearDirection();
         Formation.transFormToNextFormation(map,scorpion,snake,evils,bullets);
         //一场战斗结束，应该显示游戏结果，三秒后再显示战斗初始界面
-
-        try {
-            TimeUnit.SECONDS.sleep(2);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-        map.display(false);//这时候已经writer已经关闭,刷新显示初始画面
+        //持续显示战斗结果
+//        try {
+//            TimeUnit.SECONDS.sleep(2);
+//        } catch (InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//        map.display(false);//这时候已经writer已经关闭,刷新显示初始画面
         //test
         //如果在侦听线程sleep(2)的时候案例空格键，那么主线程就会调用strtGame()，就会显示活跃线程数不为0，但是问题不大
         ++n;
