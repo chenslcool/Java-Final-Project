@@ -39,8 +39,6 @@ public class BattleController implements Config {
     private GraphicsContext gc;//用于在canvas上直接绘图
     Map map;//地图
     BattleState battleState;//战斗状态，由多个线程共享，指示子弹移动、ui刷新线程是否要退出
-    private Image evilWinImage;
-    private Image justiceWinImage;
     private ArrayList<Huluwa> huluwas = new ArrayList<Huluwa>();
     private GrandPa grandPa;
     private ArrayList<Evil> evils = new ArrayList<>();
@@ -71,7 +69,7 @@ public class BattleController implements Config {
                 else if(event.getCode() == KeyCode.L && battleState.isInFreeState() ){
                     review();//里面已经对战斗状态进行了判断
                 }
-                else if(event.getCode() == KeyCode.F && battleState.isBattleStarted()){
+                else if(event.getCode() == KeyCode.F && battleState.isInFreeState()){
                     //在战斗还没开始可以变换阵型
                     Formation.transFormToNextFormation(map,scorpion,snake,evils,bullets);
                     map.display(false);//writer已经关闭
@@ -106,11 +104,6 @@ public class BattleController implements Config {
             }
         });
         Platform.runLater(() -> pane.requestFocus());//否则键盘无效
-        //战斗结果图像初始化
-        URL url = this.getClass().getClassLoader().getResource("pictures/" + "EvilWinner.png");
-        evilWinImage = new Image(url.toString());
-        url = this.getClass().getClassLoader().getResource("pictures/" + "JusticeWinner.png");
-        justiceWinImage = new Image(url.toString());
         //完成画布、地图和葫芦娃等的初始化
         canvas.setWidth(CANVAS_WIDTH);//960
         canvas.setHeight(CANVAS_HEIGHT);
@@ -127,7 +120,7 @@ public class BattleController implements Config {
     }
 
     private void initGrandPa(){
-        URL url = this.getClass().getClassLoader().getResource("pictures/grandPa.png");
+        URL url = this.getClass().getClassLoader().getResource("pictures/grandpa.png");
         Image image = new Image(url.toString());
         grandPa = new GrandPa(map,image,"GrandPa",bullets);
     }
@@ -227,7 +220,7 @@ public class BattleController implements Config {
         //失败一方的所有生物线段都因为alive = false 导致线程退出
         //胜利一方的所有生物线程、map刷新线程、bulletManager线程都可能还在运行
         //因此需要shutDownNow向所有线程发送interrupt()让他们退出
-        battleState.setStarted(false);
+//        battleState.setStarted(false);//这个其实没必要，已经再map的display中设置了
         System.out.println(n+"th game over");
         pool.shutdownNow();
         //现在只剩一个主线程了
@@ -245,19 +238,13 @@ public class BattleController implements Config {
         snake.clearDirection();
         Formation.transFormToNextFormation(map,scorpion,snake,evils,bullets);
         //一场战斗结束，应该显示游戏结果，三秒后再显示战斗初始界面
-        //先显示战斗结果图片
-        if(battleState.getWinner() == Camp.JUSTICE){
-            gc.drawImage(justiceWinImage,0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
-        }
-        else{
-            gc.drawImage(evilWinImage,0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
-        }
+
         try {
             TimeUnit.SECONDS.sleep(2);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        map.display(false);//这时候已经writer已经关闭
+        map.display(false);//这时候已经writer已经关闭,刷新显示初始画面
         //test
         //如果在侦听线程sleep(2)的时候案例空格键，那么主线程就会调用strtGame()，就会显示活跃线程数不为0，但是问题不大
         ++n;

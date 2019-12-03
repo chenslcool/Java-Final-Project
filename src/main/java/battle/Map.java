@@ -38,6 +38,8 @@ public class Map implements Runnable, Config, Callable<String> {
     private ObjectOutputStream writer;
     private ObjectInputStream reader;
     private HashMap<String, Image> typeImageMap;//类型名称->image的字典
+    private Image evilWinImage;
+    private Image justiceWinImage;
     public Map(BattleState battleState, int refreshRate, GraphicsContext gc, LinkedList<Bullet> bullets) {
         grounds = new Creature[NUM_ROWS][NUM_COLUMNS];//初始化为NULL
         this.battleState = battleState;
@@ -48,7 +50,11 @@ public class Map implements Runnable, Config, Callable<String> {
         deadImage = new Image(url.toString());
         url = this.getClass().getClassLoader().getResource("pictures/" + "background.jpg");
         backGroundImage = new Image(url.toString());
-        this.writer = writer;
+        //战斗结果图像初始化
+        url = this.getClass().getClassLoader().getResource("pictures/" + "EvilWinner.png");
+        evilWinImage = new Image(url.toString());
+        url = this.getClass().getClassLoader().getResource("pictures/" + "JusticeWinner.png");
+        justiceWinImage = new Image(url.toString());
         initDictionary();
     }
 
@@ -102,62 +108,64 @@ public class Map implements Runnable, Config, Callable<String> {
         int numEvilLeft = 0;
         //先清空画布
 //        gc.clearRect(0,0,CANVAS_WIDTH,CANVAS_HEIGHT); //好像清空画布是没必要的，整个覆盖了
-        //画背景
-        gc.drawImage(backGroundImage,0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
-        //先画12*16的网格
-        drawBoardLines();
-        //绘制所有Creature
-        synchronized (this){//锁住地图
-            for(int i = 0;i<NUM_ROWS;++i){
-                for(int j = 0;j<NUM_COLUMNS;++j){
-                    Creature c = this.getCreatureAt(i,j);
-                    if(c != null){
-                        synchronized (c){//画生物的时候它不能被攻击、移动
-                            record.creatureRecords.add(new CreatureRecord(i,j,c.getCamp(),c.getCurrentHP(),c.isAlive(),c.getSimpleName()));
-                            if(c.isAlive())
-                            {
-                                if(c.getCamp()== Camp.JUSTICE){
-                                    numJusticeLeft ++;
-                                }
-                                else
-                                    numEvilLeft ++;
-                                gc.drawImage(c.getImage(),j*UNIT_SIZE,i*UNIT_SIZE,UNIT_SIZE-1,UNIT_SIZE-1);
-                                //画血量
-                                int currentHp = c.getCurrentHP();
-                                int maxHp = c.getMAX_HP();
-                                int greenLen = UNIT_SIZE*currentHp/maxHp;
-//                                double redLen = UNIT_SIZE - greenLen;
-                                gc.setLineWidth(BLOOD_LINE_WIDTH);
-                                gc.setStroke(Color.LIGHTGREEN);
-                                gc.strokeLine(j*UNIT_SIZE,i*UNIT_SIZE,j*UNIT_SIZE + greenLen,i*UNIT_SIZE);
-                                if(currentHp != maxHp)
+        synchronized (gc){//锁住画布
+            //画背景
+            gc.drawImage(backGroundImage,0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
+            //先画12*16的网格
+            drawBoardLines();
+            //绘制所有Creature
+            synchronized (this){//锁住地图
+                for(int i = 0;i<NUM_ROWS;++i){
+                    for(int j = 0;j<NUM_COLUMNS;++j){
+                        Creature c = this.getCreatureAt(i,j);
+                        if(c != null){
+                            synchronized (c){//画生物的时候它不能被攻击、移动
+                                record.creatureRecords.add(new CreatureRecord(i,j,c.getCamp(),c.getCurrentHP(),c.isAlive(),c.getSimpleName()));
+                                if(c.isAlive())
                                 {
-                                    gc.setStroke(Color.RED);
-                                    gc.strokeLine(j*UNIT_SIZE + greenLen,i*UNIT_SIZE,(j+1)*UNIT_SIZE,i*UNIT_SIZE);
+                                    if(c.getCamp()== Camp.JUSTICE){
+                                        numJusticeLeft ++;
+                                    }
+                                    else
+                                        numEvilLeft ++;
+                                    gc.drawImage(c.getImage(),j*UNIT_SIZE,i*UNIT_SIZE,UNIT_SIZE-1,UNIT_SIZE-1);
+                                    //画血量
+                                    int currentHp = c.getCurrentHP();
+                                    int maxHp = c.getMAX_HP();
+                                    int greenLen = UNIT_SIZE*currentHp/maxHp;
+//                                double redLen = UNIT_SIZE - greenLen;
+                                    gc.setLineWidth(BLOOD_LINE_WIDTH);
+                                    gc.setStroke(Color.LIGHTGREEN);
+                                    gc.strokeLine(j*UNIT_SIZE,i*UNIT_SIZE,j*UNIT_SIZE + greenLen,i*UNIT_SIZE);
+                                    if(currentHp != maxHp)
+                                    {
+                                        gc.setStroke(Color.RED);
+                                        gc.strokeLine(j*UNIT_SIZE + greenLen,i*UNIT_SIZE,(j+1)*UNIT_SIZE,i*UNIT_SIZE);
+                                    }
+                                    if(c instanceof Curable){
+                                        //画治愈绿色,会不会挡住其他生物，其实这样的画法不太行，在边缘的时候不对
+                                        //设置透明度
+                                        gc.setFill(Color.rgb(0,255,0,0.3));
+                                        double x1=((j-1)>0?j-1:0)*UNIT_SIZE;
+                                        double y1=((i-1)>0?i-1:0)*UNIT_SIZE;
+                                        gc.fillRect(x1,y1,3*UNIT_SIZE,3*UNIT_SIZE);
+                                    }
                                 }
-                                if(c instanceof Curable){
-                                    //画治愈绿色,会不会挡住其他生物，其实这样的画法不太行，在边缘的时候不对
-                                    //设置透明度
-                                    gc.setFill(Color.rgb(0,255,0,0.3));
-                                    double x1=((j-1)>0?j-1:0)*UNIT_SIZE;
-                                    double y1=((i-1)>0?i-1:0)*UNIT_SIZE;
-                                    gc.fillRect(x1,y1,3*UNIT_SIZE,3*UNIT_SIZE);
+                                else{
+                                    gc.drawImage(deadImage,j*UNIT_SIZE,i*UNIT_SIZE,UNIT_SIZE-1,UNIT_SIZE-1);
                                 }
-                            }
-                            else{
-                                gc.drawImage(deadImage,j*UNIT_SIZE,i*UNIT_SIZE,UNIT_SIZE-1,UNIT_SIZE-1);
                             }
                         }
                     }
                 }
             }
-        }
-        //绘制所有的子弹
-        synchronized (bullets){//锁住
-            for(Bullet bullet:bullets){
-                record.bulletRecords.add(new BulletRecord(bullet.getX(),bullet.getY(),bullet.getColor()));
-                gc.setFill(bullet.getColor());
-                gc.fillOval(bullet.getY(),bullet.getX(),BULLTE_RADIUS,BULLTE_RADIUS);
+            //绘制所有的子弹
+            synchronized (bullets){//锁住
+                for(Bullet bullet:bullets){
+                    record.bulletRecords.add(new BulletRecord(bullet.getX(),bullet.getY(),bullet.getColor()));
+                    gc.setFill(bullet.getColor());
+                    gc.fillOval(bullet.getY(),bullet.getX(),BULLTE_RADIUS,BULLTE_RADIUS);
+                }
             }
         }
 
@@ -172,11 +180,13 @@ public class Map implements Runnable, Config, Callable<String> {
 
         if(numEvilLeft ==0 || numJusticeLeft == 0){
             battleState.setStarted(false);
-            if(numEvilLeft == 0){//设置战斗胜利者
+            if(numEvilLeft == 0){//设置战斗胜利者并且绘制
                 battleState.setWinner(Camp.JUSTICE);
+                gc.drawImage(justiceWinImage,0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
             }
             else{
                 battleState.setWinner(Camp.EVIL);
+                gc.drawImage(evilWinImage,0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
             }
             synchronized (battleState){
                 battleState.notifyAll();//唤醒侦听线程
@@ -262,7 +272,9 @@ public class Map implements Runnable, Config, Callable<String> {
         while (true){
             try {
                Record record = (Record)reader.readObject();
-               drawRecord(record);
+               synchronized (gc){//锁住画布
+                   drawRecord(record);
+               }
                TimeUnit.MILLISECONDS.sleep(1000/refreshRate);
             } catch (EOFException e) {//正常结束
                 try {
