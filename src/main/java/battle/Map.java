@@ -27,7 +27,7 @@ import javafx.concurrent.*;
  * @author csl
  * @date 2019/11/24 20:56
  */
-public class Map implements Runnable, Config, Callable<String> {
+public class Map extends Task<String> implements Config {
     private Creature[][] grounds;//这个的序列化
     private int refreshRate;//刷新频率
     private GraphicsContext gc;//通过gc直接绘图

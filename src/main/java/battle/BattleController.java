@@ -199,6 +199,7 @@ public class BattleController implements Config {
         pool.execute(scorpion);
         pool.execute(snake);
         pool.execute(map);//战场、子弹刷新线程start
+//        Platform.runLater(map);
         pool.execute(bulletManager);//负责子弹移动、出界、伤害
         //用一个线程侦听战斗是否结束，while(notEnded) wait(); map的display()检测双方人数，若一方=0，则notifyAll()结束map线程,
         new Thread(() -> {//用lambda表达式代替匿名内部类
