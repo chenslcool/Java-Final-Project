@@ -5,7 +5,11 @@ import creature.*;
 import creature.enumeration.Camp;
 import creature.enumeration.Direction;
 import formation.Formation;
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.application.Platform;
+import javafx.concurrent.Task;
+import javafx.concurrent.Worker;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -17,6 +21,7 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.Window;
+import javafx.util.Duration;
 
 import java.io.*;
 import java.net.URL;
@@ -48,7 +53,7 @@ public class BattleController implements Config {
     private BulletManager bulletManager;
     private ObjectOutputStream writer;//每次刷新就向文件写
     private ObjectInputStream reader;
-
+    Timeline timeline;
     public BattleController() {
     }
 
@@ -188,6 +193,8 @@ public class BattleController implements Config {
         battleState.setStarted(true);//状态的结束在map的run线程中设置
         //葫芦娃线程start
         //由于之前是用shutDownNow退出的，如果还是用之前的线程池再execute会出错，因此重新申请一个线程池
+//        Worker.State state = map.getState();
+//        System.out.println(state);
         pool = Executors.newCachedThreadPool();
         for(Evil evil:evils){
             pool.execute(evil);
@@ -198,9 +205,18 @@ public class BattleController implements Config {
         pool.execute(grandPa);
         pool.execute(scorpion);
         pool.execute(snake);
-        pool.execute(map);//战场、子弹刷新线程start
-//        Platform.runLater(map);
         pool.execute(bulletManager);//负责子弹移动、出界、伤害
+
+        timeline = new Timeline(//用Timeline 来实现UI的刷新，是javafx安全的
+                new KeyFrame(Duration.millis(0),
+                        event1 -> {
+                            map.display(true);//每一帧都记录
+                        }),
+                new KeyFrame(Duration.millis(1000/MAP_REFRESH_RATE))
+        );
+        timeline.setCycleCount(Timeline.INDEFINITE);
+        timeline.play();
+        System.out.println("TimeLine play");
         //用一个线程侦听战斗是否结束，while(notEnded) wait(); map的display()检测双方人数，若一方=0，则notifyAll()结束map线程,
         new Thread(() -> {//用lambda表达式代替匿名内部类
             synchronized (battleState){//观察者模式
@@ -224,6 +240,8 @@ public class BattleController implements Config {
 //        battleState.setStarted(false);//这个其实没必要，已经再map的display中设置了
         System.out.println(n+"th game over");
         pool.shutdownNow();
+        timeline.stop();//停止显示
+        System.out.println("TimeLine stop");
         //现在只剩一个主线程了
         synchronized (map){
             map.clearMap();
@@ -238,19 +256,10 @@ public class BattleController implements Config {
         grandPa.clearDirection();//可能错误的原因是：比赛结束，clearDirections的时候，按下了方向键，这样就同时修改directions
         snake.clearDirection();
         Formation.transFormToNextFormation(map,scorpion,snake,evils,bullets);
-        //一场战斗结束，应该显示游戏结果，三秒后再显示战斗初始界面
-        //持续显示战斗结果
-//        try {
-//            TimeUnit.SECONDS.sleep(2);
-//        } catch (InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//        map.display(false);//这时候已经writer已经关闭,刷新显示初始画面
         //test
         //如果在侦听线程sleep(2)的时候案例空格键，那么主线程就会调用strtGame()，就会显示活跃线程数不为0，但是问题不大
         ++n;
         int threadCount = ((ThreadPoolExecutor)pool).getActiveCount();
-        System.out.println("game "+n+",线程池中还有"+threadCount+"个活跃线程");
 //        startGame();
     }
 
@@ -276,9 +285,9 @@ public class BattleController implements Config {
             //装饰器模式
             reader = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
             map.setReader(reader);
-            pool = Executors.newCachedThreadPool();
             battleState.setReviewing(true);//回放状态的关闭在submit的call线程中
-            pool.submit((Callable<String>) map);
+            map.startReview();
+//            new Thread(map).start();//就run(),执行review，但是复盘这部分没有UI安全，考虑如何改变？
             //在review线程内关闭reader
         } catch (IOException e) {
             e.printStackTrace();
