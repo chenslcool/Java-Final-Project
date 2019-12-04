@@ -207,27 +207,6 @@ public class Map implements Config {
         }
     }
 
-//    public void run() {
-//        //序列化输出writer的文件打开操作是在主线程执行的
-//        //如果战斗结束或者暂停或结束就退出run(),结束线程
-//        while (battleState.isBattleStarted() && Thread.interrupted() == false) {
-//            try {
-//                TimeUnit.MILLISECONDS.sleep(1000/refreshRate);
-//                display(true);//display内部上锁顺序: map -> creature
-////                record();//记录一帧
-//            } catch (InterruptedException e) {
-//                break;
-//            }
-//        }
-//        //关闭序列化输出在本线程执行，如果在主线程关闭的画，本线程还未结束，可能继续用已经closed的writer
-//        try {
-//            writer.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//        System.out.println("map.run() exit");
-//    }
-
     public boolean insideMap(int x, int y) {//坐标是否在地图内
         if (x < 0 || x >= NUM_ROWS || y < 0 || y >= NUM_COLUMNS)
             return false;
@@ -272,42 +251,9 @@ public class Map implements Config {
         reviewTimeline.play();
     }
 
-//    public String call(){
-//        review(reader);
-//        battleState.setReviewing(false);//回放结束
-//        return "review";
-//    }
-
-
-
     public void setReader(ObjectInputStream reader){
         this.reader = reader;
     }
-
-//    public void review(ObjectInputStream reader){
-//        //review一定只有单线程
-//        //为什么作为callable，放到call中调用review就可以啊!!!
-//        while (true){
-//            try {
-//               Record record = (Record)reader.readObject();
-//               synchronized (gc){//锁住画布
-//                   drawRecord(record);
-//               }
-//               TimeUnit.MILLISECONDS.sleep(1000/refreshRate);
-//            } catch (EOFException e) {//正常结束
-//                try {
-//                    reader.close();
-//                } catch (IOException ex) {
-//                    ex.printStackTrace();
-//                }
-//                break;
-//            } catch (ClassNotFoundException | IOException e) {
-//                e.printStackTrace();
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
 
     //画一帧记录
     public void drawRecord(Record record){
@@ -353,13 +299,6 @@ public class Map implements Config {
             gc.fillOval(r.y,r.x,BULLTE_RADIUS,BULLTE_RADIUS);
         }
     }
-
-//
-//    @Override
-//    public void run() {
-//        review(reader);
-//        battleState.setReviewing(false);//回放结束
-//    }
 
     private Record getNextRecord(){
         Record record = null;
