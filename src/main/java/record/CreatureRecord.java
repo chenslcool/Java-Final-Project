@@ -16,7 +16,8 @@ public class CreatureRecord implements Serializable {
     public int currentHP;
     public boolean alive;
     public String type;//生物名称,用于确定用什么表示
-    public CreatureRecord(int x,int y,Camp camp,int currentHP,boolean alive,String type){
+
+    public CreatureRecord(int x, int y, Camp camp, int currentHP, boolean alive, String type) {
         this.x = x;
         this.y = y;
         this.camp = camp;

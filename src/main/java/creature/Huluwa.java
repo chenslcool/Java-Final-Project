@@ -15,8 +15,9 @@ import java.util.LinkedList;
 public class Huluwa extends Creature {
     private static String simpleName = "Huluwa";
     private int rank;
-    public Huluwa(Map map, Image image, String name,int rank, LinkedList<Bullet> bullets){
-        super(map,bullets);
+
+    public Huluwa(Map map, Image image, String name, int rank, LinkedList<Bullet> bullets) {
+        super(map, bullets);
         this.image = image;
         this.name = name;
         this.camp = Camp.JUSTICE;
@@ -27,12 +28,12 @@ public class Huluwa extends Creature {
     }
 
     @Override
-    public String getSimpleName(){
-        return "Huluwa"+ rank;
+    public String getSimpleName() {
+        return "Huluwa" + rank;
     }//用于回放
 
     @Override
-    public void resetState(){
+    public void resetState() {
         this.MAX_HP = DEFAULT_MAX_HP;
         this.currentHP = this.MAX_HP;
         this.attackValue = HULUWA_ATK;

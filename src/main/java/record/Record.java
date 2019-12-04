@@ -13,7 +13,8 @@ import java.util.ArrayList;
 public class Record implements Serializable {
     public ArrayList<CreatureRecord> creatureRecords;
     public ArrayList<BulletRecord> bulletRecords;
-    public Record(){
+
+    public Record() {
         creatureRecords = new ArrayList<>();
         bulletRecords = new ArrayList<>();
     }

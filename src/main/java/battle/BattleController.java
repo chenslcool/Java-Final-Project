@@ -54,6 +54,7 @@ public class BattleController implements Config {
     private ObjectOutputStream writer;//每次刷新就向文件写
     private ObjectInputStream reader;
     Timeline timeline;
+
     public BattleController() {
     }
 
@@ -62,48 +63,31 @@ public class BattleController implements Config {
         pane.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                //战场正在回放或者战斗，按键无效
-//                if(battleState.isInFreeState() == false){
-//                    System.out.println("battle is busy now");
-//                    return;
-//                }
-//                System.out.println(event.getCode());
-                if(event.getCode() == KeyCode.SPACE && battleState.isInFreeState()){
+                if (event.getCode() == KeyCode.SPACE && battleState.isInFreeState()) {
                     startGame();//里面已经对战斗状态进行了判断
-                }
-                else if(event.getCode() == KeyCode.L && battleState.isInFreeState() ){
+                } else if (event.getCode() == KeyCode.L && battleState.isInFreeState()) {
                     review();//里面已经对战斗状态进行了判断
-                }
-                else if(event.getCode() == KeyCode.F && battleState.isInFreeState()){
+                } else if (event.getCode() == KeyCode.F && battleState.isInFreeState()) {
                     //在战斗还没开始可以变换阵型
-                    Formation.transFormToNextFormation(map,scorpion,snake,evils,bullets);
+                    Formation.transFormToNextFormation(map, scorpion, snake, evils, bullets);
                     map.display(false);//writer已经关闭
-                }
-                else if(event.getCode() == KeyCode.UP&& battleState.isBattleStarted()){
+                } else if (event.getCode() == KeyCode.UP && battleState.isBattleStarted()) {
                     grandPa.addDirection(Direction.UP);
-                }
-                else if(event.getCode() == KeyCode.DOWN&& battleState.isBattleStarted()){
+                } else if (event.getCode() == KeyCode.DOWN && battleState.isBattleStarted()) {
                     grandPa.addDirection(Direction.DOWN);
-                }
-                else if(event.getCode() == KeyCode.RIGHT&& battleState.isBattleStarted()){
+                } else if (event.getCode() == KeyCode.RIGHT && battleState.isBattleStarted()) {
                     grandPa.addDirection(Direction.RIGHT);
-                }
-                else if(event.getCode() == KeyCode.LEFT&& battleState.isBattleStarted()){
+                } else if (event.getCode() == KeyCode.LEFT && battleState.isBattleStarted()) {
                     grandPa.addDirection(Direction.LEFT);
-                }
-                else if(event.getCode() == KeyCode.W&& battleState.isBattleStarted()){
+                } else if (event.getCode() == KeyCode.W && battleState.isBattleStarted()) {
                     snake.addDirection(Direction.UP);
-                }
-                else if(event.getCode() == KeyCode.S&& battleState.isBattleStarted()){
+                } else if (event.getCode() == KeyCode.S && battleState.isBattleStarted()) {
                     snake.addDirection(Direction.DOWN);
-                }
-                else if(event.getCode() == KeyCode.D&& battleState.isBattleStarted()){
+                } else if (event.getCode() == KeyCode.D && battleState.isBattleStarted()) {
                     snake.addDirection(Direction.RIGHT);
-                }
-                else if(event.getCode() == KeyCode.A&& battleState.isBattleStarted()){
+                } else if (event.getCode() == KeyCode.A && battleState.isBattleStarted()) {
                     snake.addDirection(Direction.LEFT);
-                }
-                else{
+                } else {
                     System.out.println("unused key or battle is busy");
                 }
             }
@@ -114,20 +98,20 @@ public class BattleController implements Config {
         canvas.setHeight(CANVAS_HEIGHT);
         gc = canvas.getGraphicsContext2D();
         battleState = new BattleState();
-        map = new Map(battleState, MAP_REFRESH_RATE, gc,bullets);
-        bulletManager = new BulletManager(map,bullets,battleState);
-        scorpion = new Scorpion(map,bullets);
-        snake = new Snake(map,bullets);
-        Formation.transFormToNextFormation(map,scorpion,snake,evils,bullets);
+        map = new Map(battleState, MAP_REFRESH_RATE, gc, bullets);
+        bulletManager = new BulletManager(map, bullets, battleState);
+        scorpion = new Scorpion(map, bullets);
+        snake = new Snake(map, bullets);
+        Formation.transFormToNextFormation(map, scorpion, snake, evils, bullets);
         initGrandPa();
         initHuluwas();//创建葫芦娃
         map.display(false);
     }
 
-    private void initGrandPa(){
+    private void initGrandPa() {
         URL url = this.getClass().getClassLoader().getResource("pictures/grandpa.png");
         Image image = new Image(url.toString());
-        grandPa = new GrandPa(map,image,"GrandPa",bullets);
+        grandPa = new GrandPa(map, image, "GrandPa", bullets);
     }
 
     private void initHuluwas() {
@@ -135,37 +119,37 @@ public class BattleController implements Config {
         for (int i = 1; i <= 7; ++i) {
             URL url = this.getClass().getClassLoader().getResource("pictures/" + i + ".png");
             Image image = new Image(url.toString());
-            huluwas.add(new Huluwa(map, image, "h",i,bullets));
+            huluwas.add(new Huluwa(map, image, "h", i, bullets));
         }
         transFormChangShe();
     }
 
-    public void arrangeHuluwas(){
+    public void arrangeHuluwas() {
         //将葫芦娃排列为长蛇阵型
         //正常情况下，这是在游戏开始之前执行的，此时只有一个main线程，因此不存在对map的竞争访问
         //葫芦娃都先恢复正常状态:aive,Hp...
-        for(Huluwa huluwa:huluwas){
+        for (Huluwa huluwa : huluwas) {
             huluwa.resetState();
         }
         grandPa.resetState();
         //重新排列
-        synchronized (map){//其实这个synchronized没必要
+        synchronized (map) {//其实这个synchronized没必要
             transFormChangShe();
         }
     }
 
     private void transFormChangShe() {
         //将葫芦娃重置为长蛇阵型，需要修改map和huluwa数组,调用Creature的moveTo方法
-        int y = NUM_COLUMNS/4;
-        int x = NUM_ROWS/2 - 3;
-        grandPa.moveTo(6,2);
+        int y = NUM_COLUMNS / 4;
+        int x = NUM_ROWS / 2 - 3;
+        grandPa.moveTo(6, 2);
         for (Huluwa huluwa : huluwas) {
             huluwa.moveTo(x, y);
             ++x;
         }
     }
 
-    public void startGame(){
+    public void startGame() {
 //        if(battleState.isBattleStarted() || battleState.isReviewing())//战斗或者回放已经开始
 //            return;
         //序列化输出文件
@@ -173,17 +157,18 @@ public class BattleController implements Config {
             //缓冲一下，加快速度
             //考虑跳出对话框让玩家选择记录文件的保存位置
             FileChooser chooser = new FileChooser();
-            chooser.setInitialDirectory(new File("."));;
+            chooser.setInitialDirectory(new File("."));
+            ;
             chooser.setTitle("保存战斗记录文件");
             //设置选择文件类型
             chooser.getExtensionFilters().add(
                     new FileChooser.ExtensionFilter("游戏记录文件", "*.gamelog*"));
             File file = chooser.showSaveDialog(stage);
-            if (file == null){//如果没有选择，就不能开始游戏
+            if (file == null) {//如果没有选择，就不能开始游戏
                 System.out.println("没有选择保存文件，游戏不能进行");
                 return;
             }
-            writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file.getPath()+".gamelog")));
+            writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file.getPath() + ".gamelog")));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -193,13 +178,11 @@ public class BattleController implements Config {
         battleState.setStarted(true);//状态的结束在map的run线程中设置
         //葫芦娃线程start
         //由于之前是用shutDownNow退出的，如果还是用之前的线程池再execute会出错，因此重新申请一个线程池
-//        Worker.State state = map.getState();
-//        System.out.println(state);
         pool = Executors.newCachedThreadPool();
-        for(Evil evil:evils){
+        for (Evil evil : evils) {
             pool.execute(evil);
         }
-        for(Huluwa huluwa:huluwas){
+        for (Huluwa huluwa : huluwas) {
             pool.execute(huluwa);
         }
         pool.execute(grandPa);
@@ -212,15 +195,15 @@ public class BattleController implements Config {
                         event1 -> {
                             map.display(true);//每一帧都记录
                         }),
-                new KeyFrame(Duration.millis(1000/MAP_REFRESH_RATE))
+                new KeyFrame(Duration.millis(1000 / MAP_REFRESH_RATE))
         );
         timeline.setCycleCount(Timeline.INDEFINITE);
         timeline.play();
         System.out.println("TimeLine play");
         //用一个线程侦听战斗是否结束，while(notEnded) wait(); map的display()检测双方人数，若一方=0，则notifyAll()结束map线程,
         new Thread(() -> {//用lambda表达式代替匿名内部类
-            synchronized (battleState){//观察者模式
-                while (battleState.isBattleStarted()){//等待战斗结束
+            synchronized (battleState) {//观察者模式
+                while (battleState.isBattleStarted()) {//等待战斗结束
                     try {
                         battleState.wait();//等待battleState的锁，而不是忙等待监听
                     } catch (InterruptedException e) {
@@ -232,51 +215,47 @@ public class BattleController implements Config {
         }).start();//这个侦听线程不经过pool控制
     }
 
-    public void gameOver(){
+    public void gameOver() {
         //这个函数在侦听线程中被调用
         //失败一方的所有生物线段都因为alive = false 导致线程退出
         //胜利一方的所有生物线程、map刷新线程、bulletManager线程都可能还在运行
         //因此需要shutDownNow向所有线程发送interrupt()让他们退出
-//        battleState.setStarted(false);//这个其实没必要，已经再map的display中设置了
-        System.out.println(n+"th game over");
         pool.shutdownNow();
         timeline.stop();//停止显示
         System.out.println("TimeLine stop");
         //现在只剩一个主线程了
-        synchronized (map){
+        synchronized (map) {
             map.clearMap();
         }
         arrangeHuluwas();
         transFormChangShe();
         bulletManager.clearBullets();
-
         scorpion.resetState();
         snake.resetState();
         grandPa.resetState();
-        grandPa.clearDirection();//可能错误的原因是：比赛结束，clearDirections的时候，按下了方向键，这样就同时修改directions
+        grandPa.clearDirection();//战斗结束，按键控制序列清空
         snake.clearDirection();
-        Formation.transFormToNextFormation(map,scorpion,snake,evils,bullets);
+        Formation.transFormToNextFormation(map, scorpion, snake, evils, bullets);
         //test
-        //如果在侦听线程sleep(2)的时候案例空格键，那么主线程就会调用strtGame()，就会显示活跃线程数不为0，但是问题不大
+        System.out.println(n + "th game over");
         ++n;
-        int threadCount = ((ThreadPoolExecutor)pool).getActiveCount();
-//        startGame();
+        int threadCount = ((ThreadPoolExecutor) pool).getActiveCount();
+        System.out.println("线程池中还有 " + threadCount + "个活跃线程");
     }
 
-    public void review(){
-//        if(battleState.isBattleStarted() || battleState.isReviewing())//战斗或者回放已经开始
-//            return;
-        //都是在主线程进行的
+    public void review() {
+        //是在主线程进行的
         //按下L回放
         System.out.println("start review");
         //应该跳出选择框，选择路径
         FileChooser chooser = new FileChooser();
-        chooser.setInitialDirectory(new File("."));;
+        chooser.setInitialDirectory(new File("."));
+        ;
         chooser.setTitle("打开回放记录文件");
         chooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("游戏记录文件", "*.gamelog*"));
         File file = chooser.showOpenDialog(stage);
-        if (file == null){//如果没有选择，就不能回放
+        if (file == null) {//如果没有选择，就不能回放
             System.out.println("没有选择记录文件，回放不能进行");
             return;
         }
@@ -287,13 +266,9 @@ public class BattleController implements Config {
             map.setReader(reader);
             battleState.setReviewing(true);//回放状态的关闭在submit的call线程中
             map.startReview();
-//            new Thread(map).start();//就run(),执行review，但是复盘这部分没有UI安全，考虑如何改变？
             //在review线程内关闭reader
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
-//    public void pauseGame(){
-//        //按下
-//    }
 }

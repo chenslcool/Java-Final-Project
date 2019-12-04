@@ -3,6 +3,7 @@ package battle;
 /**
  * @author csl
  * @date 2019/11/24 20:57
+ * 战场设置
  */
 public interface Config {
     //画布信息:12*16,每个单元格: 45*45，注意canvas是以左上角为原点的
@@ -13,7 +14,7 @@ public interface Config {
     int NUM_COLUMNS = 16;//对应y
     int MAP_REFRESH_RATE = 20;
 
-    int UNIT_SIZE = CANVAS_HEIGHT/NUM_ROWS;
+    int UNIT_SIZE = CANVAS_HEIGHT / NUM_ROWS;
     int BORDER_LINE_WIDTH = 1;
 
     //生物的一些默认属性
@@ -28,13 +29,13 @@ public interface Config {
     int HULUWA_ATK = 50;
     int HULUWA_DEF = 35;
     int EVIL_ATK = 60;
-    int EVIL_DEF = 40  ;
+    int EVIL_DEF = 40;
     int EVIL_LEADER_ATK = 70;
     int EVIL_LEADER_DEF = 40;
     //子弹
     double STEP_DISTANCE = 15;//子弹每次移动的距离：像素
     int BULLTE_RADIUS = 20;//子弹半径
-//    int DEFAULT_BULLET_DAMAGE = 30;
+    //    int DEFAULT_BULLET_DAMAGE = 30;
     int BULLET_REFRESH_RATE = 10;
     int TRACK_COUNT_DOWN = 70;//子弹最多追踪的步数
 

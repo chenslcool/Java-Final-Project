@@ -15,8 +15,9 @@ import java.util.LinkedList;
  */
 public class Scorpion extends Creature {
     private static String simpleName = "Scorpion";
-    public Scorpion(Map map, LinkedList<Bullet> bullets){
-        super(map,bullets);
+
+    public Scorpion(Map map, LinkedList<Bullet> bullets) {
+        super(map, bullets);
         URL url = this.getClass().getClassLoader().getResource("pictures/" + "scorpion.png");
         this.image = new Image(url.toString());
         this.camp = Camp.EVIL;
@@ -24,13 +25,14 @@ public class Scorpion extends Creature {
         this.defenseValue = EVIL_LEADER_DEF;
         bulletBulletGenerator = new TrackBulletGenerator();
     }
+
     @Override
-    public String getSimpleName(){
+    public String getSimpleName() {
         return "Scorpion";
     }
 
     @Override
-    public void resetState(){
+    public void resetState() {
         this.MAX_HP = DEFAULT_MAX_HP;
         this.currentHP = this.MAX_HP;
         this.attackValue = EVIL_LEADER_ATK;

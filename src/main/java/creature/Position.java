@@ -7,16 +7,20 @@ package creature;
 public class Position {
     private int x = -1;//无效
     private int y = -1;
-    public void setX(int x){
+
+    public void setX(int x) {
         this.x = x;
     }
-    public void setY(int y){
+
+    public void setY(int y) {
         this.y = y;
     }
-    public int getX(){
+
+    public int getX() {
         return x;
     }
-    public int getY(){
+
+    public int getY() {
         return y;
     }
 }

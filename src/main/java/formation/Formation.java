@@ -27,25 +27,29 @@ public class Formation implements Config {
 
     private static FormationKind nextFormation = HEYI;//初始化为鹤翼
 
-    public static void transFormToNextFormation(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets){
+    public static void transFormToNextFormation(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets) {
         //变换成下一个阵型
-        switch (nextFormation){
-            case HEYI:{
-                transformToHeyi(map,scorpion,snake,evils,bullets);
+        switch (nextFormation) {
+            case HEYI: {
+                transformToHeyi(map, scorpion, snake, evils, bullets);
                 nextFormation = YANXING;
-            }break;
-            case YANXING:{
-                transFormToYanxing(map,scorpion,snake,evils,bullets);
+            }
+            break;
+            case YANXING: {
+                transFormToYanxing(map, scorpion, snake, evils, bullets);
                 nextFormation = CHANGSHE;
-            }break;
-            case CHANGSHE:{
-                transFormToChangShe(map,scorpion,snake,evils,bullets);
+            }
+            break;
+            case CHANGSHE: {
+                transFormToChangShe(map, scorpion, snake, evils, bullets);
                 nextFormation = HEYI;
-            }break;
-        };
+            }
+            break;
+        }
+        ;
     }
 
-    public static void clearPreFormation(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets){
+    public static void clearPreFormation(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets) {
         synchronized (map) {
             //清除位置部分可以单独拿出来作为clear方法
             int rmX, rmY;//删除的位置
@@ -67,54 +71,56 @@ public class Formation implements Config {
         }
     }
 
-    public static void transformToHeyi(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets){
+    public static void transformToHeyi(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets) {
 
-        synchronized (map){
-            clearPreFormation(map,scorpion,snake,evils,bullets);
+        synchronized (map) {
+            clearPreFormation(map, scorpion, snake, evils, bullets);
             //重置阵型,占据右半边
             int leaderX = 5;
             int leaderY = 10;
-            scorpion.moveTo(leaderX,leaderY);
-            snake.moveTo(5,14);
-            for(int i = 1;i <= 2;++i){
-                Evil evil = new Evil(map,bullets);
-                evil.moveTo(leaderX-i,leaderY+i);//这里面也会对map上锁，不过都是在一个线程，问题不大
+            scorpion.moveTo(leaderX, leaderY);
+            snake.moveTo(5, 14);
+            for (int i = 1; i <= 2; ++i) {
+                Evil evil = new Evil(map, bullets);
+                evil.moveTo(leaderX - i, leaderY + i);//这里面也会对map上锁，不过都是在一个线程，问题不大
                 evils.add(evil);
-                evil = new Evil(map,bullets);
-                evil.moveTo(leaderX+i,leaderY+i);
+                evil = new Evil(map, bullets);
+                evil.moveTo(leaderX + i, leaderY + i);
                 evils.add(evil);
             }
         }
     }
-    public static void transFormToYanxing(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets){
-        synchronized (map){
-            clearPreFormation(map,scorpion,snake,evils,bullets);
+
+    public static void transFormToYanxing(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets) {
+        synchronized (map) {
+            clearPreFormation(map, scorpion, snake, evils, bullets);
             //重置阵型,占据右半边
             int leaderX = 5;
             int leaderY = 12;
-            scorpion.moveTo(leaderX,leaderY);
-            snake.moveTo(5,14);
-            for(int i = 1;i <= 3;++i){
-                Evil evil = new Evil(map,bullets);
-                evil.moveTo(leaderX-i,leaderY+i);//这里面也会对map上锁，不过都是在一个线程，问题不大
+            scorpion.moveTo(leaderX, leaderY);
+            snake.moveTo(5, 14);
+            for (int i = 1; i <= 3; ++i) {
+                Evil evil = new Evil(map, bullets);
+                evil.moveTo(leaderX - i, leaderY + i);//这里面也会对map上锁，不过都是在一个线程，问题不大
                 evils.add(evil);
-                evil = new Evil(map,bullets);
-                evil.moveTo(leaderX+i,leaderY-i);
+                evil = new Evil(map, bullets);
+                evil.moveTo(leaderX + i, leaderY - i);
                 evils.add(evil);
             }
         }
     }
-    public static void transFormToChangShe(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets){
-        synchronized (map){
-            clearPreFormation(map,scorpion,snake,evils,bullets);
+
+    public static void transFormToChangShe(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets) {
+        synchronized (map) {
+            clearPreFormation(map, scorpion, snake, evils, bullets);
             //重置阵型,占据右半边
             int leaderX = 5;
             int leaderY = 10;
-            scorpion.moveTo(leaderX,leaderY);
-            snake.moveTo(5,14);
-            for(int i = 1;i <= 7;++i){
-                Evil evil = new Evil(map,bullets);
-                evil.moveTo(1 + i,12);//这里面也会对map上锁，不过都是在一个线程，问题不大
+            scorpion.moveTo(leaderX, leaderY);
+            snake.moveTo(5, 14);
+            for (int i = 1; i <= 7; ++i) {
+                Evil evil = new Evil(map, bullets);
+                evil.moveTo(1 + i, 12);//这里面也会对map上锁，不过都是在一个线程，问题不大
                 evils.add(evil);
             }
         }

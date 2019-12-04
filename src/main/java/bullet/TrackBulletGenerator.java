@@ -10,6 +10,6 @@ import creature.Creature;
 public class TrackBulletGenerator extends BulletGenerator<Bullet> {
     @Override
     public Bullet getBullet(Map map, Creature sender, Creature target, int damage, double x, double y) {
-        return new TrackBullet(map,sender,target,damage,x,y);
+        return new TrackBullet(map, sender, target, damage, x, y);
     }
 }

@@ -8,15 +8,16 @@ import creature.Creature;
  * @date 2019/11/27 12:30
  */
 //追踪子弹
-public class TrackBullet extends Bullet{
+public class TrackBullet extends Bullet {
     int countDown = TRACK_COUNT_DOWN;
+
     public TrackBullet(Map map, Creature sender, Creature target, int damage, double x, double y) {
         super(map, sender, target, damage, x, y);
     }
 
     @Override
     public void move() {
-        countDown --;
+        countDown--;
         //追踪敌人，不管他是不是已经dead了
         //每步的总长度就是STEP_DISTANCE
         //根据敌人的位置设置角度，计算三角函数
@@ -27,18 +28,17 @@ public class TrackBullet extends Bullet{
 //            x += STEP_DISTANCE;
 //            return;
 //        }
-        double targetCenterX = target.getPosition().getX()*UNIT_SIZE + UNIT_SIZE/2;
-        double targetCenterY = target.getPosition().getY()*UNIT_SIZE + UNIT_SIZE/2;
+        double targetCenterX = target.getPosition().getX() * UNIT_SIZE + UNIT_SIZE / 2;
+        double targetCenterY = target.getPosition().getY() * UNIT_SIZE + UNIT_SIZE / 2;
         double dx = targetCenterX - x;
         double dy = targetCenterY - y;
-        double len = Math.sqrt(dx*dx + dy*dy);
-        double newX,newY;
-        if(STEP_DISTANCE >= len){//这一步超过了敌人
+        double len = Math.sqrt(dx * dx + dy * dy);
+        double newX, newY;
+        if (STEP_DISTANCE >= len) {//这一步超过了敌人
             newX = targetCenterX;
             newY = targetCenterY;
-        }
-        else{
-            double miu = STEP_DISTANCE/len;
+        } else {
+            double miu = STEP_DISTANCE / len;
             newX = x + dx * miu;
             newY = y + dy * miu;
         }
@@ -47,7 +47,7 @@ public class TrackBullet extends Bullet{
     }
 
     @Override
-    public int getCountDown(){
+    public int getCountDown() {
         return countDown;
     }
 }
