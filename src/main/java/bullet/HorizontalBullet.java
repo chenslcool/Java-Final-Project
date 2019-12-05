@@ -13,7 +13,12 @@ public class HorizontalBullet extends Bullet {
 
     public HorizontalBullet(Map map, Creature sender, Creature target, int damage, double x, double y) {
         super(map, sender, target, damage, x, y);
-        this.toRight = target.getPosition().getY() > sender.getPosition().getY();
+        if(target != null)//否则setToright由Grandpa确定
+            this.toRight = target.getPosition().getY() > sender.getPosition().getY();
+    }
+
+    public void setToRight(boolean toRight){
+        this.toRight = toRight;
     }
 
     @Override

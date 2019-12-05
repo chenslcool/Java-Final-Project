@@ -2,14 +2,11 @@ package battle;
 
 import bullet.Bullet;
 import creature.*;
-import creature.enumeration.Camp;
 import creature.enumeration.Direction;
 import formation.Formation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Platform;
-import javafx.concurrent.Task;
-import javafx.concurrent.Worker;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.scene.canvas.Canvas;
@@ -20,7 +17,6 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.util.Duration;
 
 import java.io.*;
@@ -72,13 +68,13 @@ public class BattleController implements Config {
                     Formation.transFormToNextFormation(map, scorpion, snake, evils, bullets);
                     map.display(false);//writer已经关闭
                 } else if (event.getCode() == KeyCode.UP && battleState.isBattleStarted()) {
-                    grandPa.addDirection(Direction.UP);
+                    grandPa.addMoveDirection(Direction.UP);
                 } else if (event.getCode() == KeyCode.DOWN && battleState.isBattleStarted()) {
-                    grandPa.addDirection(Direction.DOWN);
+                    grandPa.addMoveDirection(Direction.DOWN);
                 } else if (event.getCode() == KeyCode.RIGHT && battleState.isBattleStarted()) {
-                    grandPa.addDirection(Direction.RIGHT);
+                    grandPa.addMoveDirection(Direction.RIGHT);
                 } else if (event.getCode() == KeyCode.LEFT && battleState.isBattleStarted()) {
-                    grandPa.addDirection(Direction.LEFT);
+                    grandPa.addMoveDirection(Direction.LEFT);
                 } else if (event.getCode() == KeyCode.W && battleState.isBattleStarted()) {
                     snake.addDirection(Direction.UP);
                 } else if (event.getCode() == KeyCode.S && battleState.isBattleStarted()) {
@@ -87,7 +83,12 @@ public class BattleController implements Config {
                     snake.addDirection(Direction.RIGHT);
                 } else if (event.getCode() == KeyCode.A && battleState.isBattleStarted()) {
                     snake.addDirection(Direction.LEFT);
-                } else {
+                }else if (event.getCode() == KeyCode.Z && battleState.isBattleStarted()) {
+                    grandPa.addBulletDirection(Direction.LEFT);
+                }else if (event.getCode() == KeyCode.C && battleState.isBattleStarted()) {
+                    grandPa.addBulletDirection(Direction.RIGHT);
+                }
+                else {
                     System.out.println("unused key or battle is busy");
                 }
             }
@@ -233,7 +234,8 @@ public class BattleController implements Config {
         scorpion.resetState();
         snake.resetState();
         grandPa.resetState();
-        grandPa.clearDirection();//战斗结束，按键控制序列清空
+        grandPa.clearMoveDirection();//战斗结束，按键控制序列清空
+        grandPa.clearMoveBulletDirection();
         snake.clearDirection();
         Formation.transFormToNextFormation(map, scorpion, snake, evils, bullets);
         //test
