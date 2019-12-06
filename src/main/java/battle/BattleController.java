@@ -60,8 +60,21 @@ public class BattleController implements Config {
         pane.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
             @Override
             public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.SPACE && battleState.isInFreeState()) {
-                    startGame();//里面已经对战斗状态进行了判断
+                if (event.getCode() == KeyCode.SPACE) {
+                    if(battleState.isInFreeState())
+                        startGame();//里面已经对战斗状态进行了判断
+                    else if(battleState.isBattleStarted()){
+                        if(battleState.gamePaused() == false){
+                            //如果战斗正在进行，按下空格就是暂停
+                            System.out.println("pause game!");
+                            pauseGame();
+                        }
+                        else{
+                            //正在暂停模式。按下空格继续
+                            System.out.println("continue game!");
+                            continueGame();
+                        }
+                    }
                 } else if (event.getCode() == KeyCode.L && battleState.isInFreeState()) {
                     review();//里面已经对战斗状态进行了判断
                 } else if (event.getCode() == KeyCode.F && battleState.isInFreeState()) {
@@ -189,7 +202,12 @@ public class BattleController implements Config {
         timeline = new Timeline(//用Timeline 来实现UI的刷新，是javafx安全的
                 new KeyFrame(Duration.millis(0),
                         event1 -> {
-                            map.display(true);//每一帧都记录
+                            if(!battleState.gamePaused())
+                                map.display(true);//每一帧都记录
+                            else{
+                                //显示暂停画面
+                                map.displayPause();
+                            }
                         }),
                 new KeyFrame(Duration.millis(1000 / MAP_REFRESH_RATE))
         );
@@ -267,5 +285,25 @@ public class BattleController implements Config {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void pauseGame(){
+        pool.shutdownNow();//关闭pool运行的线程
+        battleState.setPaused(true);//进入暂停状态
+    }
+
+    public void continueGame(){
+        pool = Executors.newCachedThreadPool();
+        for (Evil evil : evils) {
+            pool.execute(evil);
+        }
+        for (Huluwa huluwa : huluwas) {
+            pool.execute(huluwa);
+        }
+        pool.execute(grandPa);
+        pool.execute(scorpion);
+        pool.execute(snake);
+        pool.execute(bulletController);//负责子弹移动、出界、伤害
+        battleState.setPaused(false);
     }
 }

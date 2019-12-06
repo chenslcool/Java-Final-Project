@@ -44,6 +44,7 @@ public class Map implements Config {
     private HashMap<String, Image> typeImageMap;//类型名称->image的字典，用于复盘时从Record中根据生物类型确定图片
     private Image evilWinImage;//游戏结束图片
     private Image justiceWinImage;
+    private Image pauseImage;
     private Timeline reviewTimeline;//用于回放时显示每一帧
 
     public Map(BattleState battleState, int refreshRate, GraphicsContext gc, LinkedList<Bullet> bullets) {
@@ -61,6 +62,8 @@ public class Map implements Config {
         evilWinImage = new Image(url.toString());
         url = this.getClass().getClassLoader().getResource("pictures/" + "JusticeWinner.png");
         justiceWinImage = new Image(url.toString());
+        url = this.getClass().getClassLoader().getResource("pictures/" + "fire.png");
+        pauseImage = new Image(url.toString());
         initDictionary();
     }
 
@@ -341,5 +344,9 @@ public class Map implements Config {
             e.printStackTrace();
         }
         return record;
+    }
+
+    public void displayPause(){
+        gc.drawImage(pauseImage,0,0,CANVAS_WIDTH,CANVAS_HEIGHT);
     }
 }

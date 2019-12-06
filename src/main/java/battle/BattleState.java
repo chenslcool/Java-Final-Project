@@ -11,8 +11,17 @@ import creature.enumeration.Camp;
 public class BattleState {
     //    private boolean battlePaused = false;//初始情况：战场没有暂停也没有开始
     private boolean battleStarted = false;
+    private boolean paused = false;
     private boolean reviewing = false;
     private Camp winner = null;//胜利的一方，在游戏结束时由 map设置
+
+    synchronized public void setPaused(boolean paused){
+        this.paused = paused;
+    }
+
+    synchronized public boolean gamePaused(){
+        return paused;
+    }
 
     synchronized public void setStarted(boolean started) {
         battleStarted = started;
@@ -40,7 +49,7 @@ public class BattleState {
     }
 
     synchronized public boolean isInFreeState() {
-        //判断战场仙子啊是不是处于空闲状态
+        //判断战场是不是处于空闲状态:
         return (reviewing == false) && (battleStarted == false);
     }
 
