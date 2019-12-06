@@ -4,16 +4,10 @@
     <list default="true" id="e7605e7e-84e4-41ac-a511-e4703352d8e5" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/battle/BattleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/battle/BattleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bullet/Bullet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bullet/Bullet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bullet/BulletGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bullet/BulletGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bullet/HorizontalBullet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bullet/HorizontalBullet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bullet/HorizontalBulletGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bullet/HorizontalBulletGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bullet/TrackBullet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bullet/TrackBullet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bullet/TrackBulletGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bullet/TrackBulletGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bullet/VerticalBullet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bullet/VerticalBullet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bullet/VerticalBulletGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bullet/VerticalBulletGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/creature/Creature.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Creature.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/creature/GrandPa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/GrandPa.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/battle/BulletManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bullet/BulletController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleController$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/battle/BattleController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/battle/BulletManager.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -176,6 +170,10 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="574" y="122" key="#com.intellij.ide.util.MemberChooser/0.0.1536.824@0.0.1536.824" timestamp="1575428562598" />
+    <state x="142" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog" timestamp="1575616938914">
+      <screen x="0" y="0" width="1536" height="824" />
+    </state>
+    <state x="142" y="0" key="#com.intellij.refactoring.rename.AutomaticRenamingDialog/0.0.1536.824@0.0.1536.824" timestamp="1575616938914" />
     <state x="360" y="3" key="#csl_[package]" timestamp="1575434447847">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
@@ -184,22 +182,22 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="496" y="110" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1575382221692" />
-    <state width="1493" height="183" key="GridCell.Tab.0.bottom" timestamp="1575616621357">
+    <state width="1493" height="183" key="GridCell.Tab.0.bottom" timestamp="1575617039746">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="183" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1575616621357" />
-    <state width="1493" height="183" key="GridCell.Tab.0.center" timestamp="1575616621357">
+    <state width="1493" height="183" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1575617039746" />
+    <state width="1493" height="183" key="GridCell.Tab.0.center" timestamp="1575617039746">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="183" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1575616621357" />
-    <state width="1493" height="183" key="GridCell.Tab.0.left" timestamp="1575616621357">
+    <state width="1493" height="183" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1575617039746" />
+    <state width="1493" height="183" key="GridCell.Tab.0.left" timestamp="1575617039746">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="183" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1575616621357" />
-    <state width="1493" height="183" key="GridCell.Tab.0.right" timestamp="1575616621357">
+    <state width="1493" height="183" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1575617039746" />
+    <state width="1493" height="183" key="GridCell.Tab.0.right" timestamp="1575617039746">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="183" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1575616621357" />
+    <state width="1493" height="183" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1575617039746" />
     <state width="1493" height="261" key="GridCell.Tab.1.bottom" timestamp="1575434620381">
       <screen x="0" y="0" width="1536" height="824" />
     </state>

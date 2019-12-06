@@ -1,5 +1,8 @@
-package battle;
+package bullet;
 
+import battle.BattleState;
+import battle.Config;
+import battle.Map;
 import bullet.Bullet;
 import bullet.TrackBullet;
 import creature.Creature;
@@ -13,12 +16,12 @@ import java.util.concurrent.TimeUnit;
  * @date 2019/11/25 19:17
  * manage all bullets on court
  */
-public class BulletManager implements Config, Runnable {
+public class BulletController implements Config, Runnable {
     private LinkedList<Bullet> bullets;
     private Map map;
     private BattleState battleState;
 
-    public BulletManager(Map map, LinkedList<Bullet> bullets, BattleState battleState) {
+    public BulletController(Map map, LinkedList<Bullet> bullets, BattleState battleState) {
         this.map = map;
         this.bullets = bullets;
         this.battleState = battleState;

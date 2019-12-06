@@ -1,6 +1,7 @@
 package battle;
 
 import bullet.Bullet;
+import bullet.BulletController;
 import creature.*;
 import creature.enumeration.Direction;
 import formation.Formation;
@@ -46,7 +47,7 @@ public class BattleController implements Config {
     private Scorpion scorpion;
     private Snake snake;
     private LinkedList<Bullet> bullets = new LinkedList<>();//由于bullets需要经常增删，用链表
-    private BulletManager bulletManager;
+    private BulletController bulletController;
     private ObjectOutputStream writer;//每次刷新就向文件写
     private ObjectInputStream reader;
     Timeline timeline;
@@ -96,7 +97,7 @@ public class BattleController implements Config {
         gc = canvas.getGraphicsContext2D();
         battleState = new BattleState();
         map = new Map(battleState, MAP_REFRESH_RATE, gc, bullets);
-        bulletManager = new BulletManager(map, bullets, battleState);
+        bulletController = new BulletController(map, bullets, battleState);
         scorpion = new Scorpion(map, bullets);
         snake = new Snake(map, bullets);
         Formation.transFormToNextFormation(map, scorpion, snake, evils, bullets);
@@ -147,12 +148,10 @@ public class BattleController implements Config {
     }
 
     public void startGame() {
-//        if(battleState.isBattleStarted() || battleState.isReviewing())//战斗或者回放已经开始
-//            return;
-        //序列化输出文件
+
         try {
             //缓冲一下，加快速度
-            //考虑跳出对话框让玩家选择记录文件的保存位置
+            //跳出对话框让玩家选择记录文件的保存位置
             FileChooser chooser = new FileChooser();
             chooser.setInitialDirectory(new File("."));
             ;
@@ -185,7 +184,7 @@ public class BattleController implements Config {
         pool.execute(grandPa);
         pool.execute(scorpion);
         pool.execute(snake);
-        pool.execute(bulletManager);//负责子弹移动、出界、伤害
+        pool.execute(bulletController);//负责子弹移动、出界、伤害
 
         timeline = new Timeline(//用Timeline 来实现UI的刷新，是javafx安全的
                 new KeyFrame(Duration.millis(0),
@@ -226,7 +225,7 @@ public class BattleController implements Config {
         }
         arrangeHuluwas();
         transFormChangShe();
-        bulletManager.clearBullets();
+        bulletController.clearBullets();
         scorpion.resetState();
         snake.resetState();
         grandPa.resetState();
