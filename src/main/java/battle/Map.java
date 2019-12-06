@@ -62,7 +62,7 @@ public class Map implements Config {
         evilWinImage = new Image(url.toString());
         url = this.getClass().getClassLoader().getResource("pictures/" + "JusticeWinner.png");
         justiceWinImage = new Image(url.toString());
-        url = this.getClass().getClassLoader().getResource("pictures/" + "fire.png");
+        url = this.getClass().getClassLoader().getResource("pictures/" + "pause.png");
         pauseImage = new Image(url.toString());
         initDictionary();
     }
