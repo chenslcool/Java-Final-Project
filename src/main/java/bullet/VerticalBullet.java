@@ -12,10 +12,10 @@ import javafx.scene.paint.Color;
 public class VerticalBullet extends Bullet {
     private boolean toUp;//飞行方向
 
-    public VerticalBullet(Map map, Creature sender, Creature target, int damage, double x, double y) {
-        super(map, sender, target, damage, x, y);
-        this.toUp = target.getPosition().getX() < sender.getPosition().getX();
-//        this.color = Color.RED;
+    public VerticalBullet(Creature sender, Creature target, int damage, double x, double y) {
+        super(sender, target, damage, x, y);
+        if(target != null)
+            this.toUp = target.getPosition().getX() < sender.getPosition().getX();
     }
 
     @Override
@@ -27,6 +27,10 @@ public class VerticalBullet extends Bullet {
         } else {
             this.x += STEP_DISTANCE;
         }
+    }
+
+    public void setToUp(boolean toUp){
+        this.toUp = toUp;
     }
 
     @Override

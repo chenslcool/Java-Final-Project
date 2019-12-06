@@ -11,8 +11,8 @@ import creature.Creature;
 public class TrackBullet extends Bullet {
     int countDown = TRACK_COUNT_DOWN;
 
-    public TrackBullet(Map map, Creature sender, Creature target, int damage, double x, double y) {
-        super(map, sender, target, damage, x, y);
+    public TrackBullet(Creature sender, Creature target, int damage, double x, double y) {
+        super(sender, target, damage, x, y);
     }
 
     @Override

@@ -9,5 +9,5 @@ import creature.Creature;
  * generate a bullet (factory mode)
  */
 public abstract class BulletGenerator<T> {
-    public abstract T getBullet(Map map, Creature sender, Creature target, int damage, double x, double y);
+    public abstract T getBullet(Creature sender, Creature target, int damage, double x, double y);
 }

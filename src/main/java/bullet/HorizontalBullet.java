@@ -11,8 +11,8 @@ import javafx.scene.paint.Color;
 public class HorizontalBullet extends Bullet {
     private boolean toRight;//飞行方向
 
-    public HorizontalBullet(Map map, Creature sender, Creature target, int damage, double x, double y) {
-        super(map, sender, target, damage, x, y);
+    public HorizontalBullet(Creature sender, Creature target, int damage, double x, double y) {
+        super(sender, target, damage, x, y);
         if(target != null)//否则setToright由Grandpa确定
             this.toRight = target.getPosition().getY() > sender.getPosition().getY();
     }

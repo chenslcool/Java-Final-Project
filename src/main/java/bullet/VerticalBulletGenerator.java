@@ -10,7 +10,7 @@ import creature.Creature;
 public class VerticalBulletGenerator extends BulletGenerator<Bullet> {
 
     @Override
-    public VerticalBullet getBullet(Map map, Creature sender, Creature target, int damage, double x, double y) {
-        return new VerticalBullet(map, sender, target, damage, x, y);
+    public VerticalBullet getBullet(Creature sender, Creature target, int damage, double x, double y) {
+        return new VerticalBullet(sender, target, damage, x, y);
     }
 }

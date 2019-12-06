@@ -90,7 +90,7 @@ public abstract class Creature implements Runnable, Config, Serializable {
                 if (damage <= 0) {
                     damage = 10;
                 }
-                Bullet bullet = bulletBulletGenerator.getBullet(map, this, enemy, damage, bulletX, bulletY);
+                Bullet bullet = bulletBulletGenerator.getBullet(this, enemy, damage, bulletX, bulletY);
                 if (camp == Camp.JUSTICE) {
                     bullet.setColor(Color.LIGHTGREEN);
                 } else
@@ -259,7 +259,7 @@ public abstract class Creature implements Runnable, Config, Serializable {
                     if (map.insideMap(newX, newY)) {
                         //还是没有同步
                         Creature c = map.getCreatureAt(newX, newY);
-                        if (c != null && c.camp == this.camp && c.alive && (i != 1 && j != 1)) {//不能治愈自己
+                        if (c != null && c.camp == this.camp && c.alive && (!(i == 1 && j == 1))) {//不能治愈自己
                             friends.add(c);
                         }
                     }

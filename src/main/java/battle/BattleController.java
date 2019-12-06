@@ -76,17 +76,13 @@ public class BattleController implements Config {
                 } else if (event.getCode() == KeyCode.LEFT && battleState.isBattleStarted()) {
                     grandPa.addMoveDirection(Direction.LEFT);
                 } else if (event.getCode() == KeyCode.W && battleState.isBattleStarted()) {
-                    snake.addDirection(Direction.UP);
+                    grandPa.addBulletDirection(Direction.UP);
                 } else if (event.getCode() == KeyCode.S && battleState.isBattleStarted()) {
-                    snake.addDirection(Direction.DOWN);
+                    grandPa.addBulletDirection(Direction.DOWN);
                 } else if (event.getCode() == KeyCode.D && battleState.isBattleStarted()) {
-                    snake.addDirection(Direction.RIGHT);
-                } else if (event.getCode() == KeyCode.A && battleState.isBattleStarted()) {
-                    snake.addDirection(Direction.LEFT);
-                }else if (event.getCode() == KeyCode.Z && battleState.isBattleStarted()) {
-                    grandPa.addBulletDirection(Direction.LEFT);
-                }else if (event.getCode() == KeyCode.C && battleState.isBattleStarted()) {
                     grandPa.addBulletDirection(Direction.RIGHT);
+                } else if (event.getCode() == KeyCode.A && battleState.isBattleStarted()) {
+                    grandPa.addBulletDirection(Direction.LEFT);
                 }
                 else {
                     System.out.println("unused key or battle is busy");
