@@ -16,7 +16,6 @@ public abstract class Bullet implements Config {
     double x;//左上角的坐标,是以像素为单位
     double y;
     protected Color color;//子弹的颜色
-//    protected transient Map map;//也要知道自己的位置
     protected transient int damage;//伤害
     protected transient Creature sender;//发射者，记录的一个原因是不能攻击自己
     protected transient Creature target;

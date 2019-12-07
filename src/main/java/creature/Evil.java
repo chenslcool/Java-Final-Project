@@ -2,7 +2,7 @@ package creature;
 
 import battle.Map;
 import bullet.Bullet;
-import bullet.HorizontalBulletGenerator;
+import bullet.StraightBulletGenerator;
 import creature.enumeration.Camp;
 import javafx.scene.image.Image;
 
@@ -25,7 +25,7 @@ public class Evil extends Creature {//妖精是在BattleControler中创建的
         this.camp = Camp.EVIL;
         this.attackValue = EVIL_ATK;
         this.defenseValue = EVIL_DEF;
-        bulletBulletGenerator = new HorizontalBulletGenerator();
+        bulletGenerator = new StraightBulletGenerator();
     }
 
     @Override

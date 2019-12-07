@@ -4,6 +4,7 @@ import battle.Config;
 import battle.Map;
 import bullet.*;
 import creature.enumeration.Camp;
+import creature.enumeration.Direction;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 
@@ -32,7 +33,7 @@ public abstract class Creature implements Runnable, Config, Serializable {
     protected transient int defenseValue;//防御力 < 50
     protected transient int moveRate;//速度,sleepTime = 1000ms/moveRate;
     protected transient LinkedList<Bullet> bullets;
-    protected transient BulletGenerator<Bullet> bulletBulletGenerator;//工厂模式
+    protected transient BulletGenerator<Bullet> bulletGenerator;//工厂模式
 
     public Creature() {
     }
@@ -61,46 +62,45 @@ public abstract class Creature implements Runnable, Config, Serializable {
         synchronized (map) {
             //即使一次只发射一次，会不会也太频繁了？？再慢一点？
             //只要看水平方向有没有敌人就行了，一边最多一个
-            ArrayList<Creature> enemies;
-            if (bulletBulletGenerator instanceof HorizontalBulletGenerator)
-                enemies = searchLineEnemies();
-            else if (bulletBulletGenerator instanceof VerticalBulletGenerator) {
-                enemies = searchColumnEnemies();
-            } else {
-                //追踪弹,攻击协45度方向
-                enemies = searchCorssEnemies();
-//                enemies = new ArrayList<>();
+            Bullet bullet = null;
+            Creature enemy = null;
+            if (bulletGenerator instanceof StraightBulletGenerator){
+                //顺序判断四个方向哪一个有敌人
+                enemy = searchStraightEnemy();
             }
-            if (enemies.isEmpty()) {
-                lastTimeSent = false;//记录：上一次没有发射
+            else if(bulletGenerator instanceof TrackBulletGenerator) {
+                //追踪弹,攻击斜45度方向
+                enemy = searchCorssEnemies();
             }
-            for (Creature enemy : enemies) {
-                if (enemy.isAlive() == false)//如果对方死亡
-                    continue;
-                //避免连续发射，如果上一次发射了，这次就只有 0.5 的概率发射
-                if (lastTimeSent && (!random.nextBoolean())) {
-                    lastTimeSent = false;//本次就不发射了
-                    break;
-                }
-                int x = position.getX();
-                int y = position.getY();
-                double bulletX = x * UNIT_SIZE + (UNIT_SIZE - BULLTE_RADIUS) / 2;
-                double bulletY = y * UNIT_SIZE + (UNIT_SIZE - BULLTE_RADIUS) / 2;
-                int damage = this.attackValue - enemy.defenseValue;
-                if (damage <= 0) {
-                    damage = 10;
-                }
-                Bullet bullet = bulletBulletGenerator.getBullet(this, enemy, damage, bulletX, bulletY);
-                if (camp == Camp.JUSTICE) {
-                    bullet.setColor(Color.LIGHTGREEN);
-                } else
-                    bullet.setColor(Color.DEEPPINK);
-                synchronized (bullets) {//添加子弹
-                    bullets.add(bullet);
-                }
-                break;//发射一个就行了
-//                System.out.println("add bullet:"+bullet);
+            if(enemy == null){//找到了敌人，这次要发射了
+                lastTimeSent = false;//记录：上一次(这一次)没有发射
+                return;
             }
+            if (lastTimeSent && (!random.nextBoolean())) {
+                lastTimeSent = false;//本次就不发射了
+                return;
+            }
+            lastTimeSent = true;
+            //确定要发射子弹了
+            int x = position.getX();
+            int y = position.getY();
+            double bulletX = x * UNIT_SIZE + (UNIT_SIZE - BULLTE_RADIUS) / 2;
+            double bulletY = y * UNIT_SIZE + (UNIT_SIZE - BULLTE_RADIUS) / 2;
+            int damage = this.attackValue - enemy.defenseValue;
+            if (damage <= 0) {
+                damage = 10;
+            }
+            synchronized (enemy){//防止这时候enemy移动，其实没什么用
+                bullet = bulletGenerator.getBullet(this, enemy, damage, bulletX, bulletY);
+            }
+            if (camp == Camp.JUSTICE) {
+                bullet.setColor(Color.LIGHTGREEN);
+            } else
+                bullet.setColor(Color.DEEPPINK);
+            synchronized (bullets) {//添加子弹
+                bullets.add(bullet);
+            }
+
         }
     }
 
@@ -162,39 +162,9 @@ public abstract class Creature implements Runnable, Config, Serializable {
         return image;
     }
 
-    ArrayList<Creature> searchLineEnemies() {
+    Creature searchCorssEnemies() {
+        Creature enemy = null;
         //寻找同一行的敌人
-        ArrayList<Creature> enemies = new ArrayList<>();
-        int x = position.getX();
-        int y = position.getY();
-        synchronized (map) {
-            for (int i = 0; i < NUM_COLUMNS; ++i) {
-                //这个地方有地方生物
-                if ((i != y) && (map.noCreatureAt(x, i) == false) && (map.getCreatureAt(x, i).getCamp() != this.camp))
-                    enemies.add(map.getCreatureAt(x, i));
-            }
-            return enemies;
-        }
-    }
-
-    ArrayList<Creature> searchColumnEnemies() {
-        //寻找同一行的敌人
-        ArrayList<Creature> enemies = new ArrayList<>();
-        int x = position.getX();
-        int y = position.getY();
-        synchronized (map) {
-            for (int i = 0; i < NUM_ROWS; ++i) {
-                //这个地方有地方生物
-                if ((i != x) && (map.noCreatureAt(i, y) == false) && (map.getCreatureAt(i, y).getCamp() != this.camp))
-                    enemies.add(map.getCreatureAt(i, y));
-            }
-            return enemies;
-        }
-    }
-
-    ArrayList<Creature> searchCorssEnemies() {
-        //寻找同一行的敌人
-        ArrayList<Creature> enemies = new ArrayList<>();
         int x = position.getX();
         int y = position.getY();
         //依次向四个方向寻找
@@ -203,8 +173,9 @@ public abstract class Creature implements Runnable, Config, Serializable {
             int nextX = x - 1;
             int nextY = y - 1;
             while (map.insideMap(nextX, nextY)) {
-                if ((map.noCreatureAt(nextX, nextY) == false) && (map.getCreatureAt(nextX, nextY).getCamp() != this.camp)) {
-                    enemies.add(map.getCreatureAt(nextX, nextY));
+                if ((map.noCreatureAt(nextX, nextY) == false) && (map.getCreatureAt(nextX, nextY).getCamp() != this.camp)
+                        && (map.getCreatureAt(nextX, nextY).isAlive())) {
+                    return map.getCreatureAt(nextX, nextY);
                 }
                 --nextX;
                 --nextY;
@@ -213,8 +184,9 @@ public abstract class Creature implements Runnable, Config, Serializable {
             nextX = x - 1;
             nextY = y + 1;
             while (map.insideMap(nextX, nextY)) {
-                if ((map.noCreatureAt(nextX, nextY) == false) && (map.getCreatureAt(nextX, nextY).getCamp() != this.camp)) {
-                    enemies.add(map.getCreatureAt(nextX, nextY));
+                if ((map.noCreatureAt(nextX, nextY) == false) && (map.getCreatureAt(nextX, nextY).getCamp() != this.camp)
+                        && (map.getCreatureAt(nextX, nextY).isAlive())) {
+                    return map.getCreatureAt(nextX, nextY);
                 }
                 --nextX;
                 ++nextY;
@@ -224,8 +196,9 @@ public abstract class Creature implements Runnable, Config, Serializable {
             nextX = x + 1;
             nextY = y - 1;
             while (map.insideMap(nextX, nextY)) {
-                if ((map.noCreatureAt(nextX, nextY) == false) && (map.getCreatureAt(nextX, nextY).getCamp() != this.camp)) {
-                    enemies.add(map.getCreatureAt(nextX, nextY));
+                if ((map.noCreatureAt(nextX, nextY) == false) && (map.getCreatureAt(nextX, nextY).getCamp() != this.camp)
+                        && (map.getCreatureAt(nextX, nextY).isAlive())) {
+                    return map.getCreatureAt(nextX, nextY);
                 }
                 ++nextX;
                 --nextY;
@@ -235,14 +208,15 @@ public abstract class Creature implements Runnable, Config, Serializable {
             nextX = x + 1;
             nextY = y + 1;
             while (map.insideMap(nextX, nextY)) {
-                if ((map.noCreatureAt(nextX, nextY) == false) && (map.getCreatureAt(nextX, nextY).getCamp() != this.camp)) {
-                    enemies.add(map.getCreatureAt(nextX, nextY));
+                if ((map.noCreatureAt(nextX, nextY) == false) && (map.getCreatureAt(nextX, nextY).getCamp() != this.camp)
+                        && (map.getCreatureAt(nextX, nextY).isAlive())) {
+                    return map.getCreatureAt(nextX, nextY);
                 }
                 ++nextX;
                 ++nextY;
             }
 
-            return enemies;
+            return null;
         }
     }
 
@@ -267,6 +241,30 @@ public abstract class Creature implements Runnable, Config, Serializable {
             }
         }
         return friends;
+    }
+
+    /**
+     * @return 直线方向上的某一个敌人
+     */
+    Creature searchStraightEnemy(){
+          int x = position.getX();
+        int y = position.getY();
+        synchronized (map){
+            for(int i = 0;i < NUM_COLUMNS;++i){
+                if((i != y)&&(!map.noCreatureAt(x,i))
+                        &&(map.getCreatureAt(x, i).getCamp() != this.camp)
+                        &&map.getCreatureAt(x,i).isAlive()){
+                    return map.getCreatureAt(x,i);
+                }
+            }
+            for(int i = 0;i < NUM_ROWS;++i){
+                if((i != x)&&(!map.noCreatureAt(i,y))
+                        &&(map.getCreatureAt(i, y).getCamp() != this.camp)
+                        &&map.getCreatureAt(i,y).isAlive()){
+                    return map.getCreatureAt(i,y); }
+            }
+        }
+        return null;//找不到生物
     }
 
     public Camp getCamp() {

@@ -17,8 +17,8 @@ import java.util.LinkedList;
 public class GrandPa extends Creature implements Curable {
     private static String simpleName = "GrandPa";
     private LinkedList<Direction> moveDirections = new LinkedList<Direction>();
-    private BulletGenerator<Bullet> horizonBulletGenerator;
-    private BulletGenerator<Bullet> verticalBulletGenerator;
+//    private BulletGenerator<Bullet> horizonBulletGenerator;
+//    private BulletGenerator<Bullet> verticalBulletGenerator;
 //    private Integer attackCount = 0;//玩家按下的攻击键数量
     private LinkedList<Direction> bulletDirection = new LinkedList<>();
     private long lastTimeSendBullet = System.currentTimeMillis();
@@ -33,9 +33,7 @@ public class GrandPa extends Creature implements Curable {
         //diff
         this.moveRate = DEFAULT_MOVE_RATE * 2;//为了快速相应方向键
 
-        bulletBulletGenerator = new TrackBulletGenerator();
-        horizonBulletGenerator = new HorizontalBulletGenerator();
-        verticalBulletGenerator = new VerticalBulletGenerator();
+        bulletGenerator = new StraightBulletGenerator();//GrandPa只能在控制下发射直行的子弹
     }
 
     @Override
@@ -45,7 +43,6 @@ public class GrandPa extends Creature implements Curable {
         synchronized (map) {
             cure();
         }
-        //如果玩家按下攻击键a,就向水平方向发射两枚子弹,目前完成的比较粗糙
         synchronized (bulletDirection){
             if(bulletDirection.isEmpty() == false){
                 Direction direction = bulletDirection.pollLast();
@@ -54,28 +51,9 @@ public class GrandPa extends Creature implements Curable {
                 double bulletX = x * UNIT_SIZE + (UNIT_SIZE - BULLTE_RADIUS) / 2;
                 double bulletY = y * UNIT_SIZE + (UNIT_SIZE - BULLTE_RADIUS) / 2;
                 Bullet bullet = null;
-                switch (direction){
-                    case UP:{
-                        bullet = verticalBulletGenerator.getBullet(this,null,GRANDPA_ATK - GRANDPA_DEF,bulletX,bulletY);
-                        VerticalBullet verticalBullet = (VerticalBullet) bullet;
-                        verticalBullet.setToUp(true);
-                    }break;
-                    case DOWN:{
-                        bullet = verticalBulletGenerator.getBullet(this,null,GRANDPA_ATK - GRANDPA_DEF,bulletX,bulletY);
-                        VerticalBullet verticalBullet = (VerticalBullet) bullet;
-                        verticalBullet.setToUp(false);
-                    }break;
-                    case LEFT:{
-                        bullet = horizonBulletGenerator.getBullet(this,null,GRANDPA_ATK - GRANDPA_DEF,bulletX,bulletY);
-                        HorizontalBullet horizontalBullet = (HorizontalBullet) bullet;
-                        horizontalBullet.setToRight(false);
-                    }break;
-                    case RIGHT:{
-                        bullet = horizonBulletGenerator.getBullet(this,null,GRANDPA_ATK - GRANDPA_DEF,bulletX,bulletY);
-                        HorizontalBullet horizontalBullet = (HorizontalBullet) bullet;
-                        horizontalBullet.setToRight(true);
-                    }break;
-                }
+                bullet = bulletGenerator.getBullet(this,null,GRANDPA_ATK - GRANDPA_DEF,bulletX,bulletY);
+                StraightBullet straightBullet = (StraightBullet) bullet;
+                straightBullet.setDirection(direction);
                 bullet.setColor(Color.LIGHTGREEN);
                 synchronized (bullets){
                     bullets.add(bullet);

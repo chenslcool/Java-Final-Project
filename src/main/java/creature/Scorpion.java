@@ -23,7 +23,7 @@ public class Scorpion extends Creature {
         this.camp = Camp.EVIL;
         this.attackValue = EVIL_LEADER_ATK;
         this.defenseValue = EVIL_LEADER_DEF;
-        bulletBulletGenerator = new TrackBulletGenerator();
+        bulletGenerator = new TrackBulletGenerator();
     }
 
     @Override
