@@ -37,7 +37,7 @@ public interface Config {
     int BULLTE_RADIUS = 20;//子弹半径
     //    int DEFAULT_BULLET_DAMAGE = 30;
     int BULLET_REFRESH_RATE = 10;
-    int TRACK_COUNT_DOWN = 70;//子弹最多追踪的步数
+    int TRACK_COUNT_DOWN = 150;//子弹最多追踪的步数
     //玩家控制发射子弹最小时间间隔，防止太频繁地发射子弹
     long BULLET_TIME_GAP = 200;//200 millisecond = 0.2s
     //血条
