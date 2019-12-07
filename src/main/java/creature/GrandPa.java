@@ -21,6 +21,7 @@ public class GrandPa extends Creature implements Curable {
     private BulletGenerator<Bullet> verticalBulletGenerator;
 //    private Integer attackCount = 0;//玩家按下的攻击键数量
     private LinkedList<Direction> bulletDirection = new LinkedList<>();
+    private long lastTimeSendBullet = System.currentTimeMillis();
     public GrandPa(Map map, Image image, String name, LinkedList<Bullet> bullets) {
         super(map, bullets);
         this.image = image;
@@ -161,8 +162,15 @@ public class GrandPa extends Creature implements Curable {
     }
 
     public void addBulletDirection(Direction direction){
-        synchronized (bulletDirection){
-            bulletDirection.add(direction);
+        //不能太频繁地发射子弹，要设置时间间隔
+        long currentTime = System.currentTimeMillis();
+        long timeGap = currentTime - lastTimeSendBullet;
+        if(timeGap > BULLET_TIME_GAP)
+        {
+            synchronized (bulletDirection){
+                bulletDirection.add(direction);
+            }
+            lastTimeSendBullet = currentTime;
         }
     }
 
