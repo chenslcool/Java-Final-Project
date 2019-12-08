@@ -24,16 +24,16 @@ public abstract class Creature implements Runnable, Config, Serializable {
     protected Camp camp;
     protected boolean alive;
     protected boolean lastTimeSent;//上一次是否发射了子弹
-    protected transient Image image;
-    protected transient Random random;
-    protected transient Position position;
-    protected transient Map map;
-    protected transient String name;
-    protected transient int attackValue;//攻击力 > 50
-    protected transient int defenseValue;//防御力 < 50
-    protected transient int moveRate;//速度,sleepTime = 1000ms/moveRate;
-    protected transient LinkedList<Bullet> bullets;
-    protected transient BulletGenerator<Bullet> bulletGenerator;//工厂模式
+    protected Image image;
+    protected Random random;
+    protected Position position;
+    protected Map map;
+    protected String name;
+    protected int attackValue;//攻击力 > 50
+    protected int defenseValue;//防御力 < 50
+    protected int moveRate;//速度,sleepTime = 1000ms/moveRate;
+    protected LinkedList<Bullet> bullets;
+    protected BulletGenerator<Bullet> bulletGenerator;//工厂模式
 
     public Creature() {
     }
@@ -282,7 +282,7 @@ public abstract class Creature implements Runnable, Config, Serializable {
                 if (alive == false)
                     break;//sleep后发现自己死了
                 synchronized (map) {//上锁顺序 map -> creature(this)
-                    attack();//attack()对map、bullet上锁
+                    attack();//attack()对map、enemy、bullet上锁
                     move();//move方法内部已经对map上锁了
                 }
             } catch (InterruptedException e) {

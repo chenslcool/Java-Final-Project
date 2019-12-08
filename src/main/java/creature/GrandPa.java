@@ -17,9 +17,6 @@ import java.util.LinkedList;
 public class GrandPa extends Creature implements Curable {
     private static String simpleName = "GrandPa";
     private LinkedList<Direction> moveDirections = new LinkedList<Direction>();
-//    private BulletGenerator<Bullet> horizonBulletGenerator;
-//    private BulletGenerator<Bullet> verticalBulletGenerator;
-//    private Integer attackCount = 0;//玩家按下的攻击键数量
     private LinkedList<Direction> bulletDirection = new LinkedList<>();
     private long lastTimeSendBullet = System.currentTimeMillis();
     public GrandPa(Map map, Image image, String name, LinkedList<Bullet> bullets) {
