@@ -1,5 +1,6 @@
 package creature;
 
+import battle.BattleState;
 import battle.Config;
 import battle.Map;
 import bullet.*;
@@ -18,6 +19,7 @@ import java.util.Random;
  * @date 2019/11/24 20:49
  */
 public abstract class Creature implements Runnable, Config, Serializable {
+    private static BattleState battleState;
     //只有阵营、存活状态、图像(也许可以用map统一保存，但是先存吧)、hp需要保存
     protected int MAX_HP;
     protected int currentHP;
@@ -35,6 +37,9 @@ public abstract class Creature implements Runnable, Config, Serializable {
     protected LinkedList<Bullet> bullets;
     protected BulletGenerator<Bullet> bulletGenerator;//工厂模式
 
+    public static void setBattleState(BattleState bs){
+        battleState=bs;
+    }
     public Creature() {
     }
 
@@ -278,15 +283,21 @@ public abstract class Creature implements Runnable, Config, Serializable {
         while (alive && Thread.interrupted() == false) {//死亡或者pool调用了shutDownNow则本线程退出
             //如果暂停的话，BattleField只要把所以生物的alive置为false,就能结束所有生物线程并且生物状态不变了
             try {
+                synchronized (battleState){
+                    while (battleState.gamePaused()){
+                        System.out.println("game pause,creature waiting for continue!");
+                        battleState.wait();//如果战斗暂停，就等待战斗继续,notifyAll()在gameContinue()中调用
+                    }
+                }
                 Thread.sleep(1000 / moveRate);
                 if (alive == false)
-                    break;//sleep后发现自己死了
+                    break;//sleep后发现自己死了,线程结束
                 synchronized (map) {//上锁顺序 map -> creature(this)
                     attack();//attack()对map、enemy、bullet上锁
                     move();//move方法内部已经对map上锁了
                 }
             } catch (InterruptedException e) {
-                break;//在sleep的时候shutDownNow结束线程
+                break;//在sleep的时候shutDownNow结束线程(战斗结束)
             }
         }
 //        System.out.println("Creature.run() exit");

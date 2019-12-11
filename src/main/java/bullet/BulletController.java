@@ -83,6 +83,12 @@ public class BulletController implements Config, Runnable {
     public void run() {
         while (battleState.isBattleStarted() && Thread.interrupted() == false) {
             try {
+                synchronized (battleState){
+                    while (battleState.gamePaused()){
+                        System.out.println("game pause,bulletController waiting for continue!");
+                        battleState.wait();//如果战斗暂停，就等待战斗继续,notifyAll()在gameContinue()中调用
+                    }
+                }
                 TimeUnit.MILLISECONDS.sleep(1000 / BULLET_REFRESH_RATE);
                 synchronized (map) {//上锁顺序 map -> creature
                     moveAll();//移动所有子弹
@@ -91,7 +97,7 @@ public class BulletController implements Config, Runnable {
                 break;//sleep的时候被shutdown
             }
         }
-        System.out.println("bulletManager.run() exit");
+        System.out.println("game over,bulletController.run() exit");
     }
 
     /**

@@ -109,6 +109,7 @@ public class BattleController implements Config {
         canvas.setHeight(CANVAS_HEIGHT);
         gc = canvas.getGraphicsContext2D();
         battleState = new BattleState();
+        Creature.setBattleState(battleState);
         map = new Map(battleState, MAP_REFRESH_RATE, gc, bullets);
         bulletController = new BulletController(map, bullets, battleState);
         scorpion = new Scorpion(map, bullets);
@@ -288,22 +289,13 @@ public class BattleController implements Config {
     }
 
     public void pauseGame(){
-        pool.shutdownNow();//关闭pool运行的线程
         battleState.setPaused(true);//进入暂停状态
     }
 
     public void continueGame(){
-        pool = Executors.newCachedThreadPool();
-        for (Evil evil : evils) {
-            pool.execute(evil);
-        }
-        for (Huluwa huluwa : huluwas) {
-            pool.execute(huluwa);
-        }
-        pool.execute(grandPa);
-        pool.execute(scorpion);
-        pool.execute(snake);
-        pool.execute(bulletController);//负责子弹移动、出界、伤害
         battleState.setPaused(false);
+        synchronized (battleState){
+            battleState.notifyAll();//唤醒暂停的生物、子弹controller
+        }
     }
 }
