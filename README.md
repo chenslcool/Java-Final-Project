@@ -65,7 +65,10 @@ private LinkedList<Direction> bulletDirection = new LinkedList<>();
 封装使得外部对象无法直接访问内部实现细节，体现了高内聚、低耦合的设计原则。同时，封装将一系列固定的操作用方法名易于读懂的方法表示，增加了代码的可读性。
 ## 用到的设计模式
 1. 工厂模式。在工厂模式中，我们在创建对象时不会暴露创建的底层逻辑，而是提供一个统一的接口来创建新的对象。在本项目中，工厂模式的运用具体体现在生物对象的子弹工厂bulletGenerator上，不能的生物需要发射不同种类的子弹，如果在发射时才由生物对象指定创建哪一种子弹，那么后期如果想让该生物改变射击方式，发射其他种类的子弹，就需要比较复杂的代码逻辑，可拓展性低。运用工厂模式的话，只要让这个子弹工程引用另一种工厂对象的实例，而生物发射子弹的代码则不需要修改。
-2. 观察者模式。本项目一个困惑我的问题是：当战斗结束时，主线程应该能够监测到战斗的结束，然后让仍然存活的生物线程、子弹管理线程终止。显然，战斗结束这个事件是可以由Map类的map对象在显示每一帧时通过计算两个阵营人数来确定的，但是map对象对主界面进行画面刷新是在另一个线程中执行的(javafx的Application Thread)，那么要如何通知主线程战斗已经结束呢？我原先打算的是在游戏开始时，主线程再创建一个线程，该线程用一个while循环侦听全局共享的battleState对象，一旦游戏状态为结束，就终止生物等线程。但是显然这种方式不太好，这种忙等待的方式浪费了cpu资源。结合线程并发的知识，我通过wait()和notifyAll()获取、释放battleState对象上的锁，实现了侦听线程。关键代码如下：  
+2. 观察者模式。  
+本项目有两个地方用到了观察者模式：侦听游戏结束以及暂停后侦听游戏继续的事件。  
+### 游戏结束事件的侦听及处理  
+本项目一个困惑我的问题是：当战斗结束时，主线程应该能够监测到战斗的结束，然后让仍然存活的生物线程、子弹管理线程终止。显然，战斗结束这个事件是可以由Map类的map对象在显示每一帧时通过计算两个阵营人数来确定的，但是map对象对主界面进行画面刷新是在另一个线程中执行的(javafx的Application Thread)，那么要如何通知主线程战斗已经结束呢？我原先打算的是在游戏开始时，主线程再创建一个线程，该线程用一个while循环侦听全局共享的battleState对象，一旦游戏状态为结束，就终止生物等线程。但是显然这种方式不太好，这种忙等待的方式浪费了cpu资源。结合线程并发的知识，我通过wait()和notifyAll()获取、释放battleState对象上的锁，实现了侦听线程。关键代码如下：  
 * 这是在gameStart()方法中创建战场侦听线程的代码:
 ```
 new Thread(() -> {//用lambda表达式代替匿名内部类
@@ -97,7 +100,38 @@ if (numEvilLeft == 0 || numJusticeLeft == 0) {
             }
         }
 ```
-上述对于wait()和notiflAll()方法的使用真正让我感受到java对于并发的支持，加深了我对“锁”的认识，通过合理地使用对象和锁以及wait()和notiflAll()函数，能够编写出高效、优美的代码。
+### 游戏的暂停和继续
+对于如何实现游戏的暂停和继续，我最初的想法是玩家暂停后，通过线程池关闭所有子线程（生物线程、子弹移动线程），玩家选择继续游戏后，再通过线程池重新执行这些线程。不过，这种方式虽然可以起到效果，不过效率上不够好，也没有充分使用Java内置的线程同步机制。 
+后来我想，等待游戏结束和等待游戏继续，其实都是等待battleState状态的变化，可以通过获取、等待、释放battleState上的锁实现。于是就有了如下的代码：  
+* 这是pauseGame()方法的实现,仅仅是将battleState设置为了paused = true的状态：
+````
+    public void pauseGame(){
+        battleState.setPaused(true);//进入暂停状态
+    }
+````
+* 那么上面的pauseGame()方法会如何产生效果呢?答案是它会使得所有活着的生物以及子弹控制线程等待，以下是Creature的run()方法的片段：
+````
+                synchronized (battleState){
+                    while (battleState.gamePaused()){
+                        System.out.println("game pause,creature waiting for continue!");
+                        battleState.wait();//如果战斗暂停，就等待战斗继续,notifyAll()在gameContinue()中调用
+                    }
+                }
+````
+可以看到，如果战斗暂停，生物就会释放battleState的锁，等到battleState变化的通知，而这个通知是谁发出的呢？答案是gameContinue()方法。
+* 以下是gameContinue()方法：
+````
+    public void continueGame(){
+        battleState.setPaused(false);
+        synchronized (battleState){
+            battleState.notifyAll();//唤醒暂停的生物、子弹controller
+        }
+    }
+````
+continueGame()方法十分简洁而优美，它改变了battleState的状态，再调用battleState.notifyAll()来唤醒所有等待的生物、子弹控制线程。  
+如此，游戏的暂停、继续和结束都以一种巧妙的方式完成。
+
+上述对于wait()和notifyAll()方法的使用真正让我感受到java对于并发的支持，加深了我对“锁”的认识，通过合理地使用对象和锁以及wait()和notiflAll()函数，能够编写出高效、优美的代码。
 ## 多线程的协同
 本项目遇到的线程问题及解决方案：
 ### 1. 多个生物占据了同一个位置
@@ -237,4 +271,125 @@ public class Record implements Serializable {
     }
 ````
 上述过程还涉及异常处理，利用EOFException来判断记录文件的结尾。
-## JAVA特性的使用：反射、异常处理、集合、泛型、注解、输入输出等
+# JAVA特性的使用：泛型、注解等
+## 异常处理
+其实，本项目不会出现什么因为用户输入导致的异常，至少目前还未发现。但是，我却在其他地方（巧妙地）运用异常处理机制解决了一些问题。我是将每一帧的画面信息作为一个Record对象序列化存入文件的，而一局游戏的帧数因游戏时长而定，故在复盘时，一共有多少帧是不确定的，那么如何确定何时结束读取呢？我是在getNextRecord()方法中实现每一帧的读取的，代码如下：
+````
+    private Record getNextRecord() {
+        Record record = null;
+        try {
+            record = (Record) reader.readObject();
+        } catch (EOFException e) {
+            reviewTimeline.stop();//结束timeline动画
+            battleState.setReviewing(false);//回放结束
+            return null;
+        } catch (IOException e) {
+            e.printStackTrace();
+        } catch (ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return record;
+    }
+````
+可以看到，每次通过反序列化读出一个Record对象，当然，如果已经读完，到达文件末尾，再读取是会失败的，这会抛出一个EOFException异常。
+而是正是利用这个EOFException异常，判断复盘文件的读取结束，返回null，再将复盘显示的时间线reviewTimeline关闭。这就实现了一个文件中多个序列化对象的反序列化。也许这种方式不是特别优雅，但是还是比较巧妙和有效的。
+## 集合框架
+Java包含了很多集合类型:ArrayList、LinkedLis、字典Map等。本项目中，我也主要用到了这三种集合。
+### 1. ArrayList
+ArrayList是用数组实现的表，优点是能快速随机访问元素，末尾添加元素较快，缺点是不适合频繁地插入、删除元素。也是最常用的容器。我用ArrayList存葫芦娃列表和普通妖精列表，此外对每一帧进行存储记录时，我也是将所有的生物、子弹信息存在了Record对象的两个ArrayList中。  
+这是葫芦娃列表和妖精列表在BattleController中的定义：
+````
+    private ArrayList<Huluwa> huluwas = new ArrayList<Huluwa>();
+    private ArrayList<Evil> evils = new ArrayList<>();
+````
+这是Record的实现:
+````
+public class Record implements Serializable {
+    public ArrayList<CreatureRecord> creatureRecords;
+    public ArrayList<BulletRecord> bulletRecords;
+
+    public Record() {
+        creatureRecords = new ArrayList<>();
+        bulletRecords = new ArrayList<>();
+    }
+}
+````
+### 2. LinkedList
+LinkedList是用链表实现的，特点是顺序访问、元素插入和删除快，随机访问慢。对于我的BulletController对象，它负责所有子弹的移动，一旦发现子弹击中敌人或者出界，就要将子弹删除，因此，比较适合用LinkedList存储所有的子弹。
+````
+private LinkedList<Bullet> bullets;
+````
+此外，LinkedList还实现了Queue接口，这意味着可以将LinkedList用作先进先出的队列，这个特点在控制老爷爷移动和发射子弹时起到了作用。
+我将玩家的方向键指令以及攻击指令存入两个LinkedList的尾部，在攻击和移动时分别从这两个队列的头部取出控制信息。实现如下：  
+这是GrandPa类中两个控制指令队列的定义：
+````
+    private LinkedList<Direction> moveDirections = new LinkedList<Direction>();
+    private LinkedList<Direction> bulletDirection = new LinkedList<>();
+````
+这是GrandPa的attack()方法,对bulletDirection队列进行了访问和修改：
+````
+public void attack() {
+        //老爷爷的attack(这个方法名不好，应该改成act)就是移动，治愈队友
+        //治愈九宫格之内的
+        synchronized (map) {
+            cure();
+        }
+        synchronized (bulletDirection){
+            if(bulletDirection.isEmpty() == false){
+                Direction direction = bulletDirection.pollLast();
+                //省略的具体的攻击代码
+            }
+        }
+    }
+````
+### 3. Map
+Map是字典，实现了键值对的存储和查询。我对Map的使用主要是在复盘中，因为不同的生物对应不同的图形显示，如果将生物的图像信息也作为记录参与序列化，这必然会导致记录文件的过分臃肿。于是我在游戏初始化时先用一个HashMap<String, Image>记录生物和图片的对应关系，复盘时直接用唯一确定生物的字符串查询对应的image即可。以下代码展示了这个字典在复盘过程中绘制一帧图像的作用：
+````
+public void drawRecord(Record record) {
+        //省略了无关代码
+        ArrayList<CreatureRecord> creatureRecords = record.creatureRecords;
+        ArrayList<BulletRecord> bulletRecords = record.bulletRecords;
+        //先画生物
+        for (CreatureRecord r : creatureRecords) {
+            //根据type从type-image map中选出图片
+            Image image = typeImageMap.get(r.type);
+            //省略了具体绘制部分
+        }
+
+    }
+````
+## 反射
+反射十分博大精深，在本项目中，我使用到的反射机制十分的简单：instanceOf 关键字。使用这个关键字，可以判断某一个对象是否为某一种类型。本游戏，我将老爷爷和蛇精设置拥有能为队友回血的能力，它们能为九宫格范围内的队友增减生命值，用浅绿色的3*3方格显示这一能力。
+这两者都继承了Curable接口。instanceOf的使用出现在Map类的display()方法中：
+````
+        if (c instanceof Curable) {
+             //画治愈绿色
+             //设置透明度
+             gc.setFill(Color.rgb(0, 255, 0, 0.3));
+             double x1 = ((j - 1) > 0 ? j - 1 : 0) * UNIT_SIZE;
+             double y1 = ((i - 1) > 0 ? i - 1 : 0) * UNIT_SIZE;
+             gc.fillRect(x1, y1, (3 - (j == 0 ? 1 : 0)) * UNIT_SIZE, (3 - (i == 0 ? 1 : 0)) * UNIT_SIZE);
+          }
+````
+## 输入输出
+输入输出是主要用在：关键信息在控制台打印以调试与对象序列化和反序列化。前者十分简单，而后者已经在上面的“集合框架”部分提到了。
+我就以复盘中反序列化为例，稍微写一下文件读的操作。  
+当玩家选择回放后，进入review()方法，在方法中，先使用一个FileChooser弹出文件选择框让用户选择文件，获得对应的File对象：
+````
+        FileChooser chooser = new FileChooser();
+        chooser.setInitialDirectory(new File("."));
+        chooser.setTitle("打开回放记录文件");
+        chooser.getExtensionFilters().add(
+                new FileChooser.ExtensionFilter("游戏记录文件", "*.gamelog*"));
+        File file = chooser.showOpenDialog(stage);
+        if (file == null) {//如果没有选择，就不能回放
+            System.out.println("没有选择记录文件，回放不能进行");
+            return;
+        }
+````
+之后，利用这个file构造出ObjectInputStream对象，传给map对象：
+````
+            reader = new ObjectInputStream(new BufferedInputStream(new FileInputStream(file)));
+            map.setReader(reader);
+````
+之后，map就从这个ObjectInputStream读取Record对象。具体行为已在之前对getNextRecord()的说明中详细写出了。
