@@ -266,7 +266,6 @@ public class BattleController implements Config {
         //应该跳出选择框，选择路径
         FileChooser chooser = new FileChooser();
         chooser.setInitialDirectory(new File("."));
-        ;
         chooser.setTitle("打开回放记录文件");
         chooser.getExtensionFilters().add(
                 new FileChooser.ExtensionFilter("游戏记录文件", "*.gamelog*"));

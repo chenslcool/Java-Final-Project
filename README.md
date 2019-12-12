@@ -359,7 +359,8 @@ public void drawRecord(Record record) {
     }
 ````
 ## 反射
-反射十分博大精深，在本项目中，我使用到的反射机制十分的简单：instanceOf 关键字。使用这个关键字，可以判断某一个对象是否为某一种类型。本游戏，我将老爷爷和蛇精设置拥有能为队友回血的能力，它们能为九宫格范围内的队友增减生命值，用浅绿色的3*3方格显示这一能力。
+反射十分博大精深，在本项目中，我使用到的反射机制十分的简单：instanceOf 关键字。使用这个关键字，可以判断某一个对象是否为某一种类型。我在本项目的一些地方用到了这个关键字：  
+1. 本游戏，我将老爷爷和蛇精设置拥有能为队友回血的能力，它们能为九宫格范围内的队友增减生命值，用浅绿色的3*3方格显示这一能力。
 这两者都继承了Curable接口。instanceOf的使用出现在Map类的display()方法中：
 ````
         if (c instanceof Curable) {
@@ -370,6 +371,17 @@ public void drawRecord(Record record) {
              double y1 = ((i - 1) > 0 ? i - 1 : 0) * UNIT_SIZE;
              gc.fillRect(x1, y1, (3 - (j == 0 ? 1 : 0)) * UNIT_SIZE, (3 - (i == 0 ? 1 : 0)) * UNIT_SIZE);
           }
+````
+2. 另一个我使用instanceOf关键字的地方是在Creature类的attack()方法中，由于不同的子弹搜寻的目标是不一样的（straightBullet搜寻的是水平与竖直方向的敌人，而trackBullet搜寻的是对角线上的敌人），故要根据子弹工厂类型的不同调用不同的方法寻找敌人，而把这个搜寻的任务交给子弹工程实现，用多态实现不同的搜寻方法，我觉得这和“工厂”的概念有悖。于是，这里，我通过判断子弹工厂的具体类型来搜寻不同的敌人：
+````
+           if (bulletGenerator instanceof StraightBulletGenerator){
+                //顺序判断四个方向哪一个有敌人
+                enemy = searchStraightEnemy();
+            }
+            else if(bulletGenerator instanceof TrackBulletGenerator) {
+                //追踪弹,攻击斜45度方向
+                enemy = searchCorssEnemies();
+            }
 ````
 ## 输入输出
 输入输出是主要用在：关键信息在控制台打印以调试与对象序列化和反序列化。前者十分简单，而后者已经在上面的“集合框架”部分提到了。
@@ -393,3 +405,23 @@ public void drawRecord(Record record) {
             map.setReader(reader);
 ````
 之后，map就从这个ObjectInputStream读取Record对象。具体行为已在之前对getNextRecord()的说明中详细写出了。
+## 泛型
+泛型主要体现在子弹工厂上，我将BulletGenerator时限为一个抽象类，它是一个泛型类，含有类型参数T extends Bullet，说明可以生产某一种子弹，定义如下：
+````
+public abstract class BulletGenerator<T extends Bullet> {
+    public abstract T getBullet(Creature sender, Creature target, int damage, double x, double y);
+}
+
+````
+它的getBullet()方法，接受四个参数：子弹的发射者sender,目标target、伤害damage和坐标，根据这些参数生产一个子弹。  
+而对于不同的生物，它们都有一个子弹工厂，以葫芦娃为例,它的构造函数是这样初始化子弹工厂的：
+````
+bulletGenerator = new StraightBulletGenerator();
+````
+而蛇精是这样的：
+````
+bulletGenerator = new TrackBulletGenerator();
+````
+TrackBullet和StraightBullet都可以和? extends Bullet相匹配。  
+如果之后再添加一种子弹NewBullet，只要再写一个对应的子弹工厂NewBulletGenerator，继承BulletGenerator<NewBullet>。如果要让某种生物能发射这种子弹，还要在它的构造器中将bulletGenerator指向一个NewBulletGenerator对象。   
+泛型方法增强了程序的可读性和可拓展性。

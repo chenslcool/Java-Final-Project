@@ -35,7 +35,7 @@ public abstract class Creature implements Runnable, Config, Serializable {
     protected int defenseValue;//防御力 < 50
     protected int moveRate;//速度,sleepTime = 1000ms/moveRate;
     protected LinkedList<Bullet> bullets;
-    protected BulletGenerator<Bullet> bulletGenerator;//工厂模式
+    protected BulletGenerator<? extends Bullet> bulletGenerator;//工厂模式
 
     public static void setBattleState(BattleState bs){
         battleState=bs;
