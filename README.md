@@ -427,7 +427,7 @@ TrackBullet和StraightBullet都可以和? extends Bullet相匹配。
 ### 注解
 注解可以让编译器来测试和验证代码的格式，也可以保存一些和程序相关的信息。  
 在本项目中，我主要用来两个注解：java自带的override注解和我自己创建的Info注解。
-### Override注解
+#### Override注解
 使用override注解来标注子类重写父类的方法，可以让编译器帮助检查是否确实重写了，这可以防止因为拼写错误或者参数不对应导致“你以为重写但是实际上没有重写”的错误。  
 以attack()方法为例，普通生物和老爷爷的attack()方法是不一样的，老爷爷给攻击反射取决于玩家的键盘输入，因此attack()需要重写，如下：
 ````
@@ -436,7 +436,7 @@ TrackBullet和StraightBullet都可以和? extends Bullet相匹配。
         //省略了具体的代码
     }
 ````
-### Info注解
+#### Info注解
 为了更好地掌握注解的使用，我自己写了一个注解Info，用来注解一个类型。它可以标注出代码的作者以及这个类型存在的意义，定义如下：
 ````
 @Target(ElementType.TYPE)
@@ -448,3 +448,40 @@ public @interface Info {
 ````
 其中author有默认值"CSL"，也就是我。description有默认值"no description"。  
 通常注解机制要和反射结合起来用，通过编写注解处理起解析注解信息，但是本项目好像不需要用到。
+## 测试
+对子弹及子弹工厂的功能进行测试  
+### 测试子弹的移动:
+````
+@Test
+    public void testBulletMove(){
+        BulletGenerator<StraightBullet> bulletBulletGenerator = new StraightBulletGenerator();
+        StraightBullet bullet = null;
+        try {
+            bullet = bulletBulletGenerator.getBullet(new Creature() {
+                @Override
+                public void resetState() {
+
+                }
+            }, null, 10, 100, 100);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        bullet.setDirection(Direction.UP);
+        bullet.move();
+        assertEquals((int)bullet.getX(),(int)85);
+        assertEquals((int)bullet.getY(),(int)100);
+        bullet.move();
+        assertEquals((int)bullet.getX(),(int)70);
+        assertEquals((int)bullet.getY(),(int)100);
+    }
+````
+### 对于子弹的异常创建进行测试(sender不能为null):
+````
+@Test(expected = Exception.class)
+    public void testBulletSenderNotNull() throws Exception {
+        BulletGenerator<StraightBullet> bulletBulletGenerator = new StraightBulletGenerator();
+        bulletBulletGenerator.getBullet(null,null,10,100,100);
+        fail("sender 为null，getBullet没有抛出异常");
+    }
+````
+这里将Test注解的expected属性设置为Exception.class，抛出异常是预期的，说明通过测试。
