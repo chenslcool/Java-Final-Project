@@ -1,10 +1,13 @@
 package battle;
 
+import annotations.Info;
+
 /**
  * @author csl
  * @date 2019/11/24 20:57
  * 战场设置
  */
+@Info(description = "the configuration of battle:size of canvas,move rate,attack and defense value...")
 public interface Config {
     //画布信息:12*16,每个单元格: 45*45，注意canvas是以左上角为原点的
     int CANVAS_WIDTH = 960;//Width和Height要成比例4:3

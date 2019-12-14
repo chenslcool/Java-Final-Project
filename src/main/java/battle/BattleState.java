@@ -1,5 +1,6 @@
 package battle;
 
+import annotations.Info;
 import creature.enumeration.Camp;
 
 /**
@@ -8,6 +9,7 @@ import creature.enumeration.Camp;
  * 表示战斗的状态:暂停、终止与否,由Map、BulletManager等对象共享，只能由BattleField对象修改
  */
 
+@Info(description = "the state of the battle:started or not,paused or not. Shared by entire battle.")
 public class BattleState {
     //    private boolean battlePaused = false;//初始情况：战场没有暂停也没有开始
     private boolean battleStarted = false;

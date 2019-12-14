@@ -1,5 +1,6 @@
 package battle;
 
+import annotations.Info;
 import bullet.Bullet;
 import creature.Creature;
 import creature.Curable;
@@ -31,6 +32,7 @@ import javafx.concurrent.*;
  * @author csl
  * @date 2019/11/24 20:56
  */
+@Info(description = "map of the battle,on charge of displaying battle and reviewing. Shared by all creatures")
 public class Map implements Config {
     private Creature[][] grounds;//这个的序列化
     private int refreshRate;//UI刷新频率

@@ -1,5 +1,6 @@
 package battle;
 
+import annotations.Info;
 import bullet.Bullet;
 import bullet.BulletController;
 import creature.*;
@@ -30,6 +31,8 @@ import java.util.concurrent.*;
  * @author csl
  * @date 2019/11/24 21:47
  */
+
+@Info(description = "handle keyboard event,initialize battle components.Generally,control the whole battle")
 public class BattleController implements Config {
     public static Stage stage = null;
     ExecutorService pool;//线程池
