@@ -485,3 +485,38 @@ public @interface Info {
     }
 ````
 这里将Test注解的expected属性设置为Exception.class，抛出异常是预期的，说明通过测试。
+## lambda 表达式的使用
+lambda表达式可以较为简单地实现函数式接口，比匿名内部类更简单易懂一些。我在本项目的一些地方用到了lambda表达式。
+### 侦听线程的创建
+在startGame()中，我创建了一个线程侦听游戏是否结束，代码如下：
+````
+new Thread(() -> {//用lambda表达式代替匿名内部类
+            synchronized (battleState) {//观察者模式
+                while (battleState.isBattleStarted()) {//等待战斗结束
+                    try {
+                        battleState.wait();//等待battleState的锁，而不是忙等待监听
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            gameOver();//现在这个侦听线程也要结束了
+        }).start();//这个侦听线程不经过pool控制
+````
+Runnable对象只有一个run()方法，是函数实接口，因此可以用lambda表达式实现。
+### Timeline时间轴的事件处理对象
+Timeline构造函数需要多个keyFrame关键帧，表示绘制的内容，而keyFrame需要一个EventHandler对象具体实现绘制的动作，EventHandler只有一个handle()方法，因此是函数式接口。我这样用lambda表达式实现:
+````
+        timeline = new Timeline(//用Timeline 来实现UI的刷新，是javafx安全的
+                new KeyFrame(Duration.millis(0),
+                        event1 -> {
+                            if(!battleState.gamePaused())
+                                map.display(true);//每一帧都记录
+                            else{
+                                //显示暂停画面
+                                map.displayPause();
+                            }
+                        }),
+                new KeyFrame(Duration.millis(1000 / MAP_REFRESH_RATE))
+        );
+````
