@@ -2,28 +2,27 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e7605e7e-84e4-41ac-a511-e4703352d8e5" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/annotations/Info.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/annotations/Info.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bullet/Bullet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bullet/Bullet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bullet/BulletController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bullet/BulletController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bullet/BulletGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bullet/BulletGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bullet/StraightBullet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bullet/StraightBullet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bullet/StraightBulletGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bullet/StraightBulletGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bullet/TrackBullet.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bullet/TrackBullet.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/bullet/TrackBulletGenerator.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/bullet/TrackBulletGenerator.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/creature/Creature.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Creature.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/creature/Curable.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Curable.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/creature/Evil.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Evil.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/creature/GrandPa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/GrandPa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/creature/Huluwa.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Huluwa.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/creature/Position.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Position.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/creature/Scorpion.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Scorpion.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/creature/Snake.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/creature/Snake.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/formation/Formation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/formation/Formation.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/formation/FormationKind.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/formation/FormationKind.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/record/BulletRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/record/BulletRecord.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/record/CreatureRecord.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/record/CreatureRecord.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/record/Record.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/record/Record.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/bullet/Bullet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/bullet/Bullet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/bullet/BulletGenerator.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/bullet/BulletGenerator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/bullet/TrackBullet.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/bullet/TrackBullet.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/bullet/TrackBulletGenerator.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/bullet/TrackBulletGenerator.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/creature/Creature.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Creature.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/creature/Evil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Evil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/creature/GrandPa$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/GrandPa$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/creature/GrandPa.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/GrandPa.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/creature/Huluwa.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Huluwa.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/creature/Position.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Position.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/creature/Scorpion.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Scorpion.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/creature/Snake.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/creature/Snake.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/formation/Formation$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/formation/Formation$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/formation/Formation.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/formation/Formation.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/formation/FormationKind.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/formation/FormationKind.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/record/BulletRecord.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/record/BulletRecord.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/record/CreatureRecord.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/record/CreatureRecord.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/record/Record.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/record/Record.class" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -223,22 +222,22 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="265" y="182" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1575857765165" />
-    <state width="1493" height="183" key="GridCell.Tab.0.bottom" timestamp="1576292182883">
+    <state width="1493" height="183" key="GridCell.Tab.0.bottom" timestamp="1576294579311">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="183" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1576292182883" />
-    <state width="1493" height="183" key="GridCell.Tab.0.center" timestamp="1576292182883">
+    <state width="1493" height="183" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1576294579311" />
+    <state width="1493" height="183" key="GridCell.Tab.0.center" timestamp="1576294579311">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="183" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1576292182883" />
-    <state width="1493" height="183" key="GridCell.Tab.0.left" timestamp="1576292182883">
+    <state width="1493" height="183" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1576294579311" />
+    <state width="1493" height="183" key="GridCell.Tab.0.left" timestamp="1576294579311">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="183" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1576292182883" />
-    <state width="1493" height="183" key="GridCell.Tab.0.right" timestamp="1576292182883">
+    <state width="1493" height="183" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1576294579311" />
+    <state width="1493" height="183" key="GridCell.Tab.0.right" timestamp="1576294579311">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="183" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1576292182883" />
+    <state width="1493" height="183" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1576294579311" />
     <state width="1493" height="261" key="GridCell.Tab.1.bottom" timestamp="1575792879432">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
