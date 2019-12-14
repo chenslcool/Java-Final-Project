@@ -270,8 +270,8 @@ public class Record implements Serializable {
     }
 ````
 上述过程还涉及异常处理，利用EOFException来判断记录文件的结尾。
-# JAVA特性的使用：注解等
-## 异常处理
+## JAVA特性的使用
+### 异常处理
 其实，本项目不会出现什么因为用户输入导致的异常，至少目前还未发现。但是，我却在其他地方（巧妙地）运用异常处理机制解决了一些问题。我是将每一帧的画面信息作为一个Record对象序列化存入文件的，而一局游戏的帧数因游戏时长而定，故在复盘时，一共有多少帧是不确定的，那么如何确定何时结束读取呢？我是在getNextRecord()方法中实现每一帧的读取的，代码如下：
 ````
     private Record getNextRecord() {
@@ -292,9 +292,9 @@ public class Record implements Serializable {
 ````
 可以看到，每次通过反序列化读出一个Record对象，当然，如果已经读完，到达文件末尾，再读取是会失败的，这会抛出一个EOFException异常。
 而是正是利用这个EOFException异常，判断复盘文件的读取结束，返回null，再将复盘显示的时间线reviewTimeline关闭。这就实现了一个文件中多个序列化对象的反序列化。也许这种方式不是特别优雅，但是还是比较巧妙和有效的。
-## 集合框架
+### 集合框架
 Java包含了很多集合类型:ArrayList、LinkedLis、字典Map等。本项目中，我也主要用到了这三种集合。
-### 1. ArrayList
+#### 1. ArrayList
 ArrayList是用数组实现的表，优点是能快速随机访问元素，末尾添加元素较快，缺点是不适合频繁地插入、删除元素。也是最常用的容器。我用ArrayList存葫芦娃列表和普通妖精列表，此外对每一帧进行存储记录时，我也是将所有的生物、子弹信息存在了Record对象的两个ArrayList中。  
 这是葫芦娃列表和妖精列表在BattleController中的定义：
 ````
@@ -313,7 +313,7 @@ public class Record implements Serializable {
     }
 }
 ````
-### 2. LinkedList
+#### 2. LinkedList
 LinkedList是用链表实现的，特点是顺序访问、元素插入和删除快，随机访问慢。对于我的BulletController对象，它负责所有子弹的移动，一旦发现子弹击中敌人或者出界，就要将子弹删除，因此，比较适合用LinkedList存储所有的子弹。
 ````
 private LinkedList<Bullet> bullets;
@@ -341,7 +341,7 @@ public void attack() {
         }
     }
 ````
-### 3. Map
+#### 3. Map
 Map是字典，实现了键值对的存储和查询。我对Map的使用主要是在复盘中，因为不同的生物对应不同的图形显示，如果将生物的图像信息也作为记录参与序列化，这必然会导致记录文件的过分臃肿。于是我在游戏初始化时先用一个HashMap<String, Image>记录生物和图片的对应关系，复盘时直接用唯一确定生物的字符串查询对应的image即可。以下代码展示了这个字典在复盘过程中绘制一帧图像的作用：
 ````
 public void drawRecord(Record record) {
@@ -357,7 +357,7 @@ public void drawRecord(Record record) {
 
     }
 ````
-## 反射
+### 反射
 反射十分博大精深，在本项目中，我使用到的反射机制十分的简单：instanceOf 关键字。使用这个关键字，可以判断某一个对象是否为某一种类型。我在本项目的一些地方用到了这个关键字：  
 1. 本游戏，我将老爷爷和蛇精设置拥有能为队友回血的能力，它们能为九宫格范围内的队友增减生命值，用浅绿色的3*3方格显示这一能力。
 这两者都继承了Curable接口。instanceOf的使用出现在Map类的display()方法中：
@@ -382,7 +382,7 @@ public void drawRecord(Record record) {
                 enemy = searchCorssEnemies();
             }
 ````
-## 输入输出
+### 输入输出
 输入输出是主要用在：关键信息在控制台打印以调试与对象序列化和反序列化。前者十分简单，而后者已经在上面的“集合框架”部分提到了。
 我就以复盘中反序列化为例，稍微写一下文件读的操作。  
 当玩家选择回放后，进入review()方法，在方法中，先使用一个FileChooser弹出文件选择框让用户选择文件，获得对应的File对象：
@@ -404,7 +404,7 @@ public void drawRecord(Record record) {
             map.setReader(reader);
 ````
 之后，map就从这个ObjectInputStream读取Record对象。具体行为已在之前对getNextRecord()的说明中详细写出了。
-## 泛型
+### 泛型
 泛型主要体现在子弹工厂上，我将BulletGenerator时限为一个抽象类，它是一个泛型类，含有类型参数T extends Bullet，说明可以生产某一种子弹，定义如下：
 ````
 public abstract class BulletGenerator<T extends Bullet> {
@@ -424,7 +424,7 @@ bulletGenerator = new TrackBulletGenerator();
 TrackBullet和StraightBullet都可以和? extends Bullet相匹配。  
 如果之后再添加一种子弹NewBullet，只要再写一个对应的子弹工厂NewBulletGenerator，继承BulletGenerator<NewBullet>。如果要让某种生物能发射这种子弹，还要在它的构造器中将bulletGenerator指向一个NewBulletGenerator对象。   
 泛型方法增强了程序的可读性和可拓展性。
-## 注解
+### 注解
 注解可以让编译器来测试和验证代码的格式，也可以保存一些和程序相关的信息。  
 在本项目中，我主要用来两个注解：java自带的override注解和我自己创建的Info注解。
 ### Override注解
