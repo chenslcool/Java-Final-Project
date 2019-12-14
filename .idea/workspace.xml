@@ -2,52 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="e7605e7e-84e4-41ac-a511-e4703352d8e5" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/.gitignore" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Main$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/Main.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/battle.fxml" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleController.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/battle/BattleState.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/battle/Config.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/battle/Map.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/bullet/Bullet.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/bullet/BulletGenerator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/bullet/TrackBullet.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/bullet/TrackBulletGenerator.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/creature/Creature.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/creature/Curable.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/creature/Evil.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/creature/GrandPa$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/creature/GrandPa.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/creature/Huluwa.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/creature/Position.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/creature/Scorpion.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/creature/Snake.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/creature/enumeration/Camp.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/creature/enumeration/Direction.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/formation/Formation$1.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/formation/Formation.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/formation/FormationKind.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pictures/1.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pictures/2.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pictures/3.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pictures/4.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pictures/5.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pictures/6.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pictures/7.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pictures/EvilWinner.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pictures/JusticeWinner.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pictures/background.jpg" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pictures/ghost.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pictures/grandpa.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pictures/lolo.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pictures/scorpion.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/pictures/snake.png" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/record/BulletRecord.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/record/CreatureRecord.class" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/target/classes/record/Record.class" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -279,22 +234,22 @@
       <screen x="0" y="0" width="1536" height="824" />
     </state>
     <state x="265" y="182" key="FileChooserDialogImpl/0.0.1536.824@0.0.1536.824" timestamp="1575857765165" />
-    <state width="1493" height="173" key="GridCell.Tab.0.bottom" timestamp="1576336820504">
+    <state width="1493" height="173" key="GridCell.Tab.0.bottom" timestamp="1576336841262">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="173" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1576336820504" />
-    <state width="1493" height="173" key="GridCell.Tab.0.center" timestamp="1576336820504">
+    <state width="1493" height="173" key="GridCell.Tab.0.bottom/0.0.1536.824@0.0.1536.824" timestamp="1576336841262" />
+    <state width="1493" height="173" key="GridCell.Tab.0.center" timestamp="1576336841262">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="173" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1576336820504" />
-    <state width="1493" height="173" key="GridCell.Tab.0.left" timestamp="1576336820503">
+    <state width="1493" height="173" key="GridCell.Tab.0.center/0.0.1536.824@0.0.1536.824" timestamp="1576336841262" />
+    <state width="1493" height="173" key="GridCell.Tab.0.left" timestamp="1576336841262">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="173" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1576336820503" />
-    <state width="1493" height="173" key="GridCell.Tab.0.right" timestamp="1576336820504">
+    <state width="1493" height="173" key="GridCell.Tab.0.left/0.0.1536.824@0.0.1536.824" timestamp="1576336841262" />
+    <state width="1493" height="173" key="GridCell.Tab.0.right" timestamp="1576336841262">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
-    <state width="1493" height="173" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1576336820504" />
+    <state width="1493" height="173" key="GridCell.Tab.0.right/0.0.1536.824@0.0.1536.824" timestamp="1576336841262" />
     <state width="1493" height="261" key="GridCell.Tab.1.bottom" timestamp="1575792879432">
       <screen x="0" y="0" width="1536" height="824" />
     </state>
