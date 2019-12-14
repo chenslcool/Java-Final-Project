@@ -1,6 +1,6 @@
 # Java 期末大作业 
-<center>171860525 计算机科学与技术系 陈善梁</center>
-<center>邮箱: 171860525@smail.nju.edu.cn</center>  
+171860525 计算机科学与技术系 陈善梁  
+邮箱: 171860525@smail.nju.edu.cn
 
 ## 游戏操作说明
 大作业的要求是“当某个生物体于敌方相遇（两者间的X轴距离和Y轴距离小于某个常量）时，选取一个概率决定双方生死”，当时我觉得这样的攻击方式太过粗暴，不能很好地体现真实的打斗伤害场景，而且可玩性较低。于是，在征得老师同意后，我改变了攻击的形式：发射不同类型的子弹。其他部分仍然按照大作业的要求完成。以下是游戏操作说明：  
@@ -16,10 +16,11 @@
 package|职责
 :----:|----
 battle|1. (BattleController.java) 负责UI组件(BorderPane、Canvas等)的初始化、战场元素(葫芦娃、妖精、子弹列表、子弹管理器、地图)的初始化、与记录有关的输入输出流(writer、reader)的声明、用于UI界面刷新的TimeLine的声明、线程池的声明 <br> 2. (BattleController.java) 监听键盘事件:空格键开始/暂停/继续游戏，F键改变阵型、L选择记录文件回放以及方向键控制移动等 <br> 3. (BattleController.java)实现对于键盘事件的相应函数，如startGame()、gameOver()、pauseGame()、continueGame()等。<br> 4. (Map.java)定义重要的战场地图Map类，负责控制访问和修改战场某一位置的生物、显示战斗过程中的每一帧画面、显示回放过程中的每一帧画面。该类由所有生物对象共享。<br> 5. (Config.java) 配置战场规格、不同生物特性，，如战场大小、行列数、生物攻击力等 <br> 6. (BattleState.java) 定义全局的BattleState类，表示当前状态:未开始、开始、暂停等。所有战场元素共享该对象。
-creature|定义所有的生物，基类Creature、葫芦娃类Huluwa、老爷爷GrandPa和妖精Evil等
+creature|定义所有的生g'i物，基类Creature、葫芦娃类Huluwa、老爷爷GrandPa和妖精Evil等
 bullet|定义所有的子弹类及其工厂类。
 formation|定义阵法Formation类，实现所有改变妖精阵型的方法
 record|定义游戏记录的三个类:BulletRecord(记录当前某一个子弹及其位置、伤害等信息)、CreatureRecord(记录当前某一个生物及其位置、状态信息)、Record(记录当前帧所有的子弹和生物)
+annotations|定义注解Info
 ## 面向对象的思想
 ### 1.继承
 #### 继承最直接地体现在生物类上
