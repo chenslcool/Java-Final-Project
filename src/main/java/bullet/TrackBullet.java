@@ -17,7 +17,10 @@ public class TrackBullet extends Bullet {
     }
 
     @Override
-    public void move() {
+    public void move() throws Exception {
+        if(target == null){
+            throw new Exception("target cannot be null");
+        }
         countDown--;
         //追踪敌人，不管他是不是已经dead了
         //每步的总长度就是STEP_DISTANCE

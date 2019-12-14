@@ -100,7 +100,11 @@ public abstract class Creature implements Runnable, Config, Serializable {
                 damage = 10;
             }
             synchronized (enemy){//防止这时候enemy移动，其实没什么用
-                bullet = bulletGenerator.getBullet(this, enemy, damage, bulletX, bulletY);
+                try {
+                    bullet = bulletGenerator.getBullet(this, enemy, damage, bulletX, bulletY);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             if (camp == Camp.JUSTICE) {
                 bullet.setColor(Color.LIGHTGREEN);

@@ -11,7 +11,10 @@ import creature.Creature;
 public class StraightBulletGenerator extends BulletGenerator<StraightBullet> {
 
     @Override
-    public StraightBullet getBullet(Creature sender, Creature target, int damage, double x, double y) {
+    public StraightBullet getBullet(Creature sender, Creature target, int damage, double x, double y) throws Exception {
+        if(sender == null){
+            throw new Exception("sender cannot be null");
+        }
         return new StraightBullet(sender, target, damage, x, y);
     }
 }

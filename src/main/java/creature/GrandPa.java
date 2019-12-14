@@ -50,7 +50,11 @@ public class GrandPa extends Creature implements Curable {
                 double bulletX = x * UNIT_SIZE + (UNIT_SIZE - BULLTE_RADIUS) / 2;
                 double bulletY = y * UNIT_SIZE + (UNIT_SIZE - BULLTE_RADIUS) / 2;
                 Bullet bullet = null;
-                bullet = bulletGenerator.getBullet(this,null,GRANDPA_ATK - GRANDPA_DEF,bulletX,bulletY);
+                try {
+                    bullet = bulletGenerator.getBullet(this,null,GRANDPA_ATK - GRANDPA_DEF,bulletX,bulletY);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
                 StraightBullet straightBullet = (StraightBullet) bullet;
                 straightBullet.setDirection(direction);
                 bullet.setColor(Color.LIGHTGREEN);

@@ -52,7 +52,7 @@ public abstract class Bullet implements Config {
         return sender;
     }
 
-    public abstract void move();
+    public abstract void move() throws Exception;
 
     public boolean outOfMap() {
         return (this.x < 0.1 || this.y < 0.1 || this.x >= CANVAS_HEIGHT - 0.1 || this.y >= CANVAS_WIDTH - 0.1);

@@ -11,5 +11,5 @@ import creature.Creature;
  */
 @Info(description = "generate a bullet")
 public abstract class BulletGenerator<T extends Bullet> {
-    public abstract T getBullet(Creature sender, Creature target, int damage, double x, double y);
+    public abstract T getBullet (Creature sender, Creature target, int damage, double x, double y) throws Exception;
 }

@@ -69,7 +69,12 @@ public class BulletController implements Config, Runnable {
                     }
                 }
                 //如果子弹没有爆炸
-                bullet.move();//子弹移动,为什么trackBullet敌人死后会出界而不被回收呢?导致rte:越界
+                try {
+                    bullet.move();//子弹移动,为什么trackBullet敌人死后会出界而不被回收呢?导致rte:越界
+                } catch (Exception e) {
+                    it.remove();//只有追踪弹target==null才会出现这个情况，用于测试的
+                    return;
+                }
                 if (bullet.outOfMap() ||
                         (bullet instanceof TrackBullet && ((bullet.getTarget().isAlive() == false) || bullet.getCountDown() == 0))) {//如果这次移动导致出界
                     it.remove();//删除
