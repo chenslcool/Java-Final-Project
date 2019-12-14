@@ -1,5 +1,6 @@
 package creature;
 
+import annotations.Info;
 import battle.Map;
 import bullet.Bullet;
 import bullet.TrackBulletGenerator;
@@ -13,6 +14,7 @@ import java.util.LinkedList;
  * @author csl
  * @date 2019/11/25 16:51
  */
+@Info(description = "Scorpion,stronger than common evil")
 public class Scorpion extends Creature {
     private static String simpleName = "Scorpion";
 

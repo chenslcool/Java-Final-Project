@@ -1,5 +1,6 @@
 package bullet;
 
+import annotations.Info;
 import battle.Config;
 import battle.Map;
 import creature.Creature;
@@ -11,6 +12,8 @@ import javafx.scene.paint.Color;
  * @author csl
  * @date 2019/11/25 18:56
  */
+
+@Info(description = "use bullet to attack,field:position(x,y),damage,color,target and sender")
 public abstract class Bullet implements Config {
     //子弹只有位置和颜色需要保存
     double x;//左上角的坐标,是以像素为单位

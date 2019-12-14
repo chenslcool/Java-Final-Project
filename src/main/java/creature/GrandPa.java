@@ -1,5 +1,6 @@
 package creature;
 
+import annotations.Info;
 import battle.Map;
 import bullet.*;
 import creature.enumeration.Camp;
@@ -14,6 +15,7 @@ import java.util.LinkedList;
  * @author csl
  * @date 2019/11/27 19:16
  */
+@Info(description = "GrandPa,player can control it,so has two queue to denote player-commands.")
 public class GrandPa extends Creature implements Curable {
     private static String simpleName = "GrandPa";
     private LinkedList<Direction> moveDirections = new LinkedList<Direction>();

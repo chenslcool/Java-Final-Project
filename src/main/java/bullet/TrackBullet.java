@@ -1,5 +1,6 @@
 package bullet;
 
+import annotations.Info;
 import battle.Map;
 import creature.Creature;
 
@@ -7,7 +8,7 @@ import creature.Creature;
  * @author csl
  * @date 2019/11/27 12:30
  */
-//追踪子弹
+@Info(description = "trackBullet,can track target,if move more then limited steps or target dead,self disappear")
 public class TrackBullet extends Bullet {
     int countDown = TRACK_COUNT_DOWN;
 

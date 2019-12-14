@@ -1,5 +1,6 @@
 package bullet;
 
+import annotations.Info;
 import battle.BattleState;
 import battle.Config;
 import battle.Map;
@@ -16,6 +17,8 @@ import java.util.concurrent.TimeUnit;
  * @date 2019/11/25 19:17
  * manage all bullets on court
  */
+
+@Info(description = "control all bullets,move them,check if valid crash happen or out of map")
 public class BulletController implements Config, Runnable {
     private LinkedList<Bullet> bullets;
     private Map map;

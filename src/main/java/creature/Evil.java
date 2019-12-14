@@ -1,5 +1,6 @@
 package creature;
 
+import annotations.Info;
 import battle.Map;
 import bullet.Bullet;
 import bullet.StraightBulletGenerator;
@@ -14,6 +15,7 @@ import java.util.LinkedList;
  * @author csl
  * @date 2019/11/25 12:41
  */
+@Info(description = "Evil,no too many difference with creature")
 public class Evil extends Creature {//妖精是在BattleControler中创建的
 
     public Evil(Map map, LinkedList<Bullet> bullets) {

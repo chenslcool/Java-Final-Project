@@ -1,5 +1,6 @@
 package creature;
 
+import annotations.Info;
 import battle.Map;
 import bullet.Bullet;
 import bullet.TrackBulletGenerator;
@@ -15,6 +16,7 @@ import java.util.LinkedList;
  * @author csl
  * @date 2019/11/25 16:50
  */
+@Info(description = "Snake,similar to scorpion but curable")
 public class Snake extends Creature implements Curable {
     private boolean control = false;
     private static String simpleName = "Snake";

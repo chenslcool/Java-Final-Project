@@ -1,9 +1,12 @@
 package creature;
 
+import annotations.Info;
+
 /**
  * @author csl
  * @date 2019/11/24 20:49
  */
+@Info(description = "Position of a creature")
 public class Position {
     private int x = -1;//无效
     private int y = -1;

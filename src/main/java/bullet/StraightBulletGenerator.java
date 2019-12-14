@@ -1,11 +1,13 @@
 package bullet;
 
+import annotations.Info;
 import creature.Creature;
 
 /**
  * @author csl
  * @date 2019/11/27 7:56
  */
+@Info(description = "generate straight bullet")
 public class StraightBulletGenerator extends BulletGenerator<StraightBullet> {
 
     @Override

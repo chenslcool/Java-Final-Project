@@ -1,5 +1,6 @@
 package formation;
 
+import annotations.Info;
 import battle.Config;
 import battle.Map;
 import bullet.Bullet;
@@ -18,7 +19,7 @@ import static formation.FormationKind.*;
  * @date 2019/11/25 12:48
  */
 
-//只有在游戏还未开始的时候才能调用formation的变换函数修改妖精的排列
+@Info(description = "all formations of Evil Camp")
 public class Formation implements Config {
     //将所有变换函数设置为static函数:接受一个Creature(蝎子精)作为leader，剩余的妖怪(包括蛇精)是在Arraylist中
     //TODO 添加所有static阵法方法

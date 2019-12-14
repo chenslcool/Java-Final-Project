@@ -1,5 +1,6 @@
 package creature;
 
+import annotations.Info;
 import battle.BattleState;
 import battle.Config;
 import battle.Map;
@@ -18,6 +19,9 @@ import java.util.Random;
  * @author csl
  * @date 2019/11/24 20:49
  */
+
+@Info(description = "creature,has many  fields:hp,camp,alive,position and so on. Can move and attack." +
+        "implement Runnable(),so can run as a thread until dead ot battle end")
 public abstract class Creature implements Runnable, Config, Serializable {
     private static BattleState battleState;
     //只有阵营、存活状态、图像(也许可以用map统一保存，但是先存吧)、hp需要保存

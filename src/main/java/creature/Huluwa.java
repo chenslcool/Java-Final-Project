@@ -1,5 +1,6 @@
 package creature;
 
+import annotations.Info;
 import battle.Map;
 import bullet.Bullet;
 import bullet.StraightBulletGenerator;
@@ -12,6 +13,7 @@ import java.util.LinkedList;
  * @author csl
  * @date 2019/11/24 21:26
  */
+@Info(description = "huluwa")
 public class Huluwa extends Creature {
     private static String simpleName = "Huluwa";
     private int rank;

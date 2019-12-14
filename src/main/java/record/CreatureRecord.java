@@ -1,5 +1,6 @@
 package record;
 
+import annotations.Info;
 import creature.enumeration.Camp;
 
 import java.io.Serializable;
@@ -9,6 +10,7 @@ import java.io.Serializable;
  * @date 2019/12/1 20:16
  * 记录战场上的一帧的一个生物信息(不论存活状态)，一帧需要用arraylist<CreatureRecord>表示
  */
+@Info(description = "record one creature on court")
 public class CreatureRecord implements Serializable {
     public int x;
     public int y;

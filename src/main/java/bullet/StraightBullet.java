@@ -1,5 +1,6 @@
 package bullet;
 
+import annotations.Info;
 import creature.Creature;
 import creature.enumeration.Direction;
 
@@ -7,6 +8,7 @@ import creature.enumeration.Direction;
  * @author csl
  * @date 2019/11/25 19:05
  */
+@Info(description = "Straight bullet,can only move in one direction:up,down,left,right")
 public class StraightBullet extends Bullet {
     private Direction direction;
 

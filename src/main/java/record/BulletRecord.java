@@ -1,5 +1,6 @@
 package record;
 
+import annotations.Info;
 import javafx.scene.paint.Color;
 
 import java.io.Serializable;
@@ -8,6 +9,7 @@ import java.io.Serializable;
  * @author csl
  * @date 2019/12/1 20:27
  */
+@Info(description = "record one bullet on court")
 public class BulletRecord implements Serializable {
     public double x;
     public double y;
