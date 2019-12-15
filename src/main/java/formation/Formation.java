@@ -43,9 +43,29 @@ public class Formation implements Config {
             break;
             case CHANGSHE: {
                 transFormToChangShe(map, scorpion, snake, evils, bullets);
-                nextFormation = HEYI;
+                nextFormation = ChongE;
             }
             break;
+            case ChongE:{
+                transFormToChongE(map, scorpion, snake, evils, bullets);
+                nextFormation = YuLin;
+            }break;
+            case YuLin:{
+                transFormToYuLin(map, scorpion, snake, evils, bullets);
+                nextFormation = Fan;
+            }break;
+            case Fan:{
+                transFormToFan(map, scorpion, snake, evils, bullets);
+                nextFormation = Moon;
+            }break;
+            case Moon:{
+                transFormToMoon(map, scorpion, snake, evils, bullets);
+                nextFormation = FenShi;
+            }break;
+            case FenShi:{
+                transFormToFenshi(map, scorpion, snake, evils, bullets);
+                nextFormation = HEYI;
+            }break;
         }
         ;
     }
@@ -126,4 +146,138 @@ public class Formation implements Config {
             }
         }
     }
+
+    public static void transFormToChongE(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets){
+        synchronized (map) {
+            clearPreFormation(map, scorpion, snake, evils, bullets);
+            //重置阵型,占据右半边
+            int leaderX = 9;
+            int leaderY = 11;
+            scorpion.moveTo(leaderX, leaderY);
+            snake.moveTo(6,12);
+            for (int i = 0; i <= 2; ++i) {
+                Evil evil = new Evil(map, bullets);
+                evil.moveTo(leaderX -1 -2*i, leaderY);//这里面也会对map上锁，不过都是在一个线程，问题不大
+                evils.add(evil);
+                evil = new Evil(map, bullets);
+                evil.moveTo(leaderX -2 -2*i, leaderY + 1);//这里面也会对map上锁，不过都是在一个线程，问题不大
+                evils.add(evil);
+            }
+        }
+    }
+
+    public static void transFormToYuLin(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets){
+        synchronized (map) {
+            clearPreFormation(map, scorpion, snake, evils, bullets);
+            //重置阵型,占据右半边
+            int leaderX = 7;
+            int leaderY = 12;
+            scorpion.moveTo(leaderX, leaderY);
+            snake.moveTo(4,12);
+            for(int i = 0;i<5;++i){
+                Evil evil = new Evil(map, bullets);
+                evil.moveTo(leaderX-1,leaderY-2+i);
+                evils.add(evil);
+            }
+            for(int i = 0;i<3;++i){
+                Evil evil = new Evil(map, bullets);
+                evil.moveTo(leaderX-2,leaderY-1+i);
+                evils.add(evil);
+            }
+        }
+    }
+
+    public static void transFormToFan(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets){
+        synchronized (map) {
+            clearPreFormation(map, scorpion, snake, evils, bullets);
+            //重置阵型,占据右半边
+            int leaderX = 3;
+            int leaderY = 11;
+            scorpion.moveTo(leaderX, leaderY);
+            snake.moveTo(6,11);
+            for(int i = 0;i<2;++i){
+                Evil evil = new Evil(map, bullets);
+                evil.moveTo(leaderX + i + 2,leaderY  - 1 - i);
+                evils.add(evil);
+                evil = new Evil(map, bullets);
+                evil.moveTo(leaderX + i + 2,leaderY  + 1 + i);
+                evils.add(evil);
+            }
+            Evil evil = new Evil(map, bullets);
+            evil.moveTo(leaderX + 4,leaderY  + 1);
+            evils.add(evil);
+            evil = new Evil(map, bullets);
+            evil.moveTo(leaderX + 4,leaderY  - 1);
+            evils.add(evil);
+            evil = new Evil(map, bullets);
+            evil.moveTo(leaderX + 5,leaderY );
+            evils.add(evil);
+            evil = new Evil(map, bullets);
+            evil.moveTo(leaderX + 1,leaderY );
+            evils.add(evil);
+
+        }
+    }
+
+    public static void transFormToMoon(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets){
+        synchronized (map) {
+            clearPreFormation(map, scorpion, snake, evils, bullets);
+            //重置阵型,占据右半边
+            int leaderX = 6;
+            int leaderY = 9;
+            scorpion.moveTo(leaderX, leaderY);
+            snake.moveTo(6,13);
+            for(int i = 0;i < 3;++i)
+            {
+                for(int j =0;j<3;++j){
+                    Evil evil = new Evil(map,bullets);
+                    evil.moveTo(leaderX-1+i,leaderY+1+j);
+                    evils.add(evil);
+                }
+            }
+            for(int i =0;i<2;++i){
+                Evil evil = new Evil(map,bullets);
+                evil.moveTo(leaderX-2-i,leaderY+2+i);
+                evils.add(evil);
+                evil = new Evil(map,bullets);
+                evil.moveTo(leaderX+2+i,leaderY+2+i);
+                evils.add(evil);
+            }
+            for(int i =0;i<3;++i){
+                Evil evil = new Evil(map,bullets);
+                evil.moveTo(leaderX-2-i,leaderY+3+i);
+                evils.add(evil);
+                evil = new Evil(map,bullets);
+                evil.moveTo(leaderX+2+i,leaderY+3+i);
+                evils.add(evil);
+            }
+        }
+    }
+
+    public static void transFormToFenshi(Map map, Scorpion scorpion, Snake snake, ArrayList<Evil> evils, LinkedList<Bullet> bullets){
+        synchronized (map) {
+            clearPreFormation(map, scorpion, snake, evils, bullets);
+            //重置阵型,占据右半边
+            int leaderX = 4;
+            int leaderY = 11;
+            scorpion.moveTo(leaderX, leaderY);
+            snake.moveTo(leaderX+1,leaderY);
+            for(int i = 0;i < 3;++i)
+            {
+                Evil evil = new Evil(map,bullets);
+                evil.moveTo(leaderX+1+i,leaderY+1+i);
+                evils.add(evil);
+                evil = new Evil(map,bullets);
+                evil.moveTo(leaderX+1+i,leaderY-1-i);
+                evils.add(evil);
+            }
+            for(int i =0;i<3;++i){
+                Evil evil = new Evil(map,bullets);
+                evil.moveTo(leaderX+2+i,leaderY);
+                evils.add(evil);
+            }
+        }
+    }
+
+
 }

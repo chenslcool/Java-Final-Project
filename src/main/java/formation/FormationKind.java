@@ -8,5 +8,5 @@ import annotations.Info;
  */
 @Info(description = "all kinds of Formation")
 public enum FormationKind {
-    HEYI, YANXING, CHANGSHE
+    HEYI, YANXING, CHANGSHE,ChongE,YuLin,Fan,Moon,FenShi
 }
