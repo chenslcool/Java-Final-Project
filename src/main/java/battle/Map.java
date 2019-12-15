@@ -4,6 +4,7 @@ import annotations.Info;
 import bullet.Bullet;
 import creature.Creature;
 import creature.Curable;
+import creature.Evil;
 import creature.enumeration.Camp;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
@@ -181,26 +182,39 @@ public class Map implements Config {
             }
         }
 
+        if (numEvilLeft == 0 || numJusticeLeft == 0) {
+            record.gameEnd = true;//战斗结束
+            battleState.setStarted(false);
+            if (numEvilLeft == 0) {//设置战斗胜利者并且绘制
+                battleState.setWinner(Camp.JUSTICE);
+                record.winnner = Camp.JUSTICE;
+                gc.drawImage(justiceWinImage, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+            } else {
+                record.winnner = Camp.EVIL;
+                battleState.setWinner(Camp.EVIL);
+                gc.drawImage(evilWinImage, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+            }
+
+            if (needRecord) {
+                try {
+                    writer.writeObject(record);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            synchronized (battleState) {
+                battleState.notifyAll();//唤醒侦听线程
+            }
+
+            return;//不要再写了
+        }
         //将这一帧写入文件
         if (needRecord) {
             try {
                 writer.writeObject(record);
             } catch (IOException e) {
                 e.printStackTrace();
-            }
-        }
-
-        if (numEvilLeft == 0 || numJusticeLeft == 0) {
-            battleState.setStarted(false);
-            if (numEvilLeft == 0) {//设置战斗胜利者并且绘制
-                battleState.setWinner(Camp.JUSTICE);
-                gc.drawImage(justiceWinImage, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-            } else {
-                battleState.setWinner(Camp.EVIL);
-                gc.drawImage(evilWinImage, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
-            }
-            synchronized (battleState) {
-                battleState.notifyAll();//唤醒侦听线程
             }
         }
 //        System.out.println("bullets.size() = "+bullets.size());
@@ -325,6 +339,16 @@ public class Map implements Config {
             gc.setFill(color);
             gc.fillOval(r.y, r.x, BULLTE_RADIUS, BULLTE_RADIUS);
         }
+        if(record.gameEnd == true){
+            //战斗结束
+            if(record.winnner == Camp.JUSTICE){
+                gc.drawImage(justiceWinImage, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+            }
+            else{
+                gc.drawImage(evilWinImage, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
+            }
+            return;//结束
+        }
     }
 
     /**
@@ -339,6 +363,11 @@ public class Map implements Config {
         } catch (EOFException e) {
             reviewTimeline.stop();//结束timeline动画
             battleState.setReviewing(false);//回放结束
+            try {
+                reader.close();
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
             return null;
         } catch (IOException e) {
             e.printStackTrace();

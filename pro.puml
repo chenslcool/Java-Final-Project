@@ -1,0 +1,272 @@
+@startuml
+class Position{
+    private int x = -1;
+    private int y = -1;
+    public void setX(int x);
+    public void setY(int y);
+    public int getX();
+    public int getY();
+}
+
+class Creature{
+# int MAX_HP;
+    # int currentHP;
+    # Camp camp;
+    # boolean alive;
+    # boolean lastTimeSent;
+    # Image image;
+    # Random random;
+    # Position position;
+    # Map map;
+    # String name;
+    # int attackValue;
+    # int defenseValue;
+    # int moveRate;
+    # LinkedList<Bullet> bullets;
+    # BulletGenerator<? extends Bullet> bulletGenerator;
+
+    + void getHurt(int damage);
+    + void setPosition(int x, int y);
+    + void move();
+    + void attack();
+    + void moveTo();
+    + Creature searchCorssEnemies();
+    + ArrayList<Creature> searchSudokuFriends();
+    + Creature searchStraightEnemy();
+    + void run();
+    + void heal(int blood);
+    + String getSimpleName();
+}
+
+Creature --o Position
+Creature --> Bullet
+Creature --o BulletGenerator
+class Huluwa{
+    - int rank;
+    + String getSimpleName();
+    + void resetState();
+}
+
+interface Curable{
+    + void cure();
+}
+
+class GrandPa{
+    - LinkedList<Direction> moveDirections = new LinkedList<Direction>();
+    - LinkedList<Direction> bulletDirection = new LinkedList<>();
+
+    + void move();
+    + void attack();
+    + void cure();
+    + void addMoveDirection(Direction direction);
+    + void clearMoveDirection();
+    + void addBulletDirection(Direction direction);
+    + void clearMoveBulletDirection();
+}
+
+
+class Evil{
+    + String getSimpleName();
+    + void resetState();
+}
+
+class Scorpion{
+    + String getSimpleName();
+    + void resetState();
+}
+
+class Snake{
+    + String getSimpleName();
+    + void resetState();
+}
+
+Snake -|> Creature
+Scorpion --|> Creature
+Evil --|> Creature
+Huluwa --|>Creature
+GrandPa --|>Creature
+GrandPa ..|> Curable
+Snake ..|> Curable
+
+class Bullet{
+    - double x;
+    - double y;
+    # Color color;
+    # transient int damage;
+    # transient Creature sender;
+    # transient Creature target;
+
+    + double getX();
+    + double getY();
+    + Color getColor();
+    + int getDamage();
+    + void move();
+    + boolean outOfMap();
+    + void setColor(Color color);
+    + Creature getTarget();
+    + int getCountDown();
+}
+
+class StraightBullet{
+    - Direction direction;
+    + StraightBullet();
+    + void setDirection(Direction direction);
+    + void move();
+}
+
+class TrackBullet{
+    - int countDown;
+    + void move();
+    + int getCountDown();
+}
+
+StraightBullet --|> Bullet
+TrackBullet --|> Bullet
+
+class BulletGenerator{
+    + T getBullet();
+}
+
+class StraightBulletGenerator{
+    + StraightBullet getBullet();
+}
+
+class TrackBulletGenerator{
+    + TrackBullet getBullet();
+}
+
+class BulletController{
+        - LinkedList<Bullet> bullets;
+        - Map map;
+        - BattleState battleState;
+        + void moveAll();
+        + void run();
+        + void clearBullets();
+}
+
+BulletController --> BattleState
+BulletController --> Map
+BulletController --o Bullet
+StraightBulletGenerator --|> BulletGenerator
+TrackBulletGenerator --|> BulletGenerator
+
+class Map{
+    - Creature[][] grounds;
+    - int refreshRate;
+    - GraphicsContext gc;
+    - BattleState battleState;
+    - LinkedList<Bullet> bullets;
+    - Image deadImage;
+    - Image backGroundImage;
+    - ObjectOutputStream writer;
+    - ObjectInputStream reader;
+    - HashMap<String, Image> typeImageMap;
+    - Image evilWinImage;
+    - Image justiceWinImage;
+    - Image pauseImage;
+    - Timeline reviewTimeline;
+
+    - void initDictionary();
+    + Creature getCreatureAt();
+    + void setCreatureAt();
+    + void removeCreatureAt();
+    + boolean noCreatureAt();
+    + void display(boolean needRecord);
+    + void drawBoardLines();
+    + boolean insideMap();
+    + void clearMap();
+    + void setWriter(ObjectOutputStream writer);
+    + void startReview();
+    + void setReader(ObjectInputStream reader);
+    + void drawRecord(Record record);
+    - Record getNextRecord();
+    + void displayPause();
+}
+
+Creature --> Map
+Map --> Bullet
+Map --> BattleState
+class BattleState{
+    - boolean battleStarted = false;
+    - boolean paused = false;
+    - boolean reviewing = false;
+    - Camp winner = null;
+    + void setPaused(boolean paused);
+    + boolean gamePaused();
+    + void setStarted(boolean started);
+    + boolean isBattleStarted();
+    + void setWinner(Camp winnner);
+    + Camp getWinner();
+    + void setReviewing(boolean isReviewing);
+    + boolean isReviewing();
+    + boolean isInFreeState();
+}
+
+class BattleController{
+    + static Stage stage = null;
+    - ExecutorService pool;
+    - BorderPane pane;
+    - Map map;
+    - BattleState battleState;
+    - ArrayList<Huluwa> huluwas = new ArrayList<Huluwa>();
+    - GrandPa grandPa;
+    - ArrayList<Evil> evils = new ArrayList<>();
+    - Scorpion scorpion;
+    - Snake snake;
+    - LinkedList<Bullet> bullets = new LinkedList<>();
+    - BulletController bulletController;
+    - ObjectOutputStream writer;
+    - ObjectInputStream reader;
+    - Timeline timeline;
+
+    - void initialize();
+    - void initGrandPa();
+    - void initHuluwas();
+    + void arrangeHuluwas();
+    - void transFormChangShe();
+    + void startGame();
+    + void gameOver();
+    + void review();
+    + void pauseGame();
+    + void continueGame();
+
+}
+
+BattleController --o Creature
+BattleController --o BattleState
+BattleController --o Map
+Map --> BattleState
+
+class BulletRecord{
+        + double x;
+        + double y;
+        + boolean isRed;
+}
+
+class CreatureRecord{
+    + int x;
+    + int y;
+    + Camp camp;
+    + int currentHP;
+    + boolean alive;
+    + String type;
+}
+
+class Record{
+    + ArrayList<CreatureRecord> creatureRecords;
+    + ArrayList<BulletRecord> bulletRecords;
+}
+
+class Formation{
+    - static FormationKind nextFormation = HEYI;
+    + static void transFormToNextFormation();
+    + static void clearPreFormation();
+    + static void transformToXXX();
+}
+Record --o CreatureRecord
+Record --o BulletRecord
+
+Formation --> Evil
+Formation --> Snake
+Formation --> Scorpion
+@enduml

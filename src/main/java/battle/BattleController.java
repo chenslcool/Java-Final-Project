@@ -229,6 +229,11 @@ public class BattleController implements Config {
                     }
                 }
             }
+            try {
+                TimeUnit.MILLISECONDS.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }//等待记录写完
             gameOver();//现在这个侦听线程也要结束了
         }).start();//这个侦听线程不经过pool控制
     }
@@ -238,6 +243,11 @@ public class BattleController implements Config {
         //失败一方的所有生物线段都因为alive = false 导致线程退出
         //胜利一方的所有生物线程、map刷新线程、bulletManager线程都可能还在运行
         //因此需要shutDownNow向所有线程发送interrupt()让他们退出
+        try {
+            writer.close();//确保全部写入
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         pool.shutdownNow();
         timeline.stop();//停止显示
         System.out.println("TimeLine stop");

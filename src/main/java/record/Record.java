@@ -2,6 +2,7 @@ package record;
 
 import annotations.Info;
 import creature.Creature;
+import creature.enumeration.Camp;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,7 +16,8 @@ import java.util.ArrayList;
 public class Record implements Serializable {
     public ArrayList<CreatureRecord> creatureRecords;
     public ArrayList<BulletRecord> bulletRecords;
-
+    public boolean gameEnd = false;//战斗是否
+    public Camp winnner = Camp.JUSTICE;
     public Record() {
         creatureRecords = new ArrayList<>();
         bulletRecords = new ArrayList<>();
