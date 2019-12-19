@@ -27,5 +27,8 @@ public class CreatureRecord implements Serializable {
         this.alive = alive;
         this.type = type;
     }
-
+    @Override
+    public  String toString(){
+        return type+"("+x+","+y+")";
+    }
 }

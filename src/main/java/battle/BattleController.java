@@ -249,6 +249,7 @@ public class BattleController implements Config {
             e.printStackTrace();
         }
         pool.shutdownNow();
+        while (((ThreadPoolExecutor) pool).getActiveCount() != 0);
         timeline.stop();//停止显示
         System.out.println("TimeLine stop");
         //现在只剩一个主线程了
