@@ -14,7 +14,7 @@ import java.util.LinkedList;
  * @date 2019/11/24 21:26
  */
 @Info(description = "huluwa")
-public class Huluwa extends Creature {
+public class Huluwa extends JusticeCreature {
     private static String simpleName = "Huluwa";
     private int rank;
 
@@ -43,4 +43,5 @@ public class Huluwa extends Creature {
         this.alive = true;
         this.moveRate = DEFAULT_MOVE_RATE;
     }
+
 }
