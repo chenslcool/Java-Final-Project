@@ -287,9 +287,14 @@ public class BattleController implements Config {
     public void switchControlled(){
         //修改controlled
         int n = controllables.size();
-        controllables.get(currentControlledIdx).setControlled(false);
-        currentControlledIdx = (currentControlledIdx + 1)%n;
-        controllables.get(currentControlledIdx).setControlled(true);
+        for(int i = (currentControlledIdx + 1)%n;i!=currentControlledIdx;i = (i+1)%n){
+            if(controllables.get(i).canBeControlled()){
+                controllables.get(currentControlledIdx).setControlled(false);
+                currentControlledIdx = i;
+                controllables.get(currentControlledIdx).setControlled(true);
+                break;
+            }
+        }
     }
 
     class KeyEventHandler implements EventHandler<KeyEvent> {

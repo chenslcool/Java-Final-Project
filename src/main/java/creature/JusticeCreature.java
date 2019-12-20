@@ -29,11 +29,11 @@ public abstract class JusticeCreature extends Creature implements Controllable {
         this.isControlled = controlled;
         //改变速度
         if(controlled){
-            this.moveRate *= 2;
+            this.moveRate *= CONTROL_TIMES;
             System.out.println("move rate double,current = "+moveRate);
         }
         else{
-            this.moveRate /= 2;
+            this.moveRate /= CONTROL_TIMES;
             System.out.println("move rate half,current = "+moveRate);
         }
     }
@@ -152,5 +152,10 @@ public abstract class JusticeCreature extends Creature implements Controllable {
         else{
             super.attack();
         }
+    }
+
+    @Override
+    public boolean canBeControlled(){
+        return this.alive;
     }
 }

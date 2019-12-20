@@ -48,4 +48,6 @@ public interface Config {
 
     //回血
     int HEAL_BLOOD = 20;
+
+    int CONTROL_TIMES = 4;//控制加速
 }

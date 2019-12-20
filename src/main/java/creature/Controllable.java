@@ -7,6 +7,7 @@ import creature.enumeration.Direction;
  * @date 2019/12/19 23:45
  */
 public interface Controllable {
+    boolean canBeControlled();
     void setControlled(boolean controlled);
     void controlMove();//按照控制方式移动
     void controlAttack();//按照控制攻击
