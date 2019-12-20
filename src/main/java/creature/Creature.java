@@ -337,4 +337,8 @@ public abstract class Creature implements Runnable, Config, Serializable {
     public String getSimpleName() {
         return "Creature";
     }
+
+    public boolean underControlled(){
+        return false;
+    }
 }

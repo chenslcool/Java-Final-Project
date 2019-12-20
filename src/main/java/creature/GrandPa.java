@@ -26,7 +26,7 @@ public class GrandPa extends JusticeCreature implements Curable {
         this.defenseValue = GRANDPA_DEF;
 
         //diff
-        this.moveRate = DEFAULT_MOVE_RATE * 2;//为了快速相应方向键
+        this.moveRate = DEFAULT_MOVE_RATE;
 
         bulletGenerator = new StraightBulletGenerator();//GrandPa只能在控制下发射直行的子弹
     }
@@ -63,7 +63,7 @@ public class GrandPa extends JusticeCreature implements Curable {
         this.attackValue = GRANDPA_ATK;
         this.defenseValue = GRANDPA_DEF;
         this.alive = true;
-        this.moveRate = GRANDPA_MOVE_RATE;
+//        this.moveRate = DEFAULT_MOVE_RATE;
     }
 
 }

@@ -54,7 +54,7 @@ public class Snake extends Creature implements Curable {
         this.attackValue = EVIL_LEADER_ATK - 10;
         this.defenseValue = EVIL_LEADER_DEF;
         this.alive = true;
-        this.moveRate = DEFAULT_MOVE_RATE * 2;
+//        this.moveRate = DEFAULT_MOVE_RATE * 2;
     }
 
     public void addDirection(Direction direction) {

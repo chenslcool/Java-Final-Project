@@ -21,11 +21,21 @@ public abstract class JusticeCreature extends Creature implements Controllable {
 
     public JusticeCreature(Map map, LinkedList<Bullet> bullets){
         super(map,bullets);
+        this.isControlled = false;
     }
 
     @Override
     public void setControlled(boolean controlled) {
         this.isControlled = controlled;
+        //改变速度
+        if(controlled){
+            this.moveRate *= 2;
+            System.out.println("move rate double,current = "+moveRate);
+        }
+        else{
+            this.moveRate /= 2;
+            System.out.println("move rate half,current = "+moveRate);
+        }
     }
 
     @Override
@@ -96,7 +106,7 @@ public abstract class JusticeCreature extends Creature implements Controllable {
     }
 
     @Override
-    public void addMoveAttackDirection(Direction direction) {
+    public void addMoveDirection(Direction direction) {
         synchronized (moveDirections) {
             moveDirections.add(direction);
         }
@@ -131,6 +141,16 @@ public abstract class JusticeCreature extends Creature implements Controllable {
         }
         else{
             super.move();//随机移动
+        }
+    }
+
+    @Override
+    public void attack(){
+        if(isControlled){
+            controlAttack();
+        }
+        else{
+            super.attack();
         }
     }
 }

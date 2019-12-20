@@ -18,7 +18,7 @@ public class Main extends Application implements Config {
 
     public void start(Stage primaryStage) throws Exception {
         Parent root = FXMLLoader.load(getClass().getClassLoader().getResource("battle.fxml"));
-        primaryStage.setTitle("空格开始游戏,L复盘回放,F改变阵型,方向键控制移动,WSAD发射子弹");
+        primaryStage.setTitle("空格开始游戏,L复盘回放,F改变阵型,方向键控制移动,WSAD发射子弹,Tab切换控制的生物");
         primaryStage.setScene(new Scene(root, CANVAS_WIDTH, CANVAS_HEIGHT)); //设置初始的窗口大小
         primaryStage.show();
         primaryStage.setResizable(false);//不可变更窗口大小

@@ -41,7 +41,7 @@ public class Huluwa extends JusticeCreature {
         this.attackValue = HULUWA_ATK;
         this.defenseValue = HULUWA_DEF;
         this.alive = true;
-        this.moveRate = DEFAULT_MOVE_RATE;
+//        this.moveRate = DEFAULT_MOVE_RATE;
     }
 
 }

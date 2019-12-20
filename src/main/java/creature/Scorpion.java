@@ -40,6 +40,6 @@ public class Scorpion extends Creature {
         this.attackValue = EVIL_LEADER_ATK;
         this.defenseValue = EVIL_LEADER_DEF;
         this.alive = true;
-        this.moveRate = DEFAULT_MOVE_RATE;
+//        this.moveRate = DEFAULT_MOVE_RATE;
     }
 }

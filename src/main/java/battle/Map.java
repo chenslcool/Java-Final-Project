@@ -157,7 +157,7 @@ public class Map implements Config {
                                     gc.setStroke(Color.RED);
                                     gc.strokeLine(j * UNIT_SIZE + greenLen, i * UNIT_SIZE, (j + 1) * UNIT_SIZE, i * UNIT_SIZE);
                                 }
-                                if (c instanceof Curable) {
+                                if (c instanceof Curable){
                                     //画治愈绿色
                                     //设置透明度
                                     gc.setFill(Color.rgb(0, 255, 0, 0.3));
@@ -167,6 +167,12 @@ public class Map implements Config {
                                 }
                             } else {
                                 gc.drawImage(deadImage, j * UNIT_SIZE, i * UNIT_SIZE, UNIT_SIZE - 1, UNIT_SIZE - 1);
+                            }
+                            if(c.underControlled()){
+                                gc.setFill(Color.rgb(255, 215, 0,0.3));
+                                double x1 = j * UNIT_SIZE;
+                                double y1 = i * UNIT_SIZE;
+                                gc.fillRect(x1,y1,UNIT_SIZE,UNIT_SIZE);
                             }
                         }
                     }

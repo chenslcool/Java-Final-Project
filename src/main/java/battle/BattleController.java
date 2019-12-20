@@ -54,58 +54,15 @@ public class BattleController implements Config {
     private ObjectOutputStream writer;//每次刷新就向文件写
     private ObjectInputStream reader;
     Timeline timeline;
+    ArrayList<Controllable> controllables = new ArrayList<>();//所有可控制的生物：huluwas 和 grandpa
+    int currentControlledIdx = -1;
 
     public BattleController() {
     }
 
     @FXML
     private void initialize() {
-        pane.addEventFilter(KeyEvent.KEY_PRESSED, new EventHandler<KeyEvent>() {
-            @Override
-            public void handle(KeyEvent event) {
-                if (event.getCode() == KeyCode.SPACE) {
-                    if(battleState.isInFreeState())
-                        startGame();//里面已经对战斗状态进行了判断
-                    else if(battleState.isBattleStarted()){
-                        if(battleState.gamePaused() == false){
-                            //如果战斗正在进行，按下空格就是暂停
-                            System.out.println("pause game!");
-                            pauseGame();
-                        }
-                        else{
-                            //正在暂停模式。按下空格继续
-                            System.out.println("continue game!");
-                            continueGame();
-                        }
-                    }
-                } else if (event.getCode() == KeyCode.L && battleState.isInFreeState()) {
-                    review();//里面已经对战斗状态进行了判断
-                } else if (event.getCode() == KeyCode.F && battleState.isInFreeState()) {
-                    //在战斗还没开始可以变换阵型
-                    Formation.transFormToNextFormation(map, scorpion, snake, evils, bullets);
-                    map.display(false);//writer已经关闭
-                } else if (event.getCode() == KeyCode.UP && battleState.isBattleStarted()) {
-                    grandPa.addMoveDirection(Direction.UP);
-                } else if (event.getCode() == KeyCode.DOWN && battleState.isBattleStarted()) {
-                    grandPa.addMoveDirection(Direction.DOWN);
-                } else if (event.getCode() == KeyCode.RIGHT && battleState.isBattleStarted()) {
-                    grandPa.addMoveDirection(Direction.RIGHT);
-                } else if (event.getCode() == KeyCode.LEFT && battleState.isBattleStarted()) {
-                    grandPa.addMoveDirection(Direction.LEFT);
-                } else if (event.getCode() == KeyCode.W && battleState.isBattleStarted()) {
-                    grandPa.addBulletDirection(Direction.UP);
-                } else if (event.getCode() == KeyCode.S && battleState.isBattleStarted()) {
-                    grandPa.addBulletDirection(Direction.DOWN);
-                } else if (event.getCode() == KeyCode.D && battleState.isBattleStarted()) {
-                    grandPa.addBulletDirection(Direction.RIGHT);
-                } else if (event.getCode() == KeyCode.A && battleState.isBattleStarted()) {
-                    grandPa.addBulletDirection(Direction.LEFT);
-                }
-                else {
-                    System.out.println("unused key or battle is busy");
-                }
-            }
-        });
+        pane.addEventFilter(KeyEvent.KEY_PRESSED, new KeyEventHandler());
         Platform.runLater(() -> pane.requestFocus());//否则键盘无效
         //完成画布、地图和葫芦娃等的初始化
         canvas.setWidth(CANVAS_WIDTH);//960
@@ -120,6 +77,12 @@ public class BattleController implements Config {
         Formation.transFormToNextFormation(map, scorpion, snake, evils, bullets);
         initGrandPa();
         initHuluwas();//创建葫芦娃
+        controllables.add(grandPa);//初始化所有可控制的生物
+        for(Huluwa huluwa:huluwas){
+            controllables.add(huluwa);
+        }
+        currentControlledIdx = 0;
+        controllables.get(currentControlledIdx).setControlled(true);
         map.display(false);
     }
 
@@ -262,9 +225,18 @@ public class BattleController implements Config {
         scorpion.resetState();
         snake.resetState();
         grandPa.resetState();
-        grandPa.clearMoveDirection();//战斗结束，按键控制序列清空
-        grandPa.clearMoveBulletDirection();
-        snake.clearDirection();
+//        grandPa.clearMoveDirection();//战斗结束，按键控制序列清空
+//        grandPa.clearMoveBulletDirection();
+//        snake.clearDirection();
+        //清空所有可控制生物的控制信息
+        for(Controllable controllable:controllables){
+            controllable.clearAttackDirection();
+            controllable.clearMoveDirection();
+        }
+        controllables.get(currentControlledIdx).setControlled(false);
+        currentControlledIdx = 0;
+        controllables.get(currentControlledIdx).setControlled(true);
+
         Formation.transFormToNextFormation(map, scorpion, snake, evils, bullets);
         //test
         System.out.println(n + "th game over");
@@ -309,6 +281,65 @@ public class BattleController implements Config {
         battleState.setPaused(false);
         synchronized (battleState){
             battleState.notifyAll();//唤醒暂停的生物、子弹controller
+        }
+    }
+
+    public void switchControlled(){
+        //修改controlled
+        int n = controllables.size();
+        controllables.get(currentControlledIdx).setControlled(false);
+        currentControlledIdx = (currentControlledIdx + 1)%n;
+        controllables.get(currentControlledIdx).setControlled(true);
+    }
+
+    class KeyEventHandler implements EventHandler<KeyEvent> {
+        @Override
+        public void handle(KeyEvent event) {
+            if (event.getCode() == KeyCode.SPACE) {
+                if(battleState.isInFreeState())
+                    startGame();//里面已经对战斗状态进行了判断
+                else if(battleState.isBattleStarted()){
+                    if(battleState.gamePaused() == false){
+                        //如果战斗正在进行，按下空格就是暂停
+                        System.out.println("pause game!");
+                        pauseGame();
+                    }
+                    else{
+                        //正在暂停模式。按下空格继续
+                        System.out.println("continue game!");
+                        continueGame();
+                    }
+                }
+            } else if (event.getCode() == KeyCode.L && battleState.isInFreeState()) {
+                review();//里面已经对战斗状态进行了判断
+            } else if (event.getCode() == KeyCode.F && battleState.isInFreeState()) {
+                //在战斗还没开始可以变换阵型
+                Formation.transFormToNextFormation(map, scorpion, snake, evils, bullets);
+                map.display(false);//writer已经关闭
+            } else if (event.getCode() == KeyCode.UP && battleState.isBattleStarted()) {
+                controllables.get(currentControlledIdx).addMoveDirection(Direction.UP);
+            } else if (event.getCode() == KeyCode.DOWN && battleState.isBattleStarted()) {
+                controllables.get(currentControlledIdx).addMoveDirection(Direction.DOWN);
+            } else if (event.getCode() == KeyCode.RIGHT && battleState.isBattleStarted()) {
+                controllables.get(currentControlledIdx).addMoveDirection(Direction.RIGHT);
+            } else if (event.getCode() == KeyCode.LEFT && battleState.isBattleStarted()) {
+                controllables.get(currentControlledIdx).addMoveDirection(Direction.LEFT);                }
+            else if (event.getCode() == KeyCode.W && battleState.isBattleStarted()) {
+                controllables.get(currentControlledIdx).addAttackDirection(Direction.UP);
+            } else if (event.getCode() == KeyCode.S && battleState.isBattleStarted()) {
+                controllables.get(currentControlledIdx).addAttackDirection(Direction.DOWN);
+            } else if (event.getCode() == KeyCode.D && battleState.isBattleStarted()) {
+                controllables.get(currentControlledIdx).addAttackDirection(Direction.RIGHT);
+            } else if (event.getCode() == KeyCode.A && battleState.isBattleStarted()) {
+                controllables.get(currentControlledIdx).addAttackDirection(Direction.LEFT);
+            } else if (event.getCode() == KeyCode.TAB && battleState.isBattleStarted()){
+                //切换控制
+                switchControlled();
+                System.out.println("switch controlled,current  controlled idx = "+currentControlledIdx);
+            }
+            else {
+                System.out.println("unused key or battle is busy");
+            }
         }
     }
 }
