@@ -15,7 +15,7 @@ public interface Config {
 
     int NUM_ROWS = 12;//对应x
     int NUM_COLUMNS = 16;//对应y
-    int MAP_REFRESH_RATE = 120;
+    int MAP_REFRESH_RATE = 100;
 
     int UNIT_SIZE = CANVAS_HEIGHT / NUM_ROWS;
     int BORDER_LINE_WIDTH = 1;
