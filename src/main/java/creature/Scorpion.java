@@ -15,7 +15,7 @@ import java.util.LinkedList;
  * @date 2019/11/25 16:51
  */
 @Info(description = "Scorpion,stronger than common evil")
-public class Scorpion extends Creature {
+public class Scorpion extends EvilCreature {
     private static String simpleName = "Scorpion";
 
     public Scorpion(Map map, LinkedList<Bullet> bullets) {

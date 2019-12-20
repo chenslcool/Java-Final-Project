@@ -41,6 +41,26 @@ class Creature{
 Creature --o Position
 Creature --> Bullet
 Creature --o BulletGenerator
+
+class JusticeCreature{
+    # boolean isControlled;
+    # LinkedList<Direction> moveDirections;
+    # LinkedList<Direction> bulletDirection;
+}
+
+interface Controllable{
+   + void setControlled(boolean controlled);
+   +   void controlMove();
+   +  void controlAttack();
+   +  void addMoveDirection(Direction direction);
+   +  void addAttackDirection(Direction direction);
+   +  void clearMoveDirection();
+   +  void clearAttackDirection();
+}
+
+JusticeCreature ..|> Controllable
+JusticeCreature --|> Creature
+
 class Huluwa{
     - int rank;
     + String getSimpleName();
@@ -64,6 +84,8 @@ class GrandPa{
     + void clearMoveBulletDirection();
 }
 
+class EvilCreature{
+}
 
 class Evil{
     + String getSimpleName();
@@ -80,11 +102,12 @@ class Snake{
     + void resetState();
 }
 
-Snake -|> Creature
-Scorpion --|> Creature
-Evil --|> Creature
-Huluwa --|>Creature
-GrandPa --|>Creature
+EvilCreature --|> Creature
+Snake -|> EvilCreature
+Scorpion --|> EvilCreature
+Evil --|> EvilCreature
+Huluwa --|>JusticeCreature
+GrandPa --|>JusticeCreature
 GrandPa ..|> Curable
 Snake ..|> Curable
 
@@ -126,6 +149,8 @@ TrackBullet --|> Bullet
 class BulletGenerator{
     + T getBullet();
 }
+
+BulletGenerator --> Bullet
 
 class StraightBulletGenerator{
     + StraightBullet getBullet();

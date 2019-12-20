@@ -17,7 +17,7 @@ import java.util.LinkedList;
  * @date 2019/11/25 16:50
  */
 @Info(description = "Snake,similar to scorpion but curable")
-public class Snake extends Creature implements Curable {
+public class Snake extends EvilCreature implements Curable {
     private static String simpleName = "Snake";
     public Snake(Map map, LinkedList<Bullet> bullets) {
         super(map, bullets);

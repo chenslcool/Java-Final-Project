@@ -16,7 +16,7 @@ import java.util.LinkedList;
  * @date 2019/11/25 12:41
  */
 @Info(description = "Evil,no too many difference with creature")
-public class Evil extends Creature {//妖精是在BattleControler中创建的
+public class Evil extends EvilCreature {//妖精是在BattleControler中创建的
 
     public Evil(Map map, LinkedList<Bullet> bullets) {
         super(map, bullets);

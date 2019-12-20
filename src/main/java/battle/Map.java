@@ -322,9 +322,12 @@ public class Map implements Config {
         ArrayList<CreatureRecord> creatureRecords = record.creatureRecords;
         ArrayList<BulletRecord> bulletRecords = record.bulletRecords;
         //先画生物
+
         for (CreatureRecord r : creatureRecords) {
             //TODO 根据type从type-image map中选出图片
             Image image = typeImageMap.get(r.type);
+            int i = r.x;
+            int j = r.y;
             if (r.alive) {
 //                System.out.println("inside");
                 gc.drawImage(image, r.y * UNIT_SIZE, r.x * UNIT_SIZE, UNIT_SIZE - 1, UNIT_SIZE - 1);
@@ -340,22 +343,21 @@ public class Map implements Config {
                     gc.strokeLine(r.y * UNIT_SIZE + greenLen, r.x * UNIT_SIZE, (r.y + 1) * UNIT_SIZE, r.x * UNIT_SIZE);
                 }
 
-                int i = r.x;
-                int j = r.y;
+
                 if(r.isCurable){
                     gc.setFill(Color.rgb(0, 255, 0, 0.3));
                     double x1 = ((j - 1) > 0 ? j - 1 : 0) * UNIT_SIZE;
                     double y1 = ((i - 1) > 0 ? i - 1 : 0) * UNIT_SIZE;
                     gc.fillRect(x1, y1, (3 - (j == 0 ? 1 : 0)) * UNIT_SIZE, (3 - (i == 0 ? 1 : 0)) * UNIT_SIZE);
                 }
-                if(r.isControlled){
-                    gc.setFill(Color.rgb(255, 215, 0,0.3));
-                    double x1 = j * UNIT_SIZE;
-                    double y1 = i * UNIT_SIZE;
-                    gc.fillRect(x1,y1,UNIT_SIZE,UNIT_SIZE);
-                }
             } else {
                 gc.drawImage(deadImage, r.y * UNIT_SIZE, r.x * UNIT_SIZE, UNIT_SIZE - 1, UNIT_SIZE - 1);
+            }
+            if(r.isControlled){
+                gc.setFill(Color.rgb(255, 215, 0,0.3));
+                double x1 = j * UNIT_SIZE;
+                double y1 = i * UNIT_SIZE;
+                gc.fillRect(x1,y1,UNIT_SIZE,UNIT_SIZE);
             }
         }
 

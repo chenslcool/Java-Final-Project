@@ -4,9 +4,10 @@
 
 ## 一、游戏操作说明
 大作业的要求是“当某个生物体于敌方相遇（两者间的X轴距离和Y轴距离小于某个常量）时，选取一个概率决定双方生死”，当时我觉得这样的攻击方式太过粗暴，不能很好地体现真实的打斗伤害场景，而且可玩性较低。于是，在征得老师同意后，我改变了攻击的形式：发射不同类型的子弹。其他部分仍然按照大作业的要求完成。我把游戏界面设计成比较简洁的风格，所有操作都通过键盘完成。以下是游戏操作说明：  
-1. 打开游戏后，进入初始界面，葫芦娃阵营在左侧按照长蛇阵排好，妖精阵营在右侧按照锋矢阵法排列:![未开始](src/main/resources/md/init.png)
-2. 按下空格键选择距离文件保存的目录及文件名,开始游戏。在游戏过程中可以用方向键控制老爷爷移动，用WSAD控制老爷爷向上下左右四个方向发射子弹:![]开始(src/main/resources/md/start.png)
-开始游戏后按下空格键则暂停游戏:![暂停](src/main/resources/md/pause.png)
+1. 打开游戏后，进入初始界面，葫芦娃阵营在左侧按照长蛇阵排好，妖精阵营在右侧按照鹤翼阵法排列，其中玩家控制葫芦娃阵营，当前操作的角色(游戏开始时默认为老爷爷)所在方格用透明度为0.3黄色覆盖:![未开始](src/main/resources/md/init.png)
+2. 按下空格键选择距离文件保存的目录及文件名,开始游戏。在游戏过程中可以用方向键控制角色移动，用WSAD控制向上下左右四个方向发射子弹:![开始](src/main/resources/md/start.png)  
+开始游戏后按下空格键则暂停游戏:![暂停](src/main/resources/md/pause.png)  
+在游戏过程中，按下tab键在葫芦娃阵营中切换控制角色，用黄色方块标出(图为切换到最左侧的葫芦娃)：![tab](src/main/resources/md/tab.png)  
 游戏结束:![结束](src/main/resources/md/defeated.png)
 按下L选择记录文件回放:![回放](src/main/resources/md/review.png)
 ## 二、项目框架
@@ -41,13 +42,37 @@ while (alive && Thread.interrupted() == false) {//死亡或者pool调用了shutD
             }
         }
 ```  
-葫芦娃类、老爷爷类、妖精、蛇精、蝎子精都派生自Creature类，但是他们又根据特定的需要增加了一些属性，重写或者添加了一些方法。以GrandPa类为例： 
-由于玩家需要对GrandPa进行控制(移动和子弹发射)，因此GrandPa需要记录玩家的键盘输入指令，包括方向键指令和WSAD子弹发射指令。
+表示正义生物的JusticeCreature和表示邪恶生物的EvilCreature都派生自Creature类。其中由于玩家要操控葫芦娃阵营，因此JusticeCreature还提供了一些玩家操作的接口，比如增加移动、攻击指令等。此外JusticeCreature的攻击、移动方式也不同于普通生物，它们按照玩家操作来移动，因此，它们重写了Creature的move()和attack()。  
+葫芦娃类、老爷爷类派生自JusticeCreature，妖精、蛇精、蝎子精派生自EvilCreature。他们又都根据特定的需要增加了一些属性，重写或者添加了一些方法。以GrandPa类为例：
+GrandPa派生自JusticeCreature，JusticeCreature部分代码如下:
 ```
-private LinkedList<Direction> moveDirections = new LinkedList<Direction>();
-private LinkedList<Direction> bulletDirection = new LinkedList<>();
+public abstract class JusticeCreature extends Creature implements Controllable {
+    protected boolean isControlled;//表示是否被控制
+    protected LinkedList<Direction> moveDirections = new LinkedList<Direction>();//玩家移动操作
+    protected LinkedList<Direction> bulletDirection = new LinkedList<>();//玩家攻击操作
+        
+    @Override
+    public void move(){
+        if(isControlled){//如果是控制状态，就按照指令move
+            controlMove();
+        }
+        else{
+            super.move();//随机移动
+        }
+    }
 ```
-相应的，老爷爷的attack()、move()行为也是基于玩家指令的，因此必然异于生物基类的attack()和move(),因此需要重写，基于用户输入来确定如何攻击与移动。  
+对于老爷爷，他不仅能受到玩家控制，还有回血的功能，因此，GrandPa又重写了attack()方法：
+````
+    @Override
+    public void attack() {
+        //老爷爷的attack(这个方法名不好，应该改成act)就是移动，治愈队友
+        //治愈九宫格之内的
+        synchronized (map) {
+            cure();
+        }
+        super.attack();//JusticeCreature的attack()
+    }
+````
 #### 此外，继承也体现在子弹
  所有子弹都继承自子弹基类Bullet，而Bullet定义了  
  1. 子弹的共有属性:当前位置参数x与y、子弹颜色、子弹伤害、子弹的发射者和目标。
