@@ -138,7 +138,8 @@ public class Map implements Config {
                     Creature c = this.getCreatureAt(i, j);
                     if (c != null) {
                         synchronized (c) {//画生物的时候它不能被攻击、移动
-                            record.creatureRecords.add(new CreatureRecord(i, j, c.getCamp(), c.getCurrentHP(), c.isAlive(), c.getSimpleName()));
+                            CreatureRecord creatureRecord = new CreatureRecord(i, j, c.getCamp(), c.getCurrentHP(), c.isAlive(), c.getSimpleName(),false,false);
+//                            record.creatureRecords.add(new CreatureRecord(i, j, c.getCamp(), c.getCurrentHP(), c.isAlive(), c.getSimpleName(),false,false));
                             if (c.isAlive()) {
                                 if (c.getCamp() == Camp.JUSTICE) {
                                     numJusticeLeft++;
@@ -158,6 +159,7 @@ public class Map implements Config {
                                     gc.strokeLine(j * UNIT_SIZE + greenLen, i * UNIT_SIZE, (j + 1) * UNIT_SIZE, i * UNIT_SIZE);
                                 }
                                 if (c instanceof Curable){
+                                    creatureRecord.isCurable = true;
                                     //画治愈绿色
                                     //设置透明度
                                     gc.setFill(Color.rgb(0, 255, 0, 0.3));
@@ -165,15 +167,18 @@ public class Map implements Config {
                                     double y1 = ((i - 1) > 0 ? i - 1 : 0) * UNIT_SIZE;
                                     gc.fillRect(x1, y1, (3 - (j == 0 ? 1 : 0)) * UNIT_SIZE, (3 - (i == 0 ? 1 : 0)) * UNIT_SIZE);
                                 }
-                            } else {
+                            }
+                            else {
                                 gc.drawImage(deadImage, j * UNIT_SIZE, i * UNIT_SIZE, UNIT_SIZE - 1, UNIT_SIZE - 1);
                             }
                             if(c.underControlled()){
+                                creatureRecord.isControlled = true;
                                 gc.setFill(Color.rgb(255, 215, 0,0.3));
                                 double x1 = j * UNIT_SIZE;
                                 double y1 = i * UNIT_SIZE;
                                 gc.fillRect(x1,y1,UNIT_SIZE,UNIT_SIZE);
                             }
+                            record.creatureRecords.add(creatureRecord);
                         }
                     }
                 }
@@ -334,7 +339,21 @@ public class Map implements Config {
                     gc.setStroke(Color.RED);
                     gc.strokeLine(r.y * UNIT_SIZE + greenLen, r.x * UNIT_SIZE, (r.y + 1) * UNIT_SIZE, r.x * UNIT_SIZE);
                 }
-                //TODO 处理curable的情况???
+
+                int i = r.x;
+                int j = r.y;
+                if(r.isCurable){
+                    gc.setFill(Color.rgb(0, 255, 0, 0.3));
+                    double x1 = ((j - 1) > 0 ? j - 1 : 0) * UNIT_SIZE;
+                    double y1 = ((i - 1) > 0 ? i - 1 : 0) * UNIT_SIZE;
+                    gc.fillRect(x1, y1, (3 - (j == 0 ? 1 : 0)) * UNIT_SIZE, (3 - (i == 0 ? 1 : 0)) * UNIT_SIZE);
+                }
+                if(r.isControlled){
+                    gc.setFill(Color.rgb(255, 215, 0,0.3));
+                    double x1 = j * UNIT_SIZE;
+                    double y1 = i * UNIT_SIZE;
+                    gc.fillRect(x1,y1,UNIT_SIZE,UNIT_SIZE);
+                }
             } else {
                 gc.drawImage(deadImage, r.y * UNIT_SIZE, r.x * UNIT_SIZE, UNIT_SIZE - 1, UNIT_SIZE - 1);
             }

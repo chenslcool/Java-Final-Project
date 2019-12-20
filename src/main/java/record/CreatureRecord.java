@@ -18,14 +18,17 @@ public class CreatureRecord implements Serializable {
     public int currentHP;
     public boolean alive;
     public String type;//生物名称,用于确定用什么表示
-
-    public CreatureRecord(int x, int y, Camp camp, int currentHP, boolean alive, String type) {
+    public boolean isCurable;
+    public boolean isControlled;
+    public CreatureRecord(int x, int y, Camp camp, int currentHP, boolean alive, String type,boolean isControlled,boolean isCurable) {
         this.x = x;
         this.y = y;
         this.camp = camp;
         this.currentHP = currentHP;
         this.alive = alive;
         this.type = type;
+        this.isControlled = isControlled;
+        this.isCurable = isCurable;
     }
     @Override
     public  String toString(){
