@@ -97,7 +97,6 @@ public abstract class JusticeCreature extends Creature implements Controllable {
                 }
                 StraightBullet straightBullet = (StraightBullet) bullet;
                 straightBullet.setDirection(direction);
-                bullet.setColor(Color.LIGHTGREEN);
                 synchronized (bullets){
                     bullets.add(bullet);
                 }

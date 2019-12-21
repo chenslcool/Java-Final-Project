@@ -219,7 +219,8 @@ public class BattleController implements Config {
         synchronized (map) {
             map.clearMap();
         }
-        arrangeHuluwas();
+        arrangeHuluwas()
+        ;
         transFormChangShe();
         bulletController.clearBullets();
         scorpion.resetState();

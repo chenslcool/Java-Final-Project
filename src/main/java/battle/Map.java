@@ -187,8 +187,14 @@ public class Map implements Config {
         //绘制所有的子弹
         synchronized (bullets) {//锁住
             for (Bullet bullet : bullets) {
-                record.bulletRecords.add(new BulletRecord(bullet.getX(), bullet.getY(), bullet.getColor()));
-                gc.setFill(bullet.getColor());
+                Camp bulletCamp = bullet.getSender().getCamp();
+                record.bulletRecords.add(new BulletRecord(bullet.getX(), bullet.getY(),bulletCamp));
+                if(bulletCamp == Camp.JUSTICE){
+                    gc.setFill(JUSTICE_BULLET_COLOR);
+                }
+                else{
+                    gc.setFill(EVIL_BULLET_COLOR);
+                }
                 gc.fillOval(bullet.getY(), bullet.getX(), BULLTE_RADIUS, BULLTE_RADIUS);
             }
         }
@@ -205,7 +211,6 @@ public class Map implements Config {
                 battleState.setWinner(Camp.EVIL);
                 gc.drawImage(evilWinImage, 0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
             }
-
             if (needRecord) {
                 try {
                     writer.writeObject(record);
@@ -213,7 +218,6 @@ public class Map implements Config {
                     e.printStackTrace();
                 }
             }
-
             synchronized (battleState) {
                 battleState.notifyAll();//唤醒侦听线程
             }
@@ -362,8 +366,13 @@ public class Map implements Config {
         }
 
         for (BulletRecord r : bulletRecords) {
-            Color color = r.isRed ? Color.DEEPPINK : Color.LIGHTGREEN;
-            gc.setFill(color);
+            Camp bulletCamp = r.camp;
+            if(bulletCamp == Camp.JUSTICE){
+                gc.setFill(JUSTICE_BULLET_COLOR);
+            }
+            else{
+                gc.setFill(EVIL_BULLET_COLOR);
+            }
             gc.fillOval(r.y, r.x, BULLTE_RADIUS, BULLTE_RADIUS);
         }
         if(record.gameEnd == true){

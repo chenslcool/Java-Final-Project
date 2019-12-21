@@ -18,7 +18,7 @@ public abstract class Bullet implements Config {
     //子弹只有位置和颜色需要保存
     double x;//左上角的坐标,是以像素为单位
     double y;
-    protected Color color;//子弹的颜色
+//    protected Color color;//子弹的颜色
     protected transient int damage;//伤害
     protected transient Creature sender;//发射者，记录的一个原因是不能攻击自己
     protected transient Creature target;
@@ -40,9 +40,9 @@ public abstract class Bullet implements Config {
         return y;
     }
 
-    public Color getColor() {
-        return color;
-    }
+//    public Color getColor() {
+//        return color;
+//    }
 
     public int getDamage() {
         return damage;
@@ -58,9 +58,9 @@ public abstract class Bullet implements Config {
         return (this.x < 0.1 || this.y < 0.1 || this.x >= CANVAS_HEIGHT - 0.1 || this.y >= CANVAS_WIDTH - 0.1);
     }
 
-    public void setColor(Color color) {
-        this.color = color;
-    }
+//    public void setColor(Color color) {
+//        this.color = color;
+//    }
 
     public Creature getTarget() {
         return target;

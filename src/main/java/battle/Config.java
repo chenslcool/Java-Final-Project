@@ -1,6 +1,7 @@
 package battle;
 
 import annotations.Info;
+import javafx.scene.paint.Color;
 
 /**
  * @author csl
@@ -34,10 +35,10 @@ public interface Config {
     int EVIL_ATK = 55;
     int EVIL_DEF = 40;
     int EVIL_LEADER_ATK = 65;
-    int EVIL_LEADER_DEF = 40;
+    int EVIL_LEADER_DEF = 45;
     //子弹
     double STEP_DISTANCE = 1;//子弹每次移动的距离：像素
-    int BULLTE_RADIUS = 20;//子弹半径
+    int BULLTE_RADIUS = 15;//子弹半径
     //    int DEFAULT_BULLET_DAMAGE = 30;
     int BULLET_REFRESH_RATE = 160;
     int TRACK_COUNT_DOWN = 1500;//子弹最多追踪的步数
@@ -50,4 +51,8 @@ public interface Config {
     int HEAL_BLOOD = 20;
 
     int CONTROL_TIMES = 4;//控制加速
+
+    Color JUSTICE_BULLET_COLOR = Color.LIGHTGREEN;
+
+    Color EVIL_BULLET_COLOR = Color.DEEPPINK;
 }

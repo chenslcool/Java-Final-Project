@@ -106,10 +106,10 @@ public abstract class Creature implements Runnable, Config, Serializable {
                     e.printStackTrace();
                 }
             }
-            if (camp == Camp.JUSTICE) {
-                bullet.setColor(Color.LIGHTGREEN);
-            } else
-                bullet.setColor(Color.DEEPPINK);
+//            if (camp == Camp.JUSTICE) {
+//                bullet.setColor(Color.LIGHTGREEN);
+//            } else
+//                bullet.setColor(Color.DEEPPINK);
             synchronized (bullets) {//添加子弹
                 bullets.add(bullet);
             }
