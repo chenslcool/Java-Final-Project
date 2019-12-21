@@ -300,8 +300,10 @@ public abstract class Creature implements Runnable, Config, Serializable {
                 Thread.sleep(1000 / moveRate);
                 if (alive == false)
                     break;//sleep后发现自己死了,线程结束
-                synchronized (map) {//上锁顺序 map -> creature(this)
+                synchronized (bullets) {//上锁顺序 map -> creature(this)
                     attack();//attack()对map、enemy、bullet上锁
+                }
+                synchronized (map){
                     move();//move方法内部已经对map上锁了
                 }
             } catch (InterruptedException e) {

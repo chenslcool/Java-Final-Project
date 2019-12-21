@@ -45,13 +45,7 @@ public class BulletController implements Config, Runnable {
                 double centerY = bullet.getY() + BULLTE_RADIUS / 2;
                 int squareX = (int) (centerX / UNIT_SIZE);
                 int squareY = (int) (centerY / UNIT_SIZE);
-                //下面这个完全在方格内的条件太强了，导致视觉上击中了，实际上没击中
-//                boolean entireBulletInside = (centerX - BULLTE_RADIUS/2 > squareX*UNIT_SIZE)
-//                        &&(centerX + BULLTE_RADIUS/2 < (squareX+1)*UNIT_SIZE)
-//                        &&(centerY - BULLTE_RADIUS/2 > squareY*UNIT_SIZE)
-//                        &&(centerY + BULLTE_RADIUS/2 < (squareY+1)*UNIT_SIZE);
-
-                if (true) {//子弹完整地在一个方格内
+                synchronized (map) {//子弹完整地在一个方格内
                     Creature c = map.getCreatureAt(squareX, squareY);
                     //仅有本线程(Manager)掌控子弹的移动和攻击，所以不会出现一个生物被多个同时击中、杀死
                     //但是由于生物线程也在进行，可能本线程认为打中了，而在极短时间内目标移动了，却还是受伤 or 死亡了，
@@ -98,9 +92,10 @@ public class BulletController implements Config, Runnable {
                     }
                 }
                 TimeUnit.MILLISECONDS.sleep(1000 / BULLET_REFRESH_RATE);
-                synchronized (map) {//上锁顺序 map -> creature
-                    moveAll();//移动所有子弹
-                }
+//                synchronized (map) {//上锁顺序 map -> creature
+//                    moveAll();//移动所有子弹
+//                }
+                moveAll();//移动所有子弹
             } catch (InterruptedException e) {
                 break;//sleep的时候被shutdown
             }
