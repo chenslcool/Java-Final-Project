@@ -138,13 +138,13 @@ public class BattleController implements Config {
             chooser.setTitle("保存战斗记录文件");
             //设置选择文件类型
             chooser.getExtensionFilters().add(
-                    new FileChooser.ExtensionFilter("游戏记录文件", "*.gamelog*"));
+                    new FileChooser.ExtensionFilter("游戏记录文件", "*.gamelog"));
             File file = chooser.showSaveDialog(stage);
             if (file == null) {//如果没有选择，就不能开始游戏
                 System.out.println("没有选择保存文件，游戏不能进行");
                 return;
             }
-            writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file.getPath() + ".gamelog")));
+            writer = new ObjectOutputStream(new BufferedOutputStream(new FileOutputStream(file.getPath())));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -255,7 +255,7 @@ public class BattleController implements Config {
         chooser.setInitialDirectory(new File("."));
         chooser.setTitle("打开回放记录文件");
         chooser.getExtensionFilters().add(
-                new FileChooser.ExtensionFilter("游戏记录文件", "*.gamelog*"));
+                new FileChooser.ExtensionFilter("游戏记录文件", "*.gamelog"));
         File file = chooser.showOpenDialog(stage);
         if (file == null) {//如果没有选择，就不能回放
             System.out.println("没有选择记录文件，回放不能进行");
